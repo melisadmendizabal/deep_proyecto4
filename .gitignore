@@ -1,0 +1,27 @@
+# API key y secretos: NUNCA subir
+.env
+
+# Datos descargados (pesan GB; se regeneran con collect.py)
+data/
+
+# Modelos entrenados y artefactos pesados
+models/
+*.pt
+*.pth
+*.ckpt
+*.onnx
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+.ipynb_checkpoints/
+.pytest_cache/
+
+# Editores / sistema
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
