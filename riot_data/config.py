@@ -8,6 +8,7 @@ ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data"
 CSV_DIR = DATA_DIR / "csv"     # un subdirectorio por subconjunto (plataforma_tier)
 RAW_DIR = DATA_DIR / "raw"     # JSON originales comprimidos (respaldo)
+MERGE_DIR = DATA_DIR / "datos_merge"  # dataset final mezclado y balanceado (merge.py)
 
 
 def _load_dotenv(path: Path) -> None:
@@ -37,8 +38,13 @@ PLATFORMS = ["la1", "na1", "euw1", "kr"]
 # Tiers. MASTER, GRANDMASTER y CHALLENGER usan un endpoint distinto (lista completa).
 TIERS = ["SILVER", "GOLD", "PLATINUM", "EMERALD", "DIAMOND", "MASTER"]
 
-# Meta de partidas por subconjunto (plataforma x tier). 4 plataformas x 6 tiers x 100 = 2400.
+# Meta de partidas por subconjunto (plataforma x tier). Total = plataformas x tiers x meta.
+# Si la meta es muy alta, el script corre hasta que lo detengan (Ctrl+C) o expire la key.
 TARGET_PER_BUCKET = 12000
+
+# merge.py: cuántas partidas al azar tomar de cada subconjunto (clase).
+# 1125 x 24 subconjuntos = 27,000 partidas. El resto queda de reserva en data/csv/.
+MERGE_PER_SUBSET = 1125
 
 QUEUE_ID = 420                 # 420 = Ranked Solo/Duo
 MATCHES_PER_SEED = 5           # partidas recientes que se toman de cada jugador semilla
