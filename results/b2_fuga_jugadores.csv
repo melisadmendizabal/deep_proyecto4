@@ -1,0 +1,3 @@
+split,partidas,jugadores_unicos,pct_jugadores_vistos_en_train,pct_partidas_con_>=1_jugador_de_train,promedio_jugadores_de_train_por_partida
+val,4056,35319,20.8,81.1,2.38
+test,4032,34879,19.3,75.2,2.16
