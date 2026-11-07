@@ -1,2 +1,11 @@
 requests>=2.31
 pandas>=2.0
+numpy>=2.0
+scikit-learn>=1.5
+lightgbm>=4.0
+matplotlib>=3.8
+pyyaml>=6.0
+pytest>=8.0
+# PyTorch con CUDA: instalar aparte con el comando de https://pytorch.org/get-started/locally/
+# (probado con torch 2.6.0+cu124 en una RTX 4050), por ejemplo:
+#   pip install torch --index-url https://download.pytorch.org/whl/cu124

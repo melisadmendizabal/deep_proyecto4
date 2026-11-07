@@ -1,0 +1,20 @@
+# M4 - GRU causal (modelo principal). Receta: guía, sección 2.
+name: gru_base
+data:
+  path: features/sequences.npz
+  exclude_afk_train: true
+  drop_groups: [tendencia]   # la GRU ya ve la historia; las deltas serían redundantes
+model:
+  type: gru
+  hidden: 128
+  layers: 1
+  dropout: 0.1
+train:
+  lr: 0.001
+  weight_decay: 0.0001
+  batch_size: 128
+  max_epochs: 50
+  patience: 5
+  grad_clip: 1.0
+  smooth_lambda: 0.0         # E6: probar 0.1 y 0.5
+  seed: 42

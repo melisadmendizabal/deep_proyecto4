@@ -17,6 +17,36 @@
 
 ---
 
+## Avisos y estado (sáb 7 nov)
+
+| Bloque | Estado |
+|---|---|
+| B1 Entorno + API key (A) | ⏳ Pendiente. **Urgente:** pedir la Personal API Key. La PC de Melisa ya tiene PyTorch 2.6 + CUDA, scikit-learn, LightGBM y pytest funcionando |
+| B2 Split + calidad (B) | ✅ Completado |
+| B3 Features (A) | ⏳ Pendiente. **Es el cuello de botella:** B5, B6 (con datos reales) y todo lo de entrenamiento esperan esto |
+| B4 EDA + supuestos (B) | ✅ Completado |
+| B6 Entrenamiento DL (B) | 🟡 Código listo y probado; falta correrlo con `sequences.npz` real |
+
+**Para A (compañero), antes de empezar B3:**
+1. Leer `docs/contrato_features.md`. El `.npz` debe cumplirlo exactamente; si no, `load_sequences` falla con un mensaje que dice qué falta.
+2. Usar la columna `excluir_de_train` de `results/b2_calidad_partidas.csv` como el arreglo `afk`, y `splits/splits.csv` para `split` (no recalcularlo).
+3. Ideas del EDA para las features: incluir **oro relativo** (diferencia / oro total), el **minuto**, objetivos (torres, dragones, barón) y no solo oro.
+4. Para verificar el archivo al terminar: `python -c "from src.datasets import load_sequences; d = load_sequences('features/sequences.npz'); print(len(d), d.n_features)"`.
+
+**Cuando exista `features/sequences.npz`, la noche N1 queda así** (los comandos ya están probados con datos sintéticos):
+```
+python src/train.py --config configs/gru_base.yaml --smoke                                    # 1-2 min, antes de dormir
+python src/hp_search.py --config configs/gru_base.yaml --grid configs/grid_gru.yaml --prefix gru_hp   # GPU de B
+python src/hp_search.py --config configs/mlp_base.yaml --grid configs/grid_mlp.yaml --prefix mlp_hp   # GPU de A
+```
+Resultados en `results/hp/gru_hp.csv` y `results/hp/mlp_hp.csv`, ordenados por val_loss.
+
+**Calendario:** van ~1.5 días atrás. Las noches N1–N3 se corren desde la noche en que B3 esté listo; si B3 se termina el domingo 8, N1 es esa noche y no se pierde casi nada. Si se atrasa más, recortar según la tabla de riesgos (sección 11).
+
+**Sin commits todavía.** Archivos nuevos para subir: `src/`, `tests/`, `configs/`, `splits/`, `results/` (excepto `results/runs/**/predictions.npz`, ya ignorado), `docs/`. `features/` está en `.gitignore`.
+
+---
+
 ## Índice
 
 0. [Reglas de trabajo](#0-reglas-de-trabajo)
@@ -306,15 +336,25 @@ Valor_mes = N_rev × (Ahorro_promedio / 60) × C_h − C_infra − N_rev × C_pr
 
 **Terminado cuando:** `sequences.npz` carga con las formas correctas y los tests pasan. El build tarda ~20–40 min, así que córranlo en la tarde.
 
-### B4 · B · Vie 6 · EDA + supuestos de valor (5 h) · Debe
+### B4 · B · Vie 6 · EDA + supuestos de valor (5 h) · Debe · **COMPLETADO (sáb 7 nov)**
 
-- [ ] `notebooks/eda.ipynb` (para EDA el notebook está bien):
+- [x] EDA como script reproducible `src/eda.py` (en vez de notebook; el resultado es el mismo cada vez):
   - Distribuciones por tier, región y parche; duración, rendiciones, nulos, outliers y AFK.
-  - Relación de cada feature con el resultado en los minutos 10, 15 y 20.
-- [ ] Figuras en `results/figures/` para la sección 4.2 del informe.
-- [ ] `docs/supuestos_valor.md`: el escenario y la tabla de parámetros de la sección 5.3, con **fuentes citadas** (tarifas de coaching, partidas por semana, tiempos de revisión).
+  - Relación de oro, kills, torres y dragones con el resultado en cada minuto (solo train, cálculo exploratorio sobre `frames.csv`).
+- [x] Figuras en `results/figures/b4_*.png` + datos de cada figura en `results/b4_eda_data/` + reporte `results/b4_eda.md` (base de la sección 4.2).
+- [x] `docs/supuestos_valor.md` + `configs/value.yaml`: escenario, función, tabla de parámetros con rangos y **fuentes abiertas y citadas**.
 
 **Terminado cuando:** hay figuras + supuestos con fuentes. Si B3 todavía no termina, hagan el EDA con `frames.csv` crudo.
+
+**Hallazgos clave** (detalle en `results/b4_eda.md`):
+- **La diferencia de oro sola** da AUC 0.745 en el min 10, 0.816 en el 15 y 0.855 en el 20; su máximo es 0.887 en el min ~26 y luego baja (las partidas largas son parejas y deciden los objetivos). **Ese es el listón de M0.**
+- La misma ventaja de oro pesa **más temprano**: +5.5k gana 96 % en el min 10 vs 86 % en el 20 → usar el **oro relativo** y el minuto como features (B3).
+- 3.9 % de las partidas terminan a los 15–16 min (rendición temprana); solo 53 % llega al min 30 y 8 % al 40 → reportar métricas por tramo de minuto con su n.
+- Remontadas desde −3k en el min 15: 12–15 % en todos los tiers, sin diferencia significativa.
+- KR se rinde 35 % vs ~19–23 % en el resto; LAN tiene más AFK (5.8 %).
+- 173 campeones, el menos jugado con 289 apariciones → embeddings pequeños son viables para M6.
+- **Línea base del KPI:** revisar una partida ≈ 38 min → ~12.8 h ≈ USD 256/mes por equipo (valores base, por validar).
+- **Pendiente para B10/B14:** medir f_rev, t_clip y t_setup; verificar a mano el precio de Mobalytics Plus (la página bloqueó el acceso automático).
 
 ### B5 · A · Sáb 7 · Baselines + evaluación (5 h) · Debe
 
@@ -328,17 +368,21 @@ Valor_mes = N_rev × (Ahorro_promedio / 60) × C_h − C_infra − N_rev × C_pr
 
 **Noche N1:** tuning de LightGBM en CPU, si quieren.
 
-### B6 · B · Sáb 7 · Entrenamiento DL: MLP y GRU (6 h) · Debe
+### B6 · B · Sáb 7 · Entrenamiento DL: MLP y GRU (6 h) · Debe · **CÓDIGO LISTO, falta correr con datos reales (espera B3)**
 
-- [ ] `src/datasets.py` (lee `sequences.npz`, máscaras, batches).
-- [ ] `src/models/mlp.py` y `src/models/gru.py` (GRU **unidireccional** con una cabeza lineal por paso).
-- [ ] `src/train.py`:
-  - Configs YAML en `configs/`, semilla fija y la receta de la sección 2.
-  - Guarda `best.pt`, `metrics.csv` por época y curvas train/val en `results/runs/<run_id>/`.
-  - Debe poder **reanudarse** si se corta.
-- [ ] `src/hp_search.py` con el grid de 16 combinaciones.
-- [ ] Smoke test (1 época, 500 partidas), luego una corrida completa de GRU. Debe superar a M0; si no, hay un bug.
-- [ ] **Subir `train.py` a `main` antes de las 21:00**, porque A lo necesita para la noche N1.
+- [x] `docs/contrato_features.md`: formato exacto de `features/sequences.npz` que **B3 debe generar**.
+- [x] `src/datasets.py` (lee y **valida** `sequences.npz` contra el contrato, filtra por split/AFK/tier/región/tamaño, batches recortados).
+- [x] `src/models/mlp.py` y `src/models/gru.py` (GRU **unidireccional**; B7 agrega TCN con `register('tcn', ...)` en `src/models/__init__.py`).
+- [x] `src/train.py`:
+  - Configs YAML en `configs/` (`gru_base.yaml`, `mlp_base.yaml`), semilla fija y la receta de la sección 2.
+  - Guarda `best.pt`, `last.pt`, `metrics.csv`, `summary.json` y `predictions.npz` (val + test calibradas) en `results/runs/<run_id>/`.
+  - Se puede **reanudar** (`--resume`) y tiene `--smoke`.
+  - Temperature scaling al final y opción `train.smooth_lambda` lista para E6.
+- [x] `src/hp_search.py` con el grid de 16 combinaciones (`configs/grid_gru.yaml`, `configs/grid_mlp.yaml`); al relanzarlo **salta las corridas terminadas**; `--seeds 42 43 44` para las finales.
+- [x] Pruebas: `python -m pytest tests -q` → 11/11 (contrato, **causalidad de la GRU**, padding, aprendizaje, reanudar). Con datos sintéticos (`tests/make_fake_sequences.py`), una corrida de GRU tarda segundos en la RTX 4050.
+- [ ] Smoke test con datos reales: `python src/train.py --config configs/gru_base.yaml --smoke` **(cuando exista `features/sequences.npz`)**.
+- [ ] Corrida completa de GRU con datos reales. Debe superar a M0 (AUC del oro solo: 0.745 en el min 10, 0.816 en el 15); si no, hay un bug.
+- [ ] **Subir a `main`** (sin commits todavía; ver avisos).
 
 **Noche N1:** B corre la búsqueda de la GRU y A la del MLP (ver la [sección 7](#7-corridas-nocturnas-y-paralelismo)).
 
@@ -587,6 +631,7 @@ deep_proyecto4/
 │   ├── value_model.py
 │   └── explain.py
 ├── configs/              # YAML por experimento + value.yaml
+├── tests/                # pytest + generador de datos sintéticos (python -m pytest tests -q)
 ├── app/                  # api.py + static/index.html
 ├── annotations/          # CSV de anotaciones (SÍ va a git)
 ├── results/              # métricas CSV y figuras (SÍ va a git; los modelos NO)

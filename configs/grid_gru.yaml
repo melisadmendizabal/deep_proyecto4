@@ -1,0 +1,5 @@
+# Búsqueda N1 para la GRU: 2 x 2 x 2 x 2 = 16 corridas.
+model.hidden: [64, 128]
+model.layers: [1, 2]
+model.dropout: [0.1, 0.3]
+train.lr: [0.001, 0.0003]

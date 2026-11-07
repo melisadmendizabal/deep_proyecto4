@@ -5,7 +5,7 @@
 data/
 
 # Modelos entrenados y artefactos pesados
-models/
+/models/
 *.pt
 *.pth
 *.ckpt
@@ -26,3 +26,6 @@ env/
 .DS_Store
 Thumbs.db
 data.zip
+# Features generadas (B3) y artefactos pesados de entrenamiento
+features/
+results/runs/**/predictions.npz
