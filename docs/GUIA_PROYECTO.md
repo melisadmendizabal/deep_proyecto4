@@ -21,11 +21,12 @@
 
 | Bloque | Estado |
 |---|---|
-| B1 Entorno + API key (A) | ⏳ Pendiente. **Urgente:** pedir la Personal API Key. La PC de Melisa ya tiene PyTorch 2.6 + CUDA, scikit-learn, LightGBM y pytest funcionando |
+| B1 Entorno + API key (A) | ✅ PC de A: `.venv` con Python 3.12.10, torch 2.6.0+cu124 (RTX 4060), LightGBM. La Personal API Key ya está registrada (Melisa) |
 | B2 Split + calidad (B) | ✅ Completado |
-| B3 Features (A) | ⏳ Pendiente. **Es el cuello de botella:** B5, B6 (con datos reales) y todo lo de entrenamiento esperan esto |
+| B3 Features (A) | ✅ Completado: `python src/build_features.py` (~5 min) → `features/` (pedirle a A el zip o regenerarlo). Detalle en `results/b5_resumen.md` |
 | B4 EDA + supuestos (B) | ✅ Completado |
-| B6 Entrenamiento DL (B) | 🟡 Código listo y probado; falta correrlo con `sequences.npz` real |
+| B5 Baselines + evaluación (A) | ✅ Completado: M0 AUC 0.794, M1 0.810, M2 0.811 en test. **La GRU debe superar a M2.** Detalle en `results/b5_resumen.md` |
+| B6 Entrenamiento DL (B) | 🟡 Código listo y probado; smoke test con `sequences.npz` real ✅ (lo corrió A). **Ojo:** A corrigió `fit_temperature` en `src/train.py` (LBFGS sin búsqueda de línea daba T=0.0002 con modelos poco confiados; ahora usa `line_search_fn="strong_wolfe"` + test de regresión) |
 
 **Para A (compañero), antes de empezar B3:**
 1. Leer `docs/contrato_features.md`. El `.npz` debe cumplirlo exactamente; si no, `load_sequences` falla con un mensaje que dice qué falta.
@@ -301,11 +302,11 @@ Valor_mes = N_rev × (Ahorro_promedio / 60) × C_h − C_infra − N_rev × C_pr
 
 ### B1 · A · Jue 5 · Entorno y API key (3 h) · Debe
 
-- [ ] **Hoy mismo**, solicitar la **Personal API Key** en developer.riotgames.com, registrando el producto como herramienta académica de análisis post-partida. La aprobación puede tardar días, y sin ella el despliegue público depende de la key de 24 h.
-- [ ] Mismo Python en ambas PCs (3.12 o 3.13) dentro de un `.venv`. Instalar `torch` con CUDA, `lightgbm`, `scikit-learn`, `matplotlib`, `pyyaml`, `fastapi`, `uvicorn` y `captum`, y fijar versiones en `requirements.txt`.
-- [ ] Verificar en **ambas** PCs: `python -c "import torch; print(torch.cuda.is_available())"` → `True`.
+- [x] **Hoy mismo**, solicitar la **Personal API Key** en developer.riotgames.com, registrando el producto como herramienta académica de análisis post-partida (registrada por Melisa).
+- [~] Mismo Python en ambas PCs (3.12 o 3.13) dentro de un `.venv`. PC de A: Python 3.12.10, torch 2.6.0+cu124, numpy 2.5, pandas 3.1, scikit-learn 1.9, LightGBM 4.7. **Pendiente:** acordar versiones fijas con la PC de B en `requirements.txt`; `fastapi`, `uvicorn` y `captum` se instalan en B11/B12.
+- [x] Verificar en la PC de A: `torch.cuda.is_available()` → `True` (RTX 4060 Laptop, 8 GB).
 - [ ] Crear la estructura de carpetas de la [sección 10](#10-estructura-del-repo) y el esqueleto del README.
-- [ ] Descargar los datos que comparte B y comprobar los conteos (27,000 partidas).
+- [x] Descargar los datos que comparte B y comprobar los conteos (27,000 partidas).
 
 **Terminado cuando:** las dos PCs entrenan en GPU y tienen los mismos datos.
 
@@ -325,14 +326,14 @@ Valor_mes = N_rev × (Ahorro_promedio / 60) × C_h − C_infra − N_rev × C_pr
 - 75 % de las partidas de test tiene ≥ 1 jugador que también está en train (~2 de 10). Es una limitación inevitable; se documenta.
 - Las "kills de más" en eventos son ejecuciones (torre/súbditos), no errores.
 
-### B3 · A · Vie 6 · Pipeline de features (6 h) · Debe
+### B3 · A · Vie 6 · Pipeline de features (6 h) · Debe · **COMPLETADO (sáb 7 nov)**
 
-- [ ] `src/features.py` con la función `match_to_features(frames, events, participants) → DataFrame por minuto`. La usan el entrenamiento y la app.
-- [ ] Todas las features de la sección 3.4, causales (eventos con `timestamp_ms ≤` timestamp del frame).
-- [ ] Limpieza de la sección 3.2 (`has_afk`, frames incompletos).
-- [ ] `scaler.json` ajustado solo con train.
-- [ ] `src/build_features.py`: procesa `datos_merge` por bloques → `team_minute.csv` + `sequences.npz`.
-- [ ] Tests: causalidad (borrar eventos futuros no cambia el minuto t) y una partida revisada a mano.
+- [x] `src/features.py` con la función `match_to_features(frames, events, participants) → DataFrame por minuto`. La usan el entrenamiento y la app.
+- [x] Todas las features de la sección 3.4, causales (eventos con `timestamp_ms ≤` timestamp del frame). Sin Atakhan (0 eventos en los datos).
+- [x] Limpieza de la sección 3.2 (`afk` desde `excluir_de_train`; rol vacío → por orden de participante).
+- [x] `scaler.json` ajustado solo con train (sin AFK).
+- [x] `src/build_features.py`: procesa `datos_merge` por bloques → `team_minute.csv` + `sequences.npz` (~5 min).
+- [x] Tests: causalidad (borrar eventos futuros no cambia el minuto t) y una partida revisada a mano (`tests/test_features.py`).
 
 **Terminado cuando:** `sequences.npz` carga con las formas correctas y los tests pasan. El build tarda ~20–40 min, así que córranlo en la tarde.
 
@@ -356,15 +357,17 @@ Valor_mes = N_rev × (Ahorro_promedio / 60) × C_h − C_infra − N_rev × C_pr
 - **Línea base del KPI:** revisar una partida ≈ 38 min → ~12.8 h ≈ USD 256/mes por equipo (valores base, por validar).
 - **Pendiente para B10/B14:** medir f_rev, t_clip y t_setup; verificar a mano el precio de Mobalytics Plus (la página bloqueó el acceso automático).
 
-### B5 · A · Sáb 7 · Baselines + evaluación (5 h) · Debe
+### B5 · A · Sáb 7 · Baselines + evaluación (5 h) · Debe · **COMPLETADO (sáb 7 nov)**
 
-- [ ] `src/evaluate.py`:
+- [x] `src/evaluate.py`:
   - AUC, log-loss, Brier, ECE (10 bins) y accuracy, globales y **por tramo de minuto** (5, 10, 15, 20, 25, 30+).
   - IC 95 % por bootstrap sobre partidas (1,000 réplicas) y curvas de calibración.
-  - Escribe los resultados en `results/`.
-- [ ] Entrenar M0, M1 y M2 (LightGBM con early stopping en val) y aplicarles calibración.
-- [ ] Pruebas de cordura de fuga (etiquetas barajadas → AUC 0.5).
-- [ ] La regla R0 implementada como función que devuelve los minutos marcados.
+  - Escribe los resultados en `results/`. Además: **diferencias pareadas** vs el primer modelo (`results/b5_comparacion_vs_<ref>.csv`).
+- [x] Entrenar M0, M1 y M2 (LightGBM con early stopping en val) y aplicarles calibración (`src/baselines.py`).
+- [x] Pruebas de cordura de fuga (etiquetas barajadas → AUC 0.49; solo minuto → 0.50).
+- [x] La regla R0 implementada como función que devuelve los minutos marcados (`rule_r0` en `src/baselines.py`).
+
+**Resultado** (test; detalle en `results/b5_resumen.md`): M0 0.794, M1 0.810, M2 0.811 de AUC. M1/M2 superan a M0 de forma significativa (+0.016 pareado); **M2 ≈ M1** (sin diferencia global). Todos calibrados (ECE ≈ 0.02). Para evaluar la GRU: `python src/evaluate.py --run results/runs/m0_oro results/runs/m2_lgbm results/runs/<run> --name M0 M2 M4`.
 
 **Noche N1:** tuning de LightGBM en CPU, si quieren.
 

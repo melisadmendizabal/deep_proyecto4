@@ -1,0 +1,25 @@
+{
+  "run_id": "m0_oro",
+  "name": "m0_oro",
+  "model": "logit",
+  "val_loss": 0.51361,
+  "val_auc": 0.79579,
+  "val_brier": 0.18347,
+  "val_loss_calibrated": 0.51354,
+  "temperature": 0.9714,
+  "n_train": 18294,
+  "n_val": 4056,
+  "n_features": 2,
+  "feature_names": [
+    "minute",
+    "gold_diff"
+  ],
+  "train_seconds": 0.1,
+  "infer_ms_per_match": 0.0017,
+  "device": "cpu",
+  "git_commit": "3b7d6df",
+  "coef": {
+    "minute": 0.009200000204145908,
+    "gold_diff": 1.8276000022888184
+  }
+}

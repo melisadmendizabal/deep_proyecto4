@@ -29,3 +29,5 @@ data.zip
 # Features generadas (B3) y artefactos pesados de entrenamiento
 features/
 results/runs/**/predictions.npz
+results/runs/**/model.pkl
+results/runs/**/model.txt

@@ -1,0 +1,4 @@
+prueba,auc_val,esperado
+"etiquetas barajadas (M1), media de 5 [min 0.439, max 0.524]",0.4928,~0.5
+solo minuto,0.5017,~0.5
+M1 en el minuto 10 (alarma si > 0.9),0.7689,< 0.9
