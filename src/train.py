@@ -147,7 +147,8 @@ def fit_temperature(logits: np.ndarray, data: SequenceData) -> float:
     counts = mask.sum(1)
     w = torch.tensor(np.repeat(1.0 / counts, counts), dtype=torch.float64)
     log_t = torch.zeros(1, dtype=torch.float64, requires_grad=True)
-    opt = torch.optim.LBFGS([log_t], lr=0.1, max_iter=100)
+    # sin búsqueda de línea, LBFGS con paso fijo se pasaba (T=0.0002 con modelos poco confiados)
+    opt = torch.optim.LBFGS([log_t], lr=0.1, max_iter=100, line_search_fn="strong_wolfe")
 
     def closure():
         opt.zero_grad()
