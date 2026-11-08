@@ -1,0 +1,19 @@
+{
+  "run_id": "e4_m4__con_la1_s44",
+  "name": "e4_m4__con_la1_s44",
+  "model": "gru",
+  "best_epoch": 11,
+  "epochs_run": 16,
+  "val_loss": 0.4879,
+  "val_auc": 0.81651,
+  "val_brier": 0.17407,
+  "val_loss_calibrated": 0.48783,
+  "temperature": 0.9745,
+  "n_train": 13830,
+  "n_val": 3042,
+  "n_features": 33,
+  "n_params": 210817,
+  "train_seconds": 12.2,
+  "device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+  "git_commit": "3f68948"
+}

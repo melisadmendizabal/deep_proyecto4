@@ -1,0 +1,19 @@
+{
+  "run_id": "e3_m4__mezclado_s43",
+  "name": "e3_m4__mezclado_s43",
+  "model": "gru",
+  "best_epoch": 8,
+  "epochs_run": 13,
+  "val_loss": 0.49563,
+  "val_auc": 0.80964,
+  "val_brier": 0.17694,
+  "val_loss_calibrated": 0.49561,
+  "temperature": 0.9851,
+  "n_train": 6171,
+  "n_val": 2704,
+  "n_features": 33,
+  "n_params": 210817,
+  "train_seconds": 4.9,
+  "device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+  "git_commit": "3f68948"
+}

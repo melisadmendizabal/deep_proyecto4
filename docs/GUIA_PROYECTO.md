@@ -28,6 +28,7 @@
 | B5 Baselines + evaluación (A) | ✅ Completado: M0 AUC 0.794, M1 0.810, M2 0.811 en test. **La GRU debe superar a M2.** Detalle en `results/b5_resumen.md` |
 | B7 TCN + curva (A) | ✅ Completado (dom 8): TCN, búsquedas de MLP y TCN, curva de aprendizaje de M2 y M4 (la GRU gana en todos los tamaños; los dos se aplanan después de 12k). Detalle en `results/b7_resumen.md` |
 | B6 Entrenamiento DL (B) | ✅ Completado (sáb 7, noche): GRU test AUC 0.8123 ± 0.0002 (3 semillas), +0.0017 vs M2 (significativo pero mínimo). Mejor config: hidden 128, 2 capas, dropout 0.1, lr 3e-4. Detalle en `results/b6_resumen.md`. A corrigió antes `fit_temperature` (LBFGS con `strong_wolfe`) |
+| B9 Anotación + E3/E4 (A) | 🟡 E3/E4 ✅ (`results/b9_e3e4.md`: un modelo global sirve para todos los tiers y regiones). Falta anotar las 35 partidas de A y descargar partidas propias (falta API key en la PC de A) |
 | B8 Momentos + anotación (B) | 🟡 Código listo (detector, herramienta Streamlit, protocolo, selección de 55 partidas). **Falta anotar** (humano). Ver B8 |
 
 **Para A (compañero), de B6/B8:**
@@ -416,11 +417,13 @@ Valor_mes = N_rev × (Ahorro_promedio / 60) × C_h − C_infra − N_rev × C_pr
 
 ### B9 · A · Lun 9 – Mar 10 · Anotación + E3/E4 (5 h) · Debe/Podría
 
-- [ ] Anotar 35 partidas, incluidas las 15 compartidas.
-- [ ] Configs de E3 y E4 (subconjuntos de train por tier y región, con tamaños iguales).
-- [ ] Jugar o descargar 5–10 partidas propias **nuevas** con `collect.py --riot-id`, para la demo y como entradas fuera de entrenamiento.
+- [ ] Anotar 35 partidas, incluidas las 15 compartidas (humano; venv de A listo con `streamlit` y `data/anotacion/` extraído).
+- [x] Configs de E3 y E4 (subconjuntos de train por tier y región, con tamaños iguales) **y corridos** (adelantado de N3): `python src/experiments_e3e4.py`, ~5 min. El grupo evaluado se quita de val en ambas condiciones.
+- [ ] Jugar o descargar 5–10 partidas propias **nuevas** con `collect.py --riot-id`, para la demo y como entradas fuera de entrenamiento. **Falta una API key en la PC de A** (`.env`).
 
-**Noche N3:** A corre E3 + E4. **N4** (opcional): Transformer M6.
+**Resultado E3/E4** (detalle en `results/b9_e3e4.md`): **E3:** entrenar solo con Diamond+Master rinde igual en Silver+Gold que entrenar con todos los tiers (Δ dentro del ruido). **E4:** entrenar sin LA1 no empeora LA1 (incluso +0.002 de AUC con la GRU): un solo modelo global sirve para todas las regiones. **Para E5 (B12):** LA1 (0.800) y NA (0.805) son más difíciles de predecir que EUW/KR (0.822) con cualquier modelo; por tier no hay patrón de elo.
+
+**Noche N3:** A corre E3 + E4 ✅ (hecho de día). **N4** (opcional): Transformer M6.
 
 ### B10 · B · Lun 9 – Mar 10 · Anotación + función de valor (6 h) · Debe
 

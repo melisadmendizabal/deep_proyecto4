@@ -95,13 +95,15 @@ def fit_model(spec: dict, train: SequenceData, val: SequenceData, seed: int = 42
 
 def run_baseline(key: str, full: SequenceData, run_name: str | None = None,
                  max_train_matches: int | None = None, subset_seed: int = 0,
-                 verbose: bool = True, seed: int = 42) -> dict:
+                 verbose: bool = True, seed: int = 42, tiers: list[str] | None = None,
+                 platforms: list[str] | None = None) -> dict:
     """max_train_matches/subset_seed: misma submuestra que train.py (curva de aprendizaje, E2).
+    tiers/platforms: filtran SOLO train, igual que data.tiers/data.platforms de train.py (E3/E4).
     seed: semilla del modelo (LightGBM usa bagging; la logística es determinista)."""
     spec = MODELS[key]
     data = select(full, spec)
-    train = data.subset(split="train", exclude_afk=True, max_matches=max_train_matches,
-                        seed=subset_seed)
+    train = data.subset(split="train", exclude_afk=True, tiers=tiers, platforms=platforms,
+                        max_matches=max_train_matches, seed=subset_seed)
     val, test = data.subset(split="val"), data.subset(split="test")
     run_dir = RUNS / (run_name or spec["run"])
     log = print if verbose else (lambda *a, **k: None)
