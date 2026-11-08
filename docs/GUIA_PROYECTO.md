@@ -1,6 +1,6 @@
 # Guía del proyecto final: probabilidad de victoria en LoL
 
-*Actualizada: 5 de noviembre de 2026*
+*Actualizada: 7 de noviembre de 2026*
 
 **Objetivo:** construir y desplegar un sistema que, a partir del timeline de una partida de LoL, estime minuto a minuto la probabilidad de victoria con un modelo secuencial de deep learning, detecte los momentos decisivos y cuantifique cuántas horas de revisión ahorra cada mejora del modelo.
 
@@ -29,23 +29,19 @@
 | B7 TCN + curva (A) | 🟡 TCN + búsquedas de MLP y TCN ✅; curva de M2 ✅. **Falta la curva de M4: espera la mejor config de la GRU (búsqueda N1 de B; tarda ~5 min)**. Detalle en `results/b7_resumen.md` |
 | B6 Entrenamiento DL (B) | 🟡 Código listo y probado; smoke test con `sequences.npz` real ✅ (lo corrió A). **Ojo:** A corrigió `fit_temperature` en `src/train.py` (LBFGS sin búsqueda de línea daba T=0.0002 con modelos poco confiados; ahora usa `line_search_fn="strong_wolfe"` + test de regresión) |
 
-**Para A (compañero), antes de empezar B3:**
-1. Leer `docs/contrato_features.md`. El `.npz` debe cumplirlo exactamente; si no, `load_sequences` falla con un mensaje que dice qué falta.
-2. Usar la columna `excluir_de_train` de `results/b2_calidad_partidas.csv` como el arreglo `afk`, y `splits/splits.csv` para `split` (no recalcularlo).
-3. Ideas del EDA para las features: incluir **oro relativo** (diferencia / oro total), el **minuto**, objetivos (torres, dragones, barón) y no solo oro.
-4. Para verificar el archivo al terminar: `python -c "from src.datasets import load_sequences; d = load_sequences('features/sequences.npz'); print(len(d), d.n_features)"`.
+**Lo que sigue**
+1. **B (Melisa):** búsqueda de la GRU (N1), que tarda ~5 min en una RTX 4050/4060, no toda la noche:
+   ```
+   python src/hp_search.py --config configs/gru_base.yaml --grid configs/grid_gru.yaml --prefix gru_hp
+   ```
+   Pasarle a A la mejor configuración, para que corra la curva de aprendizaje de M4 (`python src/learning_curve.py --models m4 --set ...`).
+2. La búsqueda del MLP (N1, A) y la de la TCN (N2, A) ya están hechas: `results/hp/mlp_hp.csv`, `results/hp/tcn_hp.csv`.
+3. **`features/` no está en git:** A pasó `sequences.npz` + `scaler.json` a mano (B los pone en `features/`). Todos los modelos deben usar ese mismo archivo.
+4. **Antes de pushear, hacer pull:** A tocó `src/train.py` (1 línea, `fit_temperature`) y `src/models/__init__.py` (2 líneas al final, registro de la TCN).
 
-**Cuando exista `features/sequences.npz`, la noche N1 queda así** (los comandos ya están probados con datos sintéticos):
-```
-python src/train.py --config configs/gru_base.yaml --smoke                                    # 1-2 min, antes de dormir
-python src/hp_search.py --config configs/gru_base.yaml --grid configs/grid_gru.yaml --prefix gru_hp   # GPU de B
-python src/hp_search.py --config configs/mlp_base.yaml --grid configs/grid_mlp.yaml --prefix mlp_hp   # GPU de A
-```
-Resultados en `results/hp/gru_hp.csv` y `results/hp/mlp_hp.csv`, ordenados por val_loss.
+**Calendario:** con B3, B5 y casi todo B7 hechos el sáb 7, A ya está al día. Como las corridas tardan minutos y no horas, N1–N3 se pueden correr de día y no hace falta esperar a la noche.
 
-**Calendario:** van ~1.5 días atrás. Las noches N1–N3 se corren desde la noche en que B3 esté listo; si B3 se termina el domingo 8, N1 es esa noche y no se pierde casi nada. Si se atrasa más, recortar según la tabla de riesgos (sección 11).
-
-**Sin commits todavía.** Archivos nuevos para subir: `src/`, `tests/`, `configs/`, `splits/`, `results/` (excepto `results/runs/**/predictions.npz`, ya ignorado), `docs/`. `features/` está en `.gitignore`.
+**Commits:** ya hay commits en `main` (B2, B4, B6, B3, B5, B7). `features/`, `data/`, los modelos (`*.pt`, `model.pkl/txt`) y los `predictions.npz` están en `.gitignore`.
 
 ---
 
@@ -372,7 +368,7 @@ Valor_mes = N_rev × (Ahorro_promedio / 60) × C_h − C_infra − N_rev × C_pr
 
 **Noche N1:** tuning de LightGBM en CPU, si quieren.
 
-### B6 · B · Sáb 7 · Entrenamiento DL: MLP y GRU (6 h) · Debe · **CÓDIGO LISTO, falta correr con datos reales (espera B3)**
+### B6 · B · Sáb 7 · Entrenamiento DL: MLP y GRU (6 h) · Debe · **CÓDIGO LISTO; B3 ya está, falta la búsqueda de la GRU y la corrida completa**
 
 - [x] `docs/contrato_features.md`: formato exacto de `features/sequences.npz` que **B3 debe generar**.
 - [x] `src/datasets.py` (lee y **valida** `sequences.npz` contra el contrato, filtra por split/AFK/tier/región/tamaño, batches recortados).
@@ -384,9 +380,9 @@ Valor_mes = N_rev × (Ahorro_promedio / 60) × C_h − C_infra − N_rev × C_pr
   - Temperature scaling al final y opción `train.smooth_lambda` lista para E6.
 - [x] `src/hp_search.py` con el grid de 16 combinaciones (`configs/grid_gru.yaml`, `configs/grid_mlp.yaml`); al relanzarlo **salta las corridas terminadas**; `--seeds 42 43 44` para las finales.
 - [x] Pruebas: `python -m pytest tests -q` → 11/11 (contrato, **causalidad de la GRU**, padding, aprendizaje, reanudar). Con datos sintéticos (`tests/make_fake_sequences.py`), una corrida de GRU tarda segundos en la RTX 4050.
-- [ ] Smoke test con datos reales: `python src/train.py --config configs/gru_base.yaml --smoke` **(cuando exista `features/sequences.npz`)**.
-- [ ] Corrida completa de GRU con datos reales. Debe superar a M0 (AUC del oro solo: 0.745 en el min 10, 0.816 en el 15); si no, hay un bug.
-- [ ] **Subir a `main`** (sin commits todavía; ver avisos).
+- [x] Smoke test con datos reales: `python src/train.py --config configs/gru_base.yaml --smoke` (lo corrió A el sáb 7: val AUC 0.78 con 500 partidas y 1 época; destapó el bug de `fit_temperature`, ya corregido).
+- [ ] Corrida completa de GRU con datos reales. Ahora el listón es **M2** (AUC test 0.811, log-loss 0.522), y la TCN de A da 0.813. Si no supera a M0 (0.794), hay un bug.
+- [x] **Subir a `main`** (commit "Eda y scripts de entrenamiento").
 
 **Noche N1:** B corre la búsqueda de la GRU y A la del MLP (ver la [sección 7](#7-corridas-nocturnas-y-paralelismo)).
 
