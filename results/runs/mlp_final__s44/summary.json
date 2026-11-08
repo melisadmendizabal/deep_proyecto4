@@ -1,0 +1,19 @@
+{
+  "run_id": "mlp_final__s44",
+  "name": "mlp_final__s44",
+  "model": "mlp",
+  "best_epoch": 13,
+  "epochs_run": 18,
+  "val_loss": 0.49274,
+  "val_auc": 0.81165,
+  "val_brier": 0.1762,
+  "val_loss_calibrated": 0.49273,
+  "temperature": 0.9908,
+  "n_train": 18294,
+  "n_val": 4056,
+  "n_features": 35,
+  "n_params": 6529,
+  "train_seconds": 5.6,
+  "device": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "git_commit": "a272969"
+}

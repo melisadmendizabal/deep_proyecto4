@@ -1,0 +1,19 @@
+{
+  "run_id": "gru_final__s44",
+  "name": "gru_final__s44",
+  "model": "gru",
+  "best_epoch": 13,
+  "epochs_run": 18,
+  "val_loss": 0.49187,
+  "val_auc": 0.81233,
+  "val_brier": 0.1758,
+  "val_loss_calibrated": 0.49187,
+  "temperature": 0.9925,
+  "n_train": 18294,
+  "n_val": 4056,
+  "n_features": 33,
+  "n_params": 210817,
+  "train_seconds": 12.4,
+  "device": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "git_commit": "a272969"
+}

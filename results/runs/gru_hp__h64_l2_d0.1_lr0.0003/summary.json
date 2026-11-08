@@ -1,0 +1,19 @@
+{
+  "run_id": "gru_hp__h64_l2_d0.1_lr0.0003",
+  "name": "gru_hp__h64_l2_d0.1_lr0.0003",
+  "model": "gru",
+  "best_epoch": 21,
+  "epochs_run": 26,
+  "val_loss": 0.49285,
+  "val_auc": 0.81186,
+  "val_brier": 0.17614,
+  "val_loss_calibrated": 0.49283,
+  "temperature": 0.9864,
+  "n_train": 18294,
+  "n_val": 4056,
+  "n_features": 33,
+  "n_params": 54209,
+  "train_seconds": 39.4,
+  "device": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "git_commit": "a272969"
+}

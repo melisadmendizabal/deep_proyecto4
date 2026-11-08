@@ -27,7 +27,13 @@
 | B4 EDA + supuestos (B) | ✅ Completado |
 | B5 Baselines + evaluación (A) | ✅ Completado: M0 AUC 0.794, M1 0.810, M2 0.811 en test. **La GRU debe superar a M2.** Detalle en `results/b5_resumen.md` |
 | B7 TCN + curva (A) | 🟡 TCN + búsquedas de MLP y TCN ✅; curva de M2 ✅. **Falta la curva de M4: espera la mejor config de la GRU (búsqueda N1 de B; tarda ~5 min)**. Detalle en `results/b7_resumen.md` |
-| B6 Entrenamiento DL (B) | 🟡 Código listo y probado; smoke test con `sequences.npz` real ✅ (lo corrió A). **Ojo:** A corrigió `fit_temperature` en `src/train.py` (LBFGS sin búsqueda de línea daba T=0.0002 con modelos poco confiados; ahora usa `line_search_fn="strong_wolfe"` + test de regresión) |
+| B6 Entrenamiento DL (B) | ✅ Completado (sáb 7, noche): GRU test AUC 0.8123 ± 0.0002 (3 semillas), +0.0017 vs M2 (significativo pero mínimo). Mejor config: hidden 128, 2 capas, dropout 0.1, lr 3e-4. Detalle en `results/b6_resumen.md`. A corrigió antes `fit_temperature` (LBFGS con `strong_wolfe`) |
+| B8 Momentos + anotación (B) | 🟡 Código listo (detector, herramienta Streamlit, protocolo, selección de 55 partidas). **Falta anotar** (humano). Ver B8 |
+
+**Para A (compañero), de B6/B8:**
+- Curva de aprendizaje de M4: `python src/learning_curve.py --models m4 --set model.hidden=128 model.layers=2 model.dropout=0.1 train.lr=0.0003`.
+- Para anotar (B9): `python src/select_annotation.py` (reutiliza `annotations/seleccion.csv`, extrae los datos en ~1 min) y luego `streamlit run src/annotate_app.py`, letra **A**. Leer antes `docs/protocolo_anotacion.md`.
+- Los `predictions.npz` no están en git: para evaluar en otra PC hay que regenerarlos (`python src/baselines.py --no-sanity` ~1 min; los DL con `hp_search.py`, que salta lo terminado si se borra la carpeta).
 
 **Lo que sigue**
 1. **B (Melisa):** búsqueda de la GRU (N1), que tarda ~5 min en una RTX 4050/4060, no toda la noche:
@@ -368,7 +374,7 @@ Valor_mes = N_rev × (Ahorro_promedio / 60) × C_h − C_infra − N_rev × C_pr
 
 **Noche N1:** tuning de LightGBM en CPU, si quieren.
 
-### B6 · B · Sáb 7 · Entrenamiento DL: MLP y GRU (6 h) · Debe · **CÓDIGO LISTO; B3 ya está, falta la búsqueda de la GRU y la corrida completa**
+### B6 · B · Sáb 7 · Entrenamiento DL: MLP y GRU (6 h) · Debe · **COMPLETADO (sáb 7 nov)**
 
 - [x] `docs/contrato_features.md`: formato exacto de `features/sequences.npz` que **B3 debe generar**.
 - [x] `src/datasets.py` (lee y **valida** `sequences.npz` contra el contrato, filtra por split/AFK/tier/región/tamaño, batches recortados).
@@ -381,14 +387,16 @@ Valor_mes = N_rev × (Ahorro_promedio / 60) × C_h − C_infra − N_rev × C_pr
 - [x] `src/hp_search.py` con el grid de 16 combinaciones (`configs/grid_gru.yaml`, `configs/grid_mlp.yaml`); al relanzarlo **salta las corridas terminadas**; `--seeds 42 43 44` para las finales.
 - [x] Pruebas: `python -m pytest tests -q` → 11/11 (contrato, **causalidad de la GRU**, padding, aprendizaje, reanudar). Con datos sintéticos (`tests/make_fake_sequences.py`), una corrida de GRU tarda segundos en la RTX 4050.
 - [x] Smoke test con datos reales: `python src/train.py --config configs/gru_base.yaml --smoke` (lo corrió A el sáb 7: val AUC 0.78 con 500 partidas y 1 época; destapó el bug de `fit_temperature`, ya corregido).
-- [ ] Corrida completa de GRU con datos reales. Ahora el listón es **M2** (AUC test 0.811, log-loss 0.522), y la TCN de A da 0.813. Si no supera a M0 (0.794), hay un bug.
+- [x] Búsqueda de la GRU (16 configs, **7 min**): mejor hidden 128, 2 capas, dropout 0.1, lr 3e-4 (val_loss 0.4924). Grid plano (±0.0008), igual que MLP y TCN.
+- [x] Finales con 3 semillas, GRU y MLP (lo que era la noche N2 de B): GRU test AUC **0.8123 ± 0.0002**, MLP 0.8118 ± 0.0001 (`results/b6_semillas.csv`, `src/seed_summary.py`).
+- [x] Evaluación pareada vs M2: GRU **+0.0017 [+0.0005, +0.0029]** de AUC: significativo pero mínimo (TCN +0.0021, MLP +0.0012). **La historia completa casi no aporta en AUC → la comparación decisiva es por valor (B10/B12) y E6.** Resumen: `results/b6_resumen.md`.
 - [x] **Subir a `main`** (commit "Eda y scripts de entrenamiento").
 
 **Noche N1:** B corre la búsqueda de la GRU y A la del MLP (ver la [sección 7](#7-corridas-nocturnas-y-paralelismo)).
 
 ### B7 · A · Dom 8 · TCN + curva de aprendizaje (5 h) · Debería/Debe · **CASI COMPLETO (sáb 7 nov): falta la curva de M4**
 
-- [~] Revisar con B los resultados de N1 y fijar la mejor configuración de GRU y de MLP. **MLP ✅** (búsqueda corrida por A: h64, 2 capas, dropout 0.3, lr 1e-3; `results/hp/mlp_hp.csv`). **GRU: falta la búsqueda de B.**
+- [x] Revisar con B los resultados de N1 y fijar la mejor configuración de GRU y de MLP. **MLP ✅** (búsqueda corrida por A: h64, 2 capas, dropout 0.3, lr 1e-3; `results/hp/mlp_hp.csv`). **GRU ✅** (B, sáb 7 noche): hidden 128, 2 capas, dropout 0.1, lr 3e-4 (`results/hp/gru_hp.csv`).
 - [x] `src/models/tcn.py` (convoluciones causales dilatadas) + búsqueda de la TCN (adelantada de N2): h64, 3 bloques, dropout 0.3, lr 1e-3 (`results/hp/tcn_hp.csv`). M6 Transformer: no por ahora.
 - [~] `src/learning_curve.py`: submuestras de train {1k, 3k, 6k, 12k, todo} con semilla fija; M2 y M4 con la mejor configuración y 3 semillas. **M2 ✅; M4 espera la mejor config de la GRU.**
 
@@ -396,12 +404,13 @@ Valor_mes = N_rev × (Ahorro_promedio / 60) × C_h − C_infra − N_rev × C_pr
 
 **Noche N2:** A corre E2 + la búsqueda de TCN.
 
-### B8 · B · Dom 8 · Detector de momentos + anotación (5 h) · Debe
+### B8 · B · Dom 8 · Detector de momentos + anotación (5 h) · Debe · **CÓDIGO LISTO (sáb 7 nov); falta anotar**
 
-- [ ] `src/moments.py` (ΔP, θ, w, top-K, unir detecciones cercanas).
-- [ ] Herramienta de anotación (script simple o Streamlit): muestra **solo el log de eventos** por minuto y guarda en `annotations/<anotador>.csv` (match_id, minuto, tipo).
-- [ ] `docs/protocolo_anotacion.md`: qué cuenta como momento decisivo, con 3 ejemplos.
-- [ ] Elegir las 70 partidas (val+test, estratificadas) y las 15 compartidas. Anotar las primeras 10.
+- [x] `src/moments.py`: score(t) = máx |P(t) − P(t−w)| con w ∈ {1, 2}, umbral θ, supresión de no-máximos (`merge_gap` = 2 min, una pelea = un momento, y el clip cubre toda la pelea), top-K = 5. `moments_from_minutes` aplica el mismo post-proceso a la regla R0, y `match_moments` empareja con anotaciones (±2 min) → TP/FP/FN para B10. Tests: `tests/test_b8_moments.py` (6/6).
+- [x] Herramienta de anotación `streamlit run src/annotate_app.py`: muestra **solo el log de eventos** (kills con campeón y rol, objetivos, torres, placas, marcador acumulado; sin curva ni oro), formulario de hasta 5 momentos (minuto, tipo, equipo, confianza, nota) y guarda en `annotations/<A|B>.csv` con el tiempo que tomó anotar.
+- [x] `docs/protocolo_anotacion.md`: definición, reglas y 3 ejemplos.
+- [x] Selección (`python src/select_annotation.py` → `annotations/seleccion.csv` + `data/anotacion/`): **55 partidas distintas** (27 val + 28 test, 9–10 por tier, sin AFK): 15 compartidas + 20 de A + 20 de B = **35 por persona**. *La guía decía "70 partidas, 35 cada uno con 15 compartidas", pero eso da 55; si quieren 70 distintas: `--n-each 27 --force` (42 por persona).*
+- [ ] Anotar las primeras 10 (humano). Partidas propias: `python src/select_annotation.py --add-own <match_id> ...` (las anotan ambos).
 
 **Noche N2:** B corre GRU y MLP finales con 3 semillas + calibración.
 
