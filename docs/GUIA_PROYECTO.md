@@ -26,7 +26,7 @@
 | B3 Features (A) | ✅ Completado: `python src/build_features.py` (~5 min) → `features/` (pedirle a A el zip o regenerarlo). Detalle en `results/b5_resumen.md` |
 | B4 EDA + supuestos (B) | ✅ Completado |
 | B5 Baselines + evaluación (A) | ✅ Completado: M0 AUC 0.794, M1 0.810, M2 0.811 en test. **La GRU debe superar a M2.** Detalle en `results/b5_resumen.md` |
-| B7 TCN + curva (A) | 🟡 TCN + búsquedas de MLP y TCN ✅; curva de M2 ✅. **Falta la curva de M4: espera la mejor config de la GRU (búsqueda N1 de B; tarda ~5 min)**. Detalle en `results/b7_resumen.md` |
+| B7 TCN + curva (A) | ✅ Completado (dom 8): TCN, búsquedas de MLP y TCN, curva de aprendizaje de M2 y M4 (la GRU gana en todos los tamaños; los dos se aplanan después de 12k). Detalle en `results/b7_resumen.md` |
 | B6 Entrenamiento DL (B) | ✅ Completado (sáb 7, noche): GRU test AUC 0.8123 ± 0.0002 (3 semillas), +0.0017 vs M2 (significativo pero mínimo). Mejor config: hidden 128, 2 capas, dropout 0.1, lr 3e-4. Detalle en `results/b6_resumen.md`. A corrigió antes `fit_temperature` (LBFGS con `strong_wolfe`) |
 | B8 Momentos + anotación (B) | 🟡 Código listo (detector, herramienta Streamlit, protocolo, selección de 55 partidas). **Falta anotar** (humano). Ver B8 |
 
@@ -394,13 +394,13 @@ Valor_mes = N_rev × (Ahorro_promedio / 60) × C_h − C_infra − N_rev × C_pr
 
 **Noche N1:** B corre la búsqueda de la GRU y A la del MLP (ver la [sección 7](#7-corridas-nocturnas-y-paralelismo)).
 
-### B7 · A · Dom 8 · TCN + curva de aprendizaje (5 h) · Debería/Debe · **CASI COMPLETO (sáb 7 nov): falta la curva de M4**
+### B7 · A · Dom 8 · TCN + curva de aprendizaje (5 h) · Debería/Debe · **COMPLETADO (dom 8 nov)**
 
 - [x] Revisar con B los resultados de N1 y fijar la mejor configuración de GRU y de MLP. **MLP ✅** (búsqueda corrida por A: h64, 2 capas, dropout 0.3, lr 1e-3; `results/hp/mlp_hp.csv`). **GRU ✅** (B, sáb 7 noche): hidden 128, 2 capas, dropout 0.1, lr 3e-4 (`results/hp/gru_hp.csv`).
 - [x] `src/models/tcn.py` (convoluciones causales dilatadas) + búsqueda de la TCN (adelantada de N2): h64, 3 bloques, dropout 0.3, lr 1e-3 (`results/hp/tcn_hp.csv`). M6 Transformer: no por ahora.
-- [~] `src/learning_curve.py`: submuestras de train {1k, 3k, 6k, 12k, todo} con semilla fija; M2 y M4 con la mejor configuración y 3 semillas. **M2 ✅; M4 espera la mejor config de la GRU.**
+- [x] `src/learning_curve.py`: submuestras de train {1k, 3k, 6k, 12k, todo} con semilla fija; M2 y M4 con la mejor configuración y 3 semillas (~4 min).
 
-**Resultado** (detalle en `results/b7_resumen.md`): las búsquedas tardan 3–5 min, no horas. Grids planos (±0.001 de log-loss). En test, TCN +0.002 de AUC vs M2 (significativo pero chico), MLP +0.001. M2 tiene rendimientos decrecientes claros: de 12k a 18k partidas gana solo +0.0008 de AUC.
+**Resultado** (detalle en `results/b7_resumen.md`): las búsquedas tardan 3–5 min, no horas. Grids planos (±0.001 de log-loss). En test, TCN +0.002 de AUC vs M2 (significativo pero chico), MLP +0.001. **E2:** la GRU gana a M2 en todos los tamaños, y más con pocos datos (+0.004 de AUC con 1k); la GRU con 6k ≈ M2 con 18k. Los dos se aplanan: de 12k a 18k ganan < 0.001, así que más partidas casi no ayudarían.
 
 **Noche N2:** A corre E2 + la búsqueda de TCN.
 

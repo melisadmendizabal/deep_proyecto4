@@ -1,0 +1,19 @@
+{
+  "run_id": "lc_m4__ntodo_s43",
+  "name": "lc_m4__ntodo_s43",
+  "model": "gru",
+  "best_epoch": 11,
+  "epochs_run": 16,
+  "val_loss": 0.49238,
+  "val_auc": 0.81224,
+  "val_brier": 0.17599,
+  "val_loss_calibrated": 0.49238,
+  "temperature": 0.9961,
+  "n_train": 18294,
+  "n_val": 4056,
+  "n_features": 33,
+  "n_params": 210817,
+  "train_seconds": 16.0,
+  "device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+  "git_commit": "3f68948"
+}

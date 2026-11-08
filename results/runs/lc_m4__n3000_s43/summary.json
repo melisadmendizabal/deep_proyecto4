@@ -1,0 +1,19 @@
+{
+  "run_id": "lc_m4__n3000_s43",
+  "name": "lc_m4__n3000_s43",
+  "model": "gru",
+  "best_epoch": 18,
+  "epochs_run": 23,
+  "val_loss": 0.49771,
+  "val_auc": 0.80758,
+  "val_brier": 0.17791,
+  "val_loss_calibrated": 0.4977,
+  "temperature": 0.9898,
+  "n_train": 3000,
+  "n_val": 4056,
+  "n_features": 33,
+  "n_params": 210817,
+  "train_seconds": 6.6,
+  "device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+  "git_commit": "3f68948"
+}
