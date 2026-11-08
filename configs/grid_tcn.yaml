@@ -1,0 +1,6 @@
+# Búsqueda N2 para la TCN: 2 x 2 x 2 x 2 = 16 corridas.
+# layers 3 (29 min de historia) vs 4 (61 min, toda la partida).
+model.hidden: [64, 128]
+model.layers: [3, 4]
+model.dropout: [0.1, 0.3]
+train.lr: [0.001, 0.0003]

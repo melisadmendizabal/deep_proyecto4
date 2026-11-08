@@ -1,0 +1,29 @@
+name: mlp_hp__h64_l1_d0.1_lr0.0003
+data:
+  path: features/sequences.npz
+  exclude_afk_train: true
+  drop_groups: []
+  drop_names: []
+  tiers: null
+  platforms: null
+  max_train_matches: null
+  subset_seed: 0
+model:
+  type: mlp
+  hidden: 64
+  layers: 1
+  dropout: 0.1
+train:
+  lr: 0.0003
+  weight_decay: 0.0001
+  batch_size: 128
+  max_epochs: 50
+  patience: 5
+  grad_clip: 1.0
+  smooth_lambda: 0.0
+  seed: 42
+  lr_factor: 0.5
+  lr_patience: 2
+  device: auto
+output:
+  dir: results/runs

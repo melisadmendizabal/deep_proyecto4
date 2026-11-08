@@ -22,3 +22,8 @@ def build_model(cfg: dict, n_features: int):
 def register(name: str, cls) -> None:
     """Para que B7 agregue TCN / Transformer sin tocar este archivo: register('tcn', TCNModel)."""
     MODELS[name] = cls
+
+
+# B7: registrar aquí los modelos extra, para que train.py los encuentre sin importarlos aparte
+from .tcn import TCNModel  # noqa: E402
+register("tcn", TCNModel)

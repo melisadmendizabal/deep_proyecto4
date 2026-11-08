@@ -77,7 +77,7 @@ def to_grid(values: np.ndarray, data: SequenceData) -> np.ndarray:
 
 
 # ------------------------------------------------------------------ entrenamiento
-def fit_model(spec: dict, train: SequenceData, val: SequenceData):
+def fit_model(spec: dict, train: SequenceData, val: SequenceData, seed: int = 42):
     Xtr, ytr, wtr = rows(train)
     if spec["kind"] == "logit":
         model = LogisticRegression(C=1.0, max_iter=2000)
@@ -88,23 +88,29 @@ def fit_model(spec: dict, train: SequenceData, val: SequenceData):
     names = list(train.feature_names)
     dtr = lgb.Dataset(Xtr, ytr, weight=wtr, feature_name=names, free_raw_data=False)
     dva = lgb.Dataset(Xva, yva, weight=wva, reference=dtr)
-    model = lgb.train(LGBM_PARAMS, dtr, num_boost_round=3000, valid_sets=[dva], valid_names=["val"],
-                      callbacks=[lgb.early_stopping(100, verbose=False), lgb.log_evaluation(250)])
+    model = lgb.train({**LGBM_PARAMS, "seed": seed}, dtr, num_boost_round=3000, valid_sets=[dva], valid_names=["val"],
+                      callbacks=[lgb.early_stopping(100, verbose=False)])
     return model, (lambda X: model.predict(X, raw_score=True, num_iteration=model.best_iteration))
 
 
-def run_baseline(key: str, full: SequenceData) -> dict:
+def run_baseline(key: str, full: SequenceData, run_name: str | None = None,
+                 max_train_matches: int | None = None, subset_seed: int = 0,
+                 verbose: bool = True, seed: int = 42) -> dict:
+    """max_train_matches/subset_seed: misma submuestra que train.py (curva de aprendizaje, E2).
+    seed: semilla del modelo (LightGBM usa bagging; la logística es determinista)."""
     spec = MODELS[key]
     data = select(full, spec)
-    train = data.subset(split="train", exclude_afk=True)
+    train = data.subset(split="train", exclude_afk=True, max_matches=max_train_matches,
+                        seed=subset_seed)
     val, test = data.subset(split="val"), data.subset(split="test")
-    run_dir = RUNS / spec["run"]
+    run_dir = RUNS / (run_name or spec["run"])
+    log = print if verbose else (lambda *a, **k: None)
     run_dir.mkdir(parents=True, exist_ok=True)
-    print(f"[{spec['run']}] train={len(train):,} partidas ({train.mask.sum():,} filas)  "
+    log(f"[{run_dir.name}] train={len(train):,} partidas ({train.mask.sum():,} filas)  "
           f"features={train.n_features}")
 
     t0 = time.time()
-    model, logit_fn = fit_model(spec, train, val)
+    model, logit_fn = fit_model(spec, train, val, seed=seed)
     secs = time.time() - t0
     val_logits = to_grid(logit_fn(val.X[val.mask]), val)
     t1 = time.time()
@@ -130,7 +136,7 @@ def run_baseline(key: str, full: SequenceData) -> dict:
         model.save_model(str(run_dir / "model.txt"), num_iteration=model.best_iteration)
 
     summary = {
-        "run_id": spec["run"], "name": spec["run"], "model": spec["kind"],
+        "run_id": run_dir.name, "name": run_dir.name, "model": spec["kind"],
         "val_loss": round(raw["loss"], 5), "val_auc": round(raw["auc"], 5),
         "val_brier": round(raw["brier"], 5), "val_loss_calibrated": round(cal["loss"], 5),
         "temperature": round(temperature, 4), "n_train": len(train), "n_val": len(val),
@@ -146,7 +152,7 @@ def run_baseline(key: str, full: SequenceData) -> dict:
     else:
         summary["coef"] = dict(zip(train.feature_names.tolist(), model.coef_[0].round(4).tolist()))
     (run_dir / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
-    print(f"  val_loss {summary['val_loss']} (calibrado {summary['val_loss_calibrated']}, "
+    log(f"  val_loss {summary['val_loss']} (calibrado {summary['val_loss_calibrated']}, "
           f"T={summary['temperature']})  val_auc {summary['val_auc']}  {secs:.1f}s")
     return summary
 

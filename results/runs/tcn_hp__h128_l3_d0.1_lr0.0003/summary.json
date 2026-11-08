@@ -1,0 +1,19 @@
+{
+  "run_id": "tcn_hp__h128_l3_d0.1_lr0.0003",
+  "name": "tcn_hp__h128_l3_d0.1_lr0.0003",
+  "model": "tcn",
+  "best_epoch": 10,
+  "epochs_run": 15,
+  "val_loss": 0.49232,
+  "val_auc": 0.81217,
+  "val_brier": 0.17617,
+  "val_loss_calibrated": 0.49225,
+  "temperature": 1.0266,
+  "n_train": 18294,
+  "n_val": 4056,
+  "n_features": 33,
+  "n_params": 308353,
+  "train_seconds": 12.9,
+  "device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+  "git_commit": "b33e690"
+}

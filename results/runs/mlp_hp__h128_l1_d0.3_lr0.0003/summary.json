@@ -1,0 +1,19 @@
+{
+  "run_id": "mlp_hp__h128_l1_d0.3_lr0.0003",
+  "name": "mlp_hp__h128_l1_d0.3_lr0.0003",
+  "model": "mlp",
+  "best_epoch": 39,
+  "epochs_run": 44,
+  "val_loss": 0.4938,
+  "val_auc": 0.81144,
+  "val_brier": 0.17654,
+  "val_loss_calibrated": 0.49375,
+  "temperature": 0.9784,
+  "n_train": 18294,
+  "n_val": 4056,
+  "n_features": 35,
+  "n_params": 4737,
+  "train_seconds": 12.1,
+  "device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+  "git_commit": "b33e690"
+}
