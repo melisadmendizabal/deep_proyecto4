@@ -1,0 +1,19 @@
+{
+  "run_id": "tcn_final__s42",
+  "name": "tcn_final__s42",
+  "model": "tcn",
+  "best_epoch": 13,
+  "epochs_run": 18,
+  "val_loss": 0.49245,
+  "val_auc": 0.8121,
+  "val_brier": 0.17593,
+  "val_loss_calibrated": 0.49237,
+  "temperature": 0.9705,
+  "n_train": 18294,
+  "n_val": 4056,
+  "n_features": 33,
+  "n_params": 78401,
+  "train_seconds": 23.8,
+  "device": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "git_commit": "e91d7a4"
+}

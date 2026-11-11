@@ -29,7 +29,8 @@
 | B7 TCN + curva (A) | ✅ Completado (dom 8): TCN, búsquedas de MLP y TCN, curva de aprendizaje de M2 y M4 (la GRU gana en todos los tamaños; los dos se aplanan después de 12k). Detalle en `results/b7_resumen.md` |
 | B6 Entrenamiento DL (B) | ✅ Completado (sáb 7, noche): GRU test AUC 0.8123 ± 0.0002 (3 semillas), +0.0017 vs M2 (significativo pero mínimo). Mejor config: hidden 128, 2 capas, dropout 0.1, lr 3e-4. Detalle en `results/b6_resumen.md`. A corrigió antes `fit_temperature` (LBFGS con `strong_wolfe`) |
 | B9 Anotación + E3/E4 (A) | 🟡 E3/E4 ✅ (`results/b9_e3e4.md`: un modelo global sirve para todos los tiers y regiones). Falta anotar las 35 partidas de A y descargar partidas propias (falta API key en la PC de A) |
-| B8 Momentos + anotación (B) | 🟡 Código listo (detector, herramienta Streamlit, protocolo, selección de 55 partidas). **Falta anotar** (humano). Ver B8 |
+| B8 Momentos + anotación (B) | ✅ Completado (lun 9): detector, herramienta Streamlit, protocolo, selección de 55 partidas. B lleva 13 anotadas |
+| B10 Valor (B) | 🟡 Código ✅ (lun 9): `src/value_model.py` + `src/agreement.py`, N3 de B corrida (TCN final ×3, E6 λ 0.1 y 0.5 ×3). B terminó sus 35 (mié 11). **Falta:** las 35 de A (y su `annotations/A.csv` para el acuerdo), anotar las 8 propias y cronometrar `f_rev`. Resultados en `results/b10_valor.md` (ver B10) |
 
 **Para A (compañero), de B6/B8:**
 - Curva de aprendizaje de M4: `python src/learning_curve.py --models m4 --set model.hidden=128 model.layers=2 model.dropout=0.1 train.lr=0.0003`.
@@ -405,13 +406,13 @@ Valor_mes = N_rev × (Ahorro_promedio / 60) × C_h − C_infra − N_rev × C_pr
 
 **Noche N2:** A corre E2 + la búsqueda de TCN.
 
-### B8 · B · Dom 8 · Detector de momentos + anotación (5 h) · Debe · **CÓDIGO LISTO (sáb 7 nov); falta anotar**
+### B8 · B · Dom 8 · Detector de momentos + anotación (5 h) · Debe · **COMPLETADO (lun 9 nov)**
 
 - [x] `src/moments.py`: score(t) = máx |P(t) − P(t−w)| con w ∈ {1, 2}, umbral θ, supresión de no-máximos (`merge_gap` = 2 min, una pelea = un momento, y el clip cubre toda la pelea), top-K = 5. `moments_from_minutes` aplica el mismo post-proceso a la regla R0, y `match_moments` empareja con anotaciones (±2 min) → TP/FP/FN para B10. Tests: `tests/test_b8_moments.py` (6/6).
 - [x] Herramienta de anotación `streamlit run src/annotate_app.py`: muestra **solo el log de eventos** (kills con campeón y rol, objetivos, torres, placas, marcador acumulado; sin curva ni oro), formulario de hasta 5 momentos (minuto, tipo, equipo, confianza, nota) y guarda en `annotations/<A|B>.csv` con el tiempo que tomó anotar.
 - [x] `docs/protocolo_anotacion.md`: definición, reglas y 3 ejemplos.
 - [x] Selección (`python src/select_annotation.py` → `annotations/seleccion.csv` + `data/anotacion/`): **55 partidas distintas** (27 val + 28 test, 9–10 por tier, sin AFK): 15 compartidas + 20 de A + 20 de B = **35 por persona**. *La guía decía "70 partidas, 35 cada uno con 15 compartidas", pero eso da 55; si quieren 70 distintas: `--n-each 27 --force` (42 por persona).*
-- [ ] Anotar las primeras 10 (humano). Partidas propias: `python src/select_annotation.py --add-own <match_id> ...` (las anotan ambos).
+- [x] Anotar las primeras 10 (humano): B lleva 13 al lun 9 nov (`annotations/B.csv`). Partidas propias: `python src/select_annotation.py --add-own <match_id> ...` (las anotan ambos).
 
 **Noche N2:** B corre GRU y MLP finales con 3 semillas + calibración.
 
@@ -427,14 +428,34 @@ Valor_mes = N_rev × (Ahorro_promedio / 60) × C_h − C_infra − N_rev × C_pr
 
 ### B10 · B · Lun 9 – Mar 10 · Anotación + función de valor (6 h) · Debe
 
-- [ ] Anotar 35 partidas (incluidas las 15 compartidas) y las partidas propias con la repetición, **cronometrando la revisión completa** (mide T_base y f_rev).
-- [ ] `src/value_model.py` + `configs/value.yaml`:
-  - Valor por partida y por mes.
-  - Curva valor vs θ y elección de θ* con las anotadas de val.
-  - Tornado ±20/±50 y punto de equilibrio.
-- [ ] Acuerdo entre anotadores en las 15 compartidas: % de momentos que coinciden a ±2 min.
+- [x] Anotar 35 partidas (incluidas las 15 compartidas): **B terminó las 35 el mié 11 nov** (18 val + 17 test). Las 8 propias ya están en la selección; falta anotarlas.
+- [ ] Partidas propias: descargadas (lun 9) 22 en `data/csv/na1_own/` (cuentas de B y A; 10 jugadas juntos). **Solo usar las 9 de noviembre (parche 16.22)**; las 12 de feb–may son de parches 16.4–16.11 (otro meta). Agregar 8 con `python src/select_annotation.py --add-own NA1_5675157508 NA1_5675183207 NA1_5675359401 NA1_5676507367 NA1_5676526695 NA1_5676554848 NA1_5676575937 NA1_5676682391` y **guardar NA1_5676698765 sin anotar para la demo** (NA1_5676554848 es la única reciente donde gana rojo, por si se quiere mostrar también).
+- [ ] Las partidas propias se pueden revisar y anotar **juntos** (no entran en las métricas; `agreement.py` solo usa val/test). Si se anotan juntos, guardar con una sola letra.
+- [ ] **Cronometrar 3–5 repeticiones completas** en el cliente (mide f_rev). **Urgente:** el cliente solo reproduce repeticiones del parche actual; cuando salga el siguiente parche se pierden.
+- [x] `src/value_model.py` (usa `configs/value.yaml`): valor por partida y por mes, curva valor vs θ con θ* elegido por modelo en val y reportado en test (IC 95 % bootstrap por partida, Δ pareado vs M0), oráculo (techo), tornado (rango del yaml, ±20 %, ±50 %, re-eligiendo θ* y viendo si cambia el ganador), escenarios pesimista/optimista y punto de equilibrio. `--min-conf 2` = sensibilidad sin momentos dudosos. Salidas: `results/b10_valor.md`, `b10_valor_theta.csv`, `b10_tornado.csv`, `figures/b10_*.png`. Tests: `tests/test_b10_value.py`. **Se vuelve a correr (~1 min) cuando haya más anotaciones.**
+- [x] `src/agreement.py`: acuerdo A vs B (F1 de momentos a ±2 min, recall en ambos sentidos, % mismo equipo y tipo) → `results/b10_acuerdo.csv`. **Falta que exista `annotations/A.csv`.**
+- [x] `select_annotation.py` ahora también extrae `frames.csv` (R0 y demo de partidas propias).
 
-**Noche N3:** B corre TCN final con 3 semillas + E6.
+**Resultados con las 35 de B (mié 11 nov; 18 val + 17 test; falta sumar las de A)** · `results/b10_valor.md`:
+
+| Modelo | θ* | Ahorro por partida | USD/mes [IC 95 %] | Δ vs M0 |
+|---|---|---|---|---|
+| Oráculo (techo) | — | 29.7 min (76 %) | 198 [165, 235] | +80 |
+| R0 regla sin ML | — | 18.0 min (46 %) | 120 [88, 153] | +2 [−17, +18] |
+| M0 logística solo oro | 0.09 | 17.7 min (45 %) | 118 [86, 152] | — |
+| **M4 GRU** | 0.12 | 15.8 min (40 %) | 105 [68, 144] | −13 [−28, +3] |
+| M5 TCN | 0.13 | 15.3 min | 102 | −16 [−32, −1] |
+| M4 E6 λ0.5 | 0.13 | 15.0 min | 100 | −19 [−35, −2] |
+| M2 LightGBM | 0.04 | 13.9 min (36 %) | 93 [56, 132] | −25 [−43, −8] |
+
+1. **El producto sí tiene valor:** cualquier detector ahorra 14–18 min de 39 por partida (≈ USD 93–120/mes por equipo con los parámetros base), y solo deja de ahorrar si f_rev < 0.77.
+2. **Más AUC ≠ más valor:** M2 tiene más AUC que M0 pero da menos valor; M4 le gana a M2 en valor (+12 USD/mes), pero no a M0 ni a R0. Hallazgo central para 4.5/4.8.
+3. **Sesgo a discutir (4.3/4.7):** se anota mirando el log de eventos, y R0 se dispara con esos mismos eventos (barón, ace, inhibidor); M0 solo ve el oro, que salta con las peleas del log. El ground truth favorece a los detectores "de eventos". Con anotaciones hechas viendo la repetición podría cambiar.
+4. **Sensibilidad:** f_rev, N_rev y C_h mueven el valor de todos por igual; t_clip y t_miss pueden cambiar el ganador (con t_clip 4 o t_miss 12 gana M0 o M4 E6 λ0.5). Con `--min-conf 2` (sin momentos dudosos) el orden no cambia.
+5. M2 y M1 eligen θ* en el borde de la grilla (0.04–0.05): sus curvas saltan poco y piden todos los clips posibles (tope 5).
+6. E6 λ0.1 detecta exactamente lo mismo que M4; λ0.5 suaviza pero pierde recall (0.44 vs 0.52) → **E6 no mejora el valor**.
+
+**Noche N3 (B) · ✅ hecha de día (lun 9, ~3 min de GPU):** TCN final ×3 semillas (test AUC 0.8124 ± 0.0002) y **E6** (GRU con penalización de saltos): λ 0.1 → AUC 0.8122, λ 0.5 → AUC 0.8119 (−0.0004 vs M4) con la curva más suave (salto medio por minuto 0.063 → 0.056 en test, s42). Corridas `results/runs/tcn_final__s*`, `e6_sm0.1__s*`, `e6_sm0.5__s*`; tablas `results/hp/tcn_final.csv`, `e6_sm0.*.csv`; por semilla en `results/b6_semillas.csv`.
 
 ### B11 · A · Mié 11 – Jue 12 · Backend e inferencia (6 h) · Debe
 

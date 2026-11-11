@@ -1,0 +1,4 @@
+train.seed,run_id,name,model,best_epoch,epochs_run,val_loss,val_auc,val_brier,val_loss_calibrated,temperature,n_train,n_val,n_features,n_params,train_seconds,device,git_commit
+44,e6_sm0.5__s44,e6_sm0.5__s44,gru,13,18,0.49248,0.81188,0.17591,0.49243,0.9755,18294,4056,33,210817,20.6,NVIDIA GeForce RTX 4050 Laptop GPU,e91d7a4
+43,e6_sm0.5__s43,e6_sm0.5__s43,gru,11,16,0.49292,0.81178,0.1761,0.49288,0.9794,18294,4056,33,210817,17.7,NVIDIA GeForce RTX 4050 Laptop GPU,e91d7a4
+42,e6_sm0.5__s42,e6_sm0.5__s42,gru,14,19,0.49296,0.81179,0.17624,0.4929,1.0239,18294,4056,33,210817,20.0,NVIDIA GeForce RTX 4050 Laptop GPU,e91d7a4

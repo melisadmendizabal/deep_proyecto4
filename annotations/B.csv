@@ -1,0 +1,101 @@
+anotador,match_id,minuto,tipo,equipo,confianza,nota,sin_momentos,segundos,guardado_utc
+B,NA1_5673608242,8.0,objetivo,rojo,2.0,Objetivo de larvas y rotación del jungla a mid para asesinato doble,False,1175,2026-11-09 02:39:24
+B,NA1_5673608242,17.0,pick,rojo,3.0,"Karma mató a taliyah, Rakan y Jhin, dejó expuesta a la shyvana y el team azul ya no pudo pelear el dragón",False,1175,2026-11-09 02:39:24
+B,NA1_5673608242,23.0,objetivo,rojo,2.0,"Xayah tripe asesinato, aunque pierden dragón genera ventaja para generar presión en las torretas",False,1175,2026-11-09 02:39:24
+B,NA1_5673608242,24.0,pelea,azul,2.0,Pelea que mejora el marcador del euqipo azul,False,1175,2026-11-09 02:39:24
+B,NA1_5673608242,26.0,objetivo,rojo,3.0,Barón que genera la ventaja completa y marca el final de la partida ,False,1175,2026-11-09 02:39:24
+B,KR_8443206565,14.0,estructura,azul,2.0,Asesinato en middle que dio paso a la destruccion de la torreta en mid.,False,1220,2026-11-09 02:59:58
+B,KR_8443206565,19.0,pelea,rojo,2.0,Pelea reñida pero con un asesinato de 4 a favor del equipo rojo,False,1220,2026-11-09 02:59:58
+B,KR_8443206565,22.0,error,rojo,3.0,"Pese a tener 2 objetivos, el equipo azul no se ve que hayan ejercicido presión ni hecho nada al respecto con esa pequeñá venataja, pese a tener barón el equipo rojo ejerció más presión",False,1220,2026-11-09 02:59:58
+B,KR_8443206565,25.0,pelea,azul,1.0,"Asesinatos multiples a favor del equipo azul, remontando el marcador",False,1220,2026-11-09 02:59:58
+B,KR_8443206565,28.0,pick,rojo,3.0,Pelea de quipos Donde la Gwen mata al otro jungla y gana el dragón de tierra para luego elimiar completo al otro equipo y cerrar partida,False,1220,2026-11-09 02:59:58
+B,LA1_1760256825,11.0,pick,azul,2.0,Mataron a la bottline del equipo rojo y al jungla y lograron pelear el dragón de fuego. La pelea se extendió hasta matar nuevamente y luego tiraron torre de mid,False,521,2026-11-09 03:08:46
+B,LA1_1760256825,15.0,estructura,azul,3.0,"Buena presión ejercida, lo que les otorga Heraldo y una diferencia de ventaja mas grande con 2 estructuras derribadas",False,521,2026-11-09 03:08:46
+B,NA1_5673311828,13.0,estructura,azul,2.0,"Taliya rotó y mató al top, lo que logró ejercer presión y destruis 2 torretas",False,1037,2026-11-09 03:26:23
+B,NA1_5673311828,15.0,pick,rojo,2.0,Rengar mató a Yone y permitió pelear el objetivo de drag,False,1037,2026-11-09 03:26:23
+B,NA1_5673311828,26.0,pelea,rojo,2.0,Pese a no ganar el dragón la pelea terminó con un ace para el equipo rojo,False,1037,2026-11-09 03:26:23
+B,NA1_5673311828,29.0,objetivo,azul,3.0,Excelente Barón que permitió ejercer presión suficiente y dejar expuesto al otro equipo,False,1037,2026-11-09 03:26:23
+B,KR_8445092999,16.0,estructura,rojo,2.0,Evelyne mató al Kennen y perimtió tirar la torre de top y luego un nuevo pick donde Lucian mató a a Orianna (middle) y permitió tirar mid,False,677,2026-11-09 03:37:51
+B,KR_8445092999,22.0,pelea,rojo,3.0,Muy buena presión por parte de equipo rojo,False,677,2026-11-09 03:37:51
+B,NA1_5673298789,7.0,pelea,azul,3.0,"Excelente rotación de Jarvan, presencia en todo el mapa que logro ganar un Dragón",False,359,2026-11-09 03:44:00
+B,NA1_5673298789,9.0,pick,azul,3.0,Jarvan mató al sylas que permitió llevarse las larvas del Vacio,False,359,2026-11-09 03:44:00
+B,NA1_5673298789,14.0,pelea,azul,3.0,Presión constante del Jarvan que logra una ventaja de 23-6 ,False,359,2026-11-09 03:44:00
+B,KR_8442792956,4.0,pelea,rojo,2.0,Diferencia de Top,False,570,2026-11-09 03:53:37
+B,KR_8442792956,11.0,pelea,azul,3.0,"Buena organización y asesinatos multiples en el mapa, lo que les dio un dragón",False,570,2026-11-09 03:53:37
+B,KR_8442792956,13.0,pelea,azul,3.0,Mejor coordinación en inicio de peleas y presion constante,False,570,2026-11-09 03:53:37
+B,KR_8442792956,17.0,pelea,azul,3.0,Buena organización de peleas,False,570,2026-11-09 03:53:37
+B,NA1_5673509404,14.0,pelea,rojo,2.0,Muerte de la botline lo que permite pushea r llevarse la torre de mid,False,1496,2026-11-09 04:18:38
+B,NA1_5673509404,22.0,estructura,rojo,3.0,Pelea en Bot logró ventaja para pushear ,False,1496,2026-11-09 04:18:38
+B,NA1_5673509404,23.0,pelea,azul,2.0,Defenza de torre que logró una ventaja de una cuadra kill para la katarina y perimitió pushear y hacer drag,False,1496,2026-11-09 04:18:38
+B,NA1_5673509404,24.0,pelea,rojo,3.0,Buena continuación de la pelea y ejecución de todo el quipo contrario,False,1496,2026-11-09 04:18:38
+B,EUW1_8034478263,11.0,estructura,azul,2.0,"Ventaja de asesinatos muy grande y torre destruida, no tener torre en bot permite pelear el dragón de manera simple",False,438,2026-11-09 04:26:02
+B,EUW1_8034478263,14.0,estructura,azul,2.0,"Ventaja de asesinatos muy grande y torre destruida, no tener torre en mid permite pelear el heraldo de manera simple",False,438,2026-11-09 04:26:02
+B,EUW1_8034478263,20.0,objetivo,azul,3.0,Ventaja de asesinatos y barón que permite pushear y eliminar a todo el quipo rival,False,438,2026-11-09 04:26:02
+B,LA1_1760078586,9.0,estructura,azul,2.0,"Logran Matar a la bot, lo que permite llevarse la torre.",False,510,2026-11-09 04:34:40
+B,LA1_1760078586,17.0,objetivo,azul,3.0,"Buena pelea, logran derribar a la mayoria del equipo contrario, llevarse mir y heraldo",False,510,2026-11-09 04:34:40
+B,LA1_1760078586,20.0,error,azul,2.0,"Todo el equipo rojo se tira a matar al support, lo que permite que el resto del equipo azul pushee y luego regrese a una pelea de equipos que elimina la poca ventaja que logró el rojo",False,510,2026-11-09 04:34:40
+B,LA1_1760078586,21.0,pelea,azul,3.0,Buena pelea de equipo y logran pushear lo suficiente hasta destruir el nexo,False,510,2026-11-09 04:34:40
+B,LA1_1759851330,22.0,pelea,azul,3.0,"Pelea en el dragón que pese a no llevarlo marcó la diferencia de asesinatos a favor del equipo azul con un ace, permitiendo pushear mid y bot",False,879,2026-11-09 04:49:33
+B,LA1_1759851330,25.0,pick,azul,3.0,"Pelea en top, que permitió elimiar a 3 roles principales y poder pelear el berón y pushear libremente",False,879,2026-11-09 04:49:33
+B,LA1_1759918095,10.0,estructura,rojo,2.0,"Yorick mató al Shen lo que permitió tirar torre, lo que permite posibles rotaciones",False,526,2026-11-09 04:58:46
+B,LA1_1759918095,14.0,pelea,rojo,2.0,"Buenas rotaciones lo que permite, asesinatos de top y midd, lo que permite destruir la torre de mid interior y pelear el heraldo",False,526,2026-11-09 04:58:46
+B,LA1_1759918095,18.0,error,rojo,3.0,"Pelear Dragón dejando top expuesto, permitiendo la rotación del quipo rojo",False,526,2026-11-09 04:58:46
+B,NA1_5672887032,9.0,pick,azul,2.0,Pelea de junglas que permite que el equipo azul gane las larvas,False,1012,2026-11-10 06:11:13
+B,NA1_5672887032,20.0,pelea,rojo,2.0,"Asesinato triple del olaf, remontada en top ",False,1012,2026-11-10 06:11:13
+B,NA1_5672887032,22.0,estructura,rojo,2.0,"El yi se empezó a armar y escalar, logró un asecinato doble junto con el supp y el top, permite mantener un excelente push y ganar dragones y torretas",False,1012,2026-11-10 06:11:13
+B,NA1_5672887032,33.0,objetivo,azul,2.0,"Buena pelea que pemitió pelear un objetivo, logran pushear, se miran las consecuencias del barón sobre el equipo rojo con asecinatos estructuras y dragón",False,1012,2026-11-10 06:11:13
+B,NA1_5672887032,39.0,error,rojo,3.0,"Buen push de parte del equipo azul, pero forzaron a cerrar la partida, no consideraron el barón ni que el Yi podia revivir o backear, y los mató a todos porque los Yi escalan y estan en late, eso permitió que el yi los matara a todos, hiciera un barón, elder y finalizzar la partida (error, llegar a late con un yi en el equipo contrario) o pushear sin fuerza como baron",False,1012,2026-11-10 06:11:13
+B,KR_8443114745,3.0,pelea,rojo,2.0,Triple de zoe complica el juego en linea de la Syndra,False,988,2026-11-10 06:27:51
+B,KR_8443114745,12.0,estructura,rojo,2.0,Pelea que logra derribar 2 torres con presión,False,988,2026-11-10 06:27:51
+B,KR_8443114745,21.0,estructura,azul,2.0,Pelea que permite pushear 2 torres,False,988,2026-11-10 06:27:51
+B,KR_8443114745,22.0,estructura,rojo,2.0,Permitieron pushear mucho a la Zoe y logró un asesinato dobre y el derribo de varias torres,False,988,2026-11-10 06:27:51
+B,NA1_5673270767,4.0,pelea,azul,2.0,Ventaja de kills para un XinZhao,False,6,2026-11-10 06:27:57
+B,NA1_5673270767,9.0,pelea,azul,2.0,Pelea que termina en una torreta muy baja,False,6,2026-11-10 06:27:57
+B,NA1_5673270767,16.0,pelea,rojo,1.0,Pelea en la que se obtienen 2 kills,False,6,2026-11-10 06:27:57
+B,NA1_5673270767,18.0,estructura,azul,3.0,Destrucción de torre con un triple asesinato de Malzahar,False,6,2026-11-10 06:27:57
+B,LA1_1760014371,16.0,estructura,azul,2.0,Pelea que permite el derribo de 2 torretas,False,679,2026-11-10 06:39:24
+B,LA1_1760014371,21.0,estructura,azul,3.0,"Excelente presión de torres que se aplica en todo el mapa y coordinación de equipo. Dejar tan pusheado deja la opción de hacer el barón, ya que el equipo rojo debe de defender el centro de la oleadas",False,679,2026-11-10 06:39:24
+B,LA1_1760014371,25.0,objetivo,azul,3.0,Aprovecharon el push para hacer barón y regresar con más presión ,False,679,2026-11-10 06:39:24
+B,LA1_1760014371,30.0,error,rojo,2.0,"No saber cerrar partidas, ya que el quipo rojos puede a matar a todo el equipo azul y medio remontar y defender, aunque en paralelo hicieron Drag y Barón",False,679,2026-11-10 06:39:24
+B,KR_8444875248,12.0,pelea,rojo,2.0,Katarina fideeada,False,1023,2026-11-10 06:57:24
+B,KR_8444875248,16.0,estructura,rojo,2.0,Buena pelea que permite derribar torres,False,1023,2026-11-10 06:57:24
+B,KR_8444875248,21.0,pick,azul,3.0,Pelea entre junglas que permite obtener el barón y permite pushear hasta el minuto 25,False,1023,2026-11-10 06:57:24
+B,KR_8444875248,29.0,pelea,rojo,2.0,"Penta de katarina pero mala ejecución de equipo, no realizan ningun objetivo o pushean en grupo",False,1023,2026-11-10 06:57:24
+B,KR_8444875248,31.0,objetivo,azul,2.0,"Buena respuesta del push del equipo rojo, con objetivo terminado y push suficiente que el equipo rojo dio por terminada la partida aunque pusieron revivir y pelear",False,1023,2026-11-10 06:57:24
+B,LA1_1760210364,15.0,objetivo,rojo,2.0,"Diferencia de oro y kills muy alta, permite hacer heraldo y pushear en quipo en varias partes del equipo",False,19,2026-11-10 07:10:42
+B,LA1_1760210364,20.0,estructura,rojo,3.0,"Pelea que termina en ace, excelente push y luego en barón y mucha presión",False,19,2026-11-10 07:10:42
+B,EUW1_8033760145,24.0,objetivo,rojo,3.0,Buena pelea y lograron matar al jungla y pelear el barón,False,565,2026-11-10 07:20:17
+B,EUW1_8033760145,28.0,objetivo,rojo,3.0,Lograron ganar el alma de dragón de fuego y pushearon y matuvieron bien la presión,False,565,2026-11-10 07:20:17
+B,KR_8444730369,14.0,estructura,rojo,2.0,"Buena presión, logran derribar 3 torres principales rapidamente",False,434,2026-11-10 07:28:48
+B,KR_8444730369,18.0,objetivo,rojo,3.0,Logran pelear heraldo lo cual sirve para aumentar la presión que ya tenían,False,434,2026-11-10 07:28:48
+B,KR_8444730369,25.0,pick,rojo,3.0,Fiora mata al jungla y logran hacer barón y pushear mas,False,434,2026-11-10 07:28:48
+B,KR_8444529674,23.0,estructura,azul,2.0,Buen push ,False,166,2026-11-11 06:37:49
+B,LA1_1760143155,14.0,estructura,rojo,2.0,Malphite gana linea e inmediatamente rota a mid,False,373,2026-11-11 06:44:11
+B,LA1_1760143155,20.0,objetivo,rojo,2.0,Mataron a todo el equipo contrario e inmediatamente rotaron a por el objetivo,False,373,2026-11-11 06:44:11
+B,LA1_1760143155,27.0,objetivo,rojo,3.0,Lograron derribar a algunos enemigos y les permitió pushear nuevamente al dragón de fuego y con mas daño pushearon,False,373,2026-11-11 06:44:11
+B,LA1_1760143155,30.0,objetivo,rojo,3.0,el quipo rojo se dio cuenta que necesitaban fuerzas para pushear y aprovecharon un casi ace para realizar baron y regresar con fuerzas a pushear y cerrar partida,False,373,2026-11-11 06:44:11
+B,NA1_5672877441,7.0,pelea,rojo,2.0,Rotación de soporte constante a lo largo del mapa que permite mantener presión,False,345,2026-11-11 06:50:03
+B,NA1_5672877441,11.0,pelea,rojo,3.0,"Excelente rotación y ganks del jungla, además se puede intuir una diferencia de nivel de juego del equipo rojo contra el azul",False,345,2026-11-11 06:50:03
+B,NA1_5672877441,23.0,pelea,rojo,3.0,Barón sin pelea clara lo que permite pushear inmediatamente,False,345,2026-11-11 06:50:03
+B,LA1_1760170016,,,,,,True,412,2026-11-11 06:57:07
+B,LA1_1760433201,,,,,,True,771,2026-11-11 07:10:21
+B,KR_8444656219,10.0,pelea,azul,2.0,Diana fideada con buenas rotaciones,False,304,2026-11-11 07:15:36
+B,NA1_5673291203,15.0,objetivo,rojo,2.0,"Pelea por dragón que deja en ventaja al equipo rojo ya sea por coordinación propia del equipo o por descoordinación del equipo contrario, la pelea continuó y el Locke aprovechó su dominio del campeon y posibles bonificaciones para seguir cometiendo asesinatos",False,737,2026-11-11 07:28:03
+B,NA1_5673291203,21.0,error,azul,2.0,"Equipo rojo peleó barón y no se retiraron eficientemente, al intentar hacerlo sin una ventaja clara quedaron con poca vida y cuando llegaron a pelearles murieron (el equipo rojo en su mayoria) perdiendo la bonificacion del baron, pudieron dejar el baron a la mitad, pelear y regresar a terminarlo",False,737,2026-11-11 07:28:03
+B,NA1_5673291203,31.0,estructura,rojo,3.0,pusheo correcto del equipo rojo,False,737,2026-11-11 07:28:03
+B,NA1_5673291203,35.0,objetivo,azul,3.0,"Ganaron El elder, nada que hacer",False,737,2026-11-11 07:28:03
+B,NA1_5673139878,,,,,,True,812,2026-11-11 07:41:43
+B,EUW1_8035197666,34.0,pelea,rojo,2.0,"Posiblemente el smolder escaló y lograron 2 ace seguidos, suficientes para ejercer mucha presión, aprovecharon para hacer barón y terminar  o pushear lo suficiente",False,462,2026-11-11 07:49:49
+B,KR_8442801032,11.0,pelea,rojo,2.0,Excelente rotaciones de Nidalee,False,145,2026-11-11 07:52:24
+B,LA1_1760181103,14.0,pelea,rojo,2.0,"Excelente presión y rotación de equipo a bot, logró picks para el  drag y presión cosntante y rotación eficiente al siguiente objetivo",False,300,2026-11-11 07:57:39
+B,LA1_1760181103,21.0,pick,rojo,3.0,Mataron al jungla enemigo y lograron un barón y pelea exitosa  con buen push constante,False,300,2026-11-11 07:57:39
+B,LA1_1760181103,28.0,error,azul,1.0,No saber terminar partidas y necesitaron 2 objetivos mas para terminar,False,300,2026-11-11 07:57:39
+B,KR_8444601933,16.0,pick,rojo,2.0,Pick con el jungla que permite realiazar el heraldo  y buen pusheo al rededor del mapa,False,278,2026-11-11 08:02:36
+B,KR_8444601933,18.0,pelea,azul,2.0,Darius fideado con 5 asesinatos a su favor,False,278,2026-11-11 08:02:36
+B,KR_8444601933,27.0,pelea,azul,3.0,Buena pelea semi grupal con un ace y un barón inmediato que permite pushear,False,278,2026-11-11 08:02:36
+B,EUW1_8035668214,28.0,objetivo,azul,3.0,Excelente pelea que finaliza con dos objetivos bastante fuertes que permiten cerrar partida,False,209,2026-11-11 08:06:16
+B,EUW1_8035668214,17.0,pick,azul,2.0,Pelea que marca una diferencia clara de asesinatos y permite realizar un excelente objetivo,False,209,2026-11-11 08:06:16
+B,NA1_5673221392,13.0,pelea,azul,2.0,KSante Fideado,False,437,2026-11-11 08:13:42
+B,NA1_5673221392,20.0,pick,azul,2.0,Pelea que termina con derribo de torre  y buenas peleas de equipos de push,False,437,2026-11-11 08:13:42
+B,NA1_5673221392,35.0,objetivo,azul,3.0,Elder que permite pushear y terminar partida,False,437,2026-11-11 08:13:42
+B,LA1_1760122599,6,pelea,rojo,2.0,Yasuo fideado,False,229,2026-11-11 08:17:41

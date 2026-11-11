@@ -1,0 +1,72 @@
+﻿3 corridas en results\runs (prefijo 'e6_sm0.1')
+[1/3] e6_sm0.1__s42
+[e6_sm0.1__s42] train=18,294 val=4,056 test=4,032 features=33 device=cuda
+  época   1  train 0.5392  val 0.5027  auc 0.8074  lr 3.0e-04  1.9s  *
+  época   2  train 0.5023  val 0.4999  auc 0.8100  lr 3.0e-04  1.4s  *
+  época   3  train 0.4994  val 0.4951  auc 0.8105  lr 3.0e-04  1.4s  *
+  época   4  train 0.4980  val 0.4951  auc 0.8111  lr 3.0e-04  1.2s  *
+  época   5  train 0.4981  val 0.4955  auc 0.8110  lr 3.0e-04  1.1s
+  época   6  train 0.4965  val 0.4939  auc 0.8109  lr 3.0e-04  1.0s  *
+  época   7  train 0.4965  val 0.4935  auc 0.8112  lr 3.0e-04  0.8s  *
+  época   8  train 0.4962  val 0.4940  auc 0.8121  lr 3.0e-04  0.9s
+  época   9  train 0.4955  val 0.4971  auc 0.8113  lr 3.0e-04  1.0s
+  época  10  train 0.4954  val 0.4927  auc 0.8120  lr 3.0e-04  0.8s  *
+  época  11  train 0.4951  val 0.4935  auc 0.8120  lr 3.0e-04  1.3s
+  época  12  train 0.4946  val 0.4938  auc 0.8118  lr 3.0e-04  1.5s
+  época  13  train 0.4947  val 0.4927  auc 0.8120  lr 1.5e-04  1.1s
+  época  14  train 0.4934  val 0.4924  auc 0.8122  lr 1.5e-04  0.9s  *
+  época  15  train 0.4932  val 0.4932  auc 0.8122  lr 1.5e-04  1.3s
+  época  16  train 0.4930  val 0.4933  auc 0.8118  lr 1.5e-04  1.4s
+  época  17  train 0.4929  val 0.4934  auc 0.8120  lr 7.5e-05  1.0s
+  época  18  train 0.4927  val 0.4930  auc 0.8121  lr 7.5e-05  1.0s
+  época  19  train 0.4926  val 0.4927  auc 0.8120  lr 7.5e-05  0.9s
+  mejor época 14: val_loss 0.49244 (calibrado 0.49232, T=1.037), val_auc 0.81223, 22.0s
+[2/3] e6_sm0.1__s43
+[e6_sm0.1__s43] train=18,294 val=4,056 test=4,032 features=33 device=cuda
+  época   1  train 0.5374  val 0.5009  auc 0.8058  lr 3.0e-04  1.1s  *
+  época   2  train 0.5022  val 0.4966  auc 0.8091  lr 3.0e-04  1.3s  *
+  época   3  train 0.4999  val 0.5007  auc 0.8097  lr 3.0e-04  1.8s
+  época   4  train 0.4986  val 0.4953  auc 0.8110  lr 3.0e-04  1.9s  *
+  época   5  train 0.4976  val 0.4938  auc 0.8111  lr 3.0e-04  1.7s  *
+  época   6  train 0.4970  val 0.4937  auc 0.8111  lr 3.0e-04  1.1s  *
+  época   7  train 0.4973  val 0.4937  auc 0.8113  lr 3.0e-04  1.0s  *
+  época   8  train 0.4959  val 0.4942  auc 0.8116  lr 3.0e-04  0.9s
+  época   9  train 0.4957  val 0.4943  auc 0.8116  lr 3.0e-04  1.1s
+  época  10  train 0.4952  val 0.4936  auc 0.8121  lr 3.0e-04  0.9s  *
+  época  11  train 0.4950  val 0.4933  auc 0.8122  lr 3.0e-04  1.0s  *
+  época  12  train 0.4949  val 0.4931  auc 0.8122  lr 3.0e-04  1.2s  *
+  época  13  train 0.4947  val 0.4939  auc 0.8121  lr 3.0e-04  1.0s
+  época  14  train 0.4941  val 0.4939  auc 0.8122  lr 3.0e-04  1.1s
+  época  15  train 0.4941  val 0.4937  auc 0.8117  lr 1.5e-04  0.8s
+  época  16  train 0.4933  val 0.4931  auc 0.8121  lr 1.5e-04  0.9s
+  época  17  train 0.4930  val 0.4938  auc 0.8116  lr 1.5e-04  0.8s
+  mejor época 12: val_loss 0.49313 (calibrado 0.49297, T=0.9593), val_auc 0.81217, 19.7s
+[3/3] e6_sm0.1__s44
+[e6_sm0.1__s44] train=18,294 val=4,056 test=4,032 features=33 device=cuda
+  época   1  train 0.5387  val 0.5003  auc 0.8067  lr 3.0e-04  1.3s  *
+  época   2  train 0.5021  val 0.4986  auc 0.8093  lr 3.0e-04  1.3s  *
+  época   3  train 0.4998  val 0.4965  auc 0.8104  lr 3.0e-04  0.9s  *
+  época   4  train 0.4985  val 0.4937  auc 0.8114  lr 3.0e-04  1.0s  *
+  época   5  train 0.4974  val 0.4943  auc 0.8116  lr 3.0e-04  0.9s
+  época   6  train 0.4969  val 0.4932  auc 0.8121  lr 3.0e-04  1.0s  *
+  época   7  train 0.4968  val 0.4935  auc 0.8122  lr 3.0e-04  1.0s
+  época   8  train 0.4960  val 0.4940  auc 0.8118  lr 3.0e-04  0.9s
+  época   9  train 0.4956  val 0.4934  auc 0.8121  lr 1.5e-04  0.8s
+  época  10  train 0.4947  val 0.4922  auc 0.8122  lr 1.5e-04  0.8s  *
+  época  11  train 0.4946  val 0.4932  auc 0.8123  lr 1.5e-04  0.9s
+  época  12  train 0.4944  val 0.4927  auc 0.8122  lr 1.5e-04  1.1s
+  época  13  train 0.4945  val 0.4919  auc 0.8123  lr 1.5e-04  0.9s  *
+  época  14  train 0.4943  val 0.4923  auc 0.8122  lr 1.5e-04  0.8s
+  época  15  train 0.4939  val 0.4939  auc 0.8122  lr 1.5e-04  0.8s
+  época  16  train 0.4938  val 0.4932  auc 0.8123  lr 7.5e-05  0.9s
+  época  17  train 0.4932  val 0.4927  auc 0.8122  lr 7.5e-05  1.0s
+  época  18  train 0.4932  val 0.4930  auc 0.8123  lr 7.5e-05  1.0s
+  mejor época 13: val_loss 0.49194 (calibrado 0.49193, T=0.9882), val_auc 0.8123, 17.3s
+
+Terminado en 1.1 min. Mejores corridas:
+ train.seed  val_loss  val_loss_calibrated  val_auc  best_epoch  train_seconds
+         44   0.49194              0.49193  0.81230          13           17.3
+         42   0.49244              0.49232  0.81223          14           22.0
+         43   0.49313              0.49297  0.81217          12           19.7
+
+Tabla completa: results/hp/e6_sm0.1.csv

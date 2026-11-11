@@ -10,4 +10,5 @@ N_rev:      {base: 20, low: 8, high: 60, status: "supuesto con fuente (GBH 2017,
 C_h_usd:    {base: 20, low: 10, high: 60, status: "fuente (WeCoach 2023)"}
 C_infra_usd_mes: {base: 0, low: 0, high: 7, status: "confirmar en B13"}
 C_pred_usd: {base: 0.0, status: "medir en B11"}
+precio_ref_usd_mes: {base: 8, status: "Mobalytics Plus 4.99-7.99/mes, verificar a mano"}  # punto de equilibrio
 match_window_min: 2   # una detección es TP si cae a ±2 min de un momento anotado

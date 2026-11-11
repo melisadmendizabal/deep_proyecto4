@@ -15,7 +15,7 @@ Uso:
 
 Salidas:
   annotations/seleccion.csv        orden, match_id, split, tier, platform, duracion_min, anotador (A/B/ambos)
-  data/anotacion/{matches,participants,events}.csv   solo las partidas elegidas (rápido de cargar)
+  data/anotacion/{matches,participants,events,frames}.csv   solo las partidas elegidas (rápido de cargar)
 """
 from __future__ import annotations
 
@@ -69,14 +69,16 @@ def select(n_shared: int, n_each: int, seed: int) -> pd.DataFrame:
     return chosen[["orden", "match_id", "split", "tier", "platform", "duration_min", "anotador"]]
 
 
-def extract(match_ids: set[str]) -> None:
+def extract(match_ids: set[str], names=("matches", "participants", "events", "frames")) -> None:
     """Copia a data/anotacion/ solo las filas de las partidas elegidas (todo como texto).
 
     Busca en data/datos_merge/ y en las carpetas de partidas propias data/csv/*_own/.
+    Los frames no los usa la herramienta de anotación: son para la regla R0 (B10) y para
+    pasar las partidas propias por el modelo (demo).
     """
     OUT.mkdir(parents=True, exist_ok=True)
     sources = [config.MERGE_DIR] + sorted(config.CSV_DIR.glob("*_own"))
-    for name in ("matches", "participants", "events"):
+    for name in names:
         parts = []
         for src in sources:
             path = src / f"{name}.csv"

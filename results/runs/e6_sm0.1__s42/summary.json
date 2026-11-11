@@ -1,0 +1,19 @@
+{
+  "run_id": "e6_sm0.1__s42",
+  "name": "e6_sm0.1__s42",
+  "model": "gru",
+  "best_epoch": 14,
+  "epochs_run": 19,
+  "val_loss": 0.49244,
+  "val_auc": 0.81223,
+  "val_brier": 0.17613,
+  "val_loss_calibrated": 0.49232,
+  "temperature": 1.037,
+  "n_train": 18294,
+  "n_val": 4056,
+  "n_features": 33,
+  "n_params": 210817,
+  "train_seconds": 22.0,
+  "device": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "git_commit": "e91d7a4"
+}
