@@ -1,0 +1,87 @@
+anotador,match_id,minuto,tipo,equipo,confianza,nota,sin_momentos,segundos,guardado_utc
+A,LA1_1760065693,7.0,objetivo,rojo,2.0,"Pelea con presión en mid y bot, que terminaron beneficiando al equipo rojo; posiblemente la causa de la pelea fue el dragon",False,5,2026-11-09 02:26:10
+A,LA1_1760065693,13.0,pelea,azul,2.0,"Pelea en dragon que terminó a favor de equipo azul, tanto que terminaron tirando torre al final.",False,5,2026-11-09 02:26:10
+A,LA1_1760065693,15.0,objetivo,azul,3.0,"Pelea en top y mid por control de heraldo, objetivo ganado y utilizado para tirar las torres de mid y top.",False,5,2026-11-09 02:26:10
+A,LA1_1760065693,18.0,objetivo,azul,3.0,"Pelea en bot para hacer el dragon, que tambien asegura la primera torre del carril inferior.",False,5,2026-11-09 02:26:10
+A,LA1_1760065693,21.0,pelea,azul,3.0,"Pelea final, que beneficia al equipo azul. Al consecuencia de esta, no queda nadie del equipo rojo para defender. ",False,5,2026-11-09 02:26:10
+A,KR_8443206565,14.0,estructura,azul,2.0,Pelea que termina en tirar la primera torre de mid,False,804,2026-11-09 02:39:38
+A,KR_8443206565,16.0,pelea,azul,3.0,"Pelea que termina beneficiando al equipo azul. Eso desemboca en torre de top, heraldo y dragon",False,804,2026-11-09 02:39:38
+A,KR_8443206565,19.0,error,rojo,3.0,"Forzaron una pelea en bot con tal de tirar la torre, pero eso desembocó en una pelea que terminó beneficiando al equipo rojo, cuando era el equipo azul el que llevaba una gran ventaja.",False,804,2026-11-09 02:39:38
+A,KR_8443206565,23.0,error,rojo,3.0,"Equipo azul no aprovechó su bonificación de baron, en cambio, perdieron una pelea muy importante, e incluso 3 torres y 1 inhibidor",False,804,2026-11-09 02:39:38
+A,KR_8443206565,28.0,objetivo,rojo,3.0,"Pelea en el dragon termina siendo totalmente a favor del equipo rojo, luego de una intensa pelea. Estando todos muertos (ACE), el equipo rojo aprovecha y termina la partida. ",False,804,2026-11-09 02:39:38
+A,KR_8445092999,19.0,pick,rojo,3.0,El jungla del equipo rojo hace un pick en contra del jungla del equipo azul; y por eso puede hacerse libremente el heraldo y el dragon.,False,571,2026-11-09 02:49:21
+A,NA1_5673298789,,,,,,True,199,2026-11-09 02:52:42
+A,NA1_5673509404,14.0,pelea,rojo,2.0,Pelea a favor del equipo rojo,False,713,2026-11-09 03:04:38
+A,NA1_5673509404,18.0,estructura,rojo,1.0,Dos torres tiradas a favor del equipo rojo,False,713,2026-11-09 03:04:38
+A,NA1_5673509404,22.0,pelea,rojo,3.0,Pelea a favor del equipo rojo; su resultado es tirar 2 torres y 2 inhibidores,False,713,2026-11-09 03:04:38
+A,NA1_5673509404,23.0,pelea,azul,3.0,"Pelea totalmente a favor del equipo azul, el mid se hace una cuadra-kill; y un dragon",False,713,2026-11-09 03:04:38
+A,NA1_5673509404,24.0,pelea,rojo,3.0,Pelea totalmente a favor del equipo rojo. Es suficiente para terminar la partida.,False,713,2026-11-09 03:04:38
+A,EUW1_8034478263,,,,,,True,341,2026-11-09 03:10:26
+A,LA1_1760201868,27.0,pelea,rojo,2.0,"Pelea a favor del equipo rojo; el jungla rojo se lleva una triple-kill, una torre y un dragon",False,503,2026-11-09 03:18:56
+A,LA1_1760201868,35.0,pelea,rojo,2.0,"Pelea a favor del equipo rojo, que termina la partida.",False,503,2026-11-09 03:18:56
+A,KR_8445472884,8.0,objetivo,rojo,3.0,"Gank del jungla del equipo rojo, agarrando el equipo rojo un buen tempo, y haciendo las 3 larvas.",False,593,2026-11-09 03:29:01
+A,KR_8445472884,16.0,pelea,rojo,3.0,Pelea totalmente a favor del equipo rojo; termina en ACE para ellos.,False,593,2026-11-09 03:29:01
+A,KR_8445472884,18.0,pelea,rojo,3.0,"Pelea totalmente a favor del equipo rojo; el jungla rojo se hace una cuadra-kill. A consecuencia, pueden tirar muchas estructuras en las 3 lineas",False,593,2026-11-09 03:29:01
+A,KR_8445472884,19.0,objetivo,rojo,2.0,"Heraldo realizado, y snowball para el final de la partida",False,593,2026-11-09 03:29:01
+A,KR_8443124478,18.0,estructura,rojo,3.0,Pelea por tirar la torre exterior de mid,False,694,2026-11-09 03:41:55
+A,KR_8443124478,24.0,objetivo,azul,3.0,"Pelea por hacerse el barón, termina a favor del equipo azul",False,694,2026-11-09 03:41:55
+A,KR_8443124478,27.0,pelea,azul,3.0,"Pelea totalmente a favor del equipo azul, que termina en un push muy fuerte en el carril central.",False,694,2026-11-09 03:41:55
+A,KR_8443124478,35.0,error,rojo,3.0,"Equipo azul no pudo aprovechar el baron, y se colocaron en una posición desventajosa, haciéndolos perder la partida. ",False,694,2026-11-09 03:41:55
+A,NA1_5673292215,11.0,objetivo,rojo,3.0,"Pelea por el dragon, beneficiada totalmente a favor del equipo rojo",False,764,2026-11-09 03:55:15
+A,NA1_5673292215,16.0,objetivo,azul,3.0,"Pelea por el dragon, beneficia totalmente a favor del equipo azul",False,764,2026-11-09 03:55:15
+A,NA1_5673292215,19.0,objetivo,azul,3.0,"Pelea por el heraldo, totalmente a favor del equipo azul. Heraldo usado inmediatamente para presionar el carril central",False,764,2026-11-09 03:55:15
+A,NA1_5673292215,27.0,pelea,azul,3.0,"Pelea a favor del equipo azul, que ayuda a presionar las estructuras del carril central",False,764,2026-11-09 03:55:15
+A,NA1_5673292215,29.0,pelea,azul,2.0,Pelea final a favor del equipo azul.  ,False,764,2026-11-09 03:55:15
+A,NA1_5672887032,33.0,objetivo,azul,3.0,"Pelea a favor del equipo azul, para hacerse la bonificación del barón.",False,1336,2026-11-10 06:35:01
+A,NA1_5672887032,17.0,pick,rojo,3.0,"El mid del equipo rojo logra matar al jungla del equipo azul, asegurando entonces el dragon facilmente para su jungla.",False,1336,2026-11-10 06:35:01
+A,NA1_5672887032,20.0,error,rojo,2.0,"Se exponen mucho a pesar de estar ganando por ventaja, lo que le regala una triple-kill al top del equipo rojo.",False,1336,2026-11-10 06:35:01
+A,NA1_5672887032,24.0,error,rojo,3.0,"El equipo azul, principalmente el bottom de ellos (quien es el más fuerte), se expone a una mala pelea, que queda totalmente a favor del equipo rojo, incluyendo un dragón y un barón luego. ACE a favor del equipo rojo",False,1336,2026-11-10 06:35:01
+A,NA1_5672887032,45.0,pelea,rojo,3.0,"Pelea para defender la torre de top del equipo rojo, que termina en una balanza totalmente a favor de ellos, suficiente para terminar la partida. ",False,1336,2026-11-10 06:35:01
+A,EUW1_8035492359,18.0,pelea,azul,2.0,Pelea a favor del equipo auzl,False,583,2026-11-10 06:45:02
+A,EUW1_8035492359,24.0,estructura,azul,3.0,Aprovecharon la bonificación del barón para tirar 3 torres ,False,583,2026-11-10 06:45:02
+A,EUW1_8035492359,31.0,pelea,rojo,3.0,"Pelea que termina totalmente a favor del equipo rojo, suficiente como para terminar la partida",False,583,2026-11-10 06:45:02
+A,EUW1_8035315280,27.0,pelea,azul,3.0,"Pelea en mid, que termina muy favorecida para el equipo azul.",False,760,2026-11-10 06:57:50
+A,EUW1_8035705111,17.0,pelea,rojo,2.0,"Pelea que termina muy a favor del equipo rojo, llevándose el jungla una triple-kill",False,485,2026-11-10 07:06:00
+A,EUW1_8035705111,19.0,objetivo,rojo,3.0,"Pelea por el heraldo, que termina totalmente a favor del equipo rojo, significando también el siguiente dragón, y siendo el inicio de un snowball con el que terminan la partida. ",False,485,2026-11-10 07:06:00
+A,LA1_1760014371,16.0,pelea,azul,2.0,Pelea totalmente a favor del equipo azul,False,633,2026-11-10 07:16:38
+A,LA1_1760014371,21.0,estructura,azul,3.0,"Pelea totalmente a favor del equipo azul, que termina haciendo una gran presión en el carril central",False,633,2026-11-10 07:16:38
+A,LA1_1760014371,27.0,pelea,azul,2.0,Pelea que termina en ACE a favor del equipo azul,False,633,2026-11-10 07:16:38
+A,LA1_1760014371,32.0,objetivo,azul,3.0,"Pelea por el dragón, que termina siendo totalmente a favor del equipo azul, haciendo que se haga nla bonificación del barón, haciendo e push final. ",False,633,2026-11-10 07:16:38
+A,KR_8443067572,29.0,pelea,azul,3.0,Pelea que terminó en clean ace a favor de equipo azul; y luego en barón,False,1,2026-11-10 07:16:39
+A,KR_8443067572,32.0,pelea,azul,3.0,Pelea que terminó en ACE; con esto terminó la partida,False,1,2026-11-10 07:16:39
+A,KR_8443067572,19.0,pelea,rojo,3.0,"Palea que terminó beneficiando al equipo rojo, tiraron una torre luego de la pelea",False,1,2026-11-10 07:16:39
+A,LA1_1760108304,31.0,error,azul,3.0,"El equipo rojo iba ganando por bastante, pero los agarraron en esta situación y el mid del equipo azul aprovechó a matarlos. Este error les costó la partida. ",False,461,2026-11-10 07:24:47
+A,LA1_1760240742,21.0,pelea,azul,3.0,"Pelea que termina en una triple-kill a favor del jungla del equipo azul, así como en ACE, dragón y barón para su favor. Además, aprovechando la bonificación, tiraron 2 torres en el minuto siguiente.",False,803,2026-11-10 19:53:00
+A,LA1_1760240742,31.0,pelea,rojo,2.0,"Pelea que termina a favor del equipo rojo, con el bottom de dicho equipo llevándose una triple-kill",False,803,2026-11-10 19:53:00
+A,LA1_1760240742,33.0,objetivo,azul,3.0,"Pelea por el dragón, que termina favoreciendo totalmente al equipo azul, haciendo que su bottom se lleve una triple-kill. A consecuencia de eso, tienen barón sin presión y con eso terminan la partida. ",False,803,2026-11-10 19:53:00
+A,KR_8444875248,21.0,pick,azul,3.0,"El jungla del equipo azul mata al jungla del equipo rojo, asegurando un objetivo de barón sin dificultad. Con ese barón ejercen una gran presión en carriles mid y top.",False,744,2026-11-10 20:05:29
+A,KR_8444875248,27.0,error,rojo,3.0,"Mala jugada por parte del equipo azul, que llevan amplia ventaja de mapa, termina en ACE y barón a favor del equipo rojo. ",False,744,2026-11-10 20:05:29
+A,KR_8444875248,29.0,pelea,rojo,3.0,"Pelea que termina en una penta-kill a favor del bottom del equipo rojo, creando una gran ventaja de oro para el carry y tirando torre e inhibidor en el carril central. ",False,744,2026-11-10 20:05:29
+A,KR_8444875248,31.0,error,azul,3.0,"Error del equipo rojo de estar separados y no estabilizar la situación, luego de haber tenido la pelea ventajosa previa. Mueren todos (el jungla estaba tirando torre en top), el equipo azul hace alma de dragón y terminan la partida.  ",False,744,2026-11-10 20:05:29
+A,KR_8445483239,,,,,,True,216,2026-11-11 06:17:37
+A,EUW1_8034802049,,,,,,True,172,2026-11-11 06:20:38
+A,NA1_5673205122,8.0,pick,azul,2.0,"El jungla del equipo azul mata el jungla del equipo rojo, por lo que le asegura un objetivo sencillo.",False,489,2026-11-11 06:42:54
+A,NA1_5673205122,17.0,objetivo,azul,3.0,"Pelea por el heraldo, que termina totalmente a favor del equipo azul.  Termina siendo el detonante del snowball que termina el juego.",False,489,2026-11-11 06:42:54
+A,KR_8444730369,20.0,estructura,rojo,2.0,Buena presión en el carril superior.,False,529,2026-11-11 06:51:47
+A,KR_8444730369,25.0,objetivo,rojo,3.0,"Pelea por la bonificación del barón, que termina realmente a favor del equipo rojo. ",False,529,2026-11-11 06:51:47
+A,NA1_5673011529,,,,,,True,602,2026-11-11 07:01:53
+A,KR_8444529674,24.0,pelea,azul,3.0,"Pelea totalmente a favor del equipo azul, que termina siendo el snowball para el final de la partida. ",False,406,2026-11-11 07:08:45
+A,LA1_1760143155,21.0,pelea,rojo,3.0,"Pelea que termina totalmente a favor del equipo rojo, terminando en un ACE a su favor.",False,404,2026-11-11 07:16:19
+A,LA1_1760143155,31.0,objetivo,rojo,3.0,"Pelea por el objetivo del barón, haciendo que sea favorable al equipo rojo, siendo la causa del final de la partida. ",False,404,2026-11-11 07:16:19
+A,LA1_1760349664,14.0,estructura,rojo,2.0,Buena presión de torres.,False,685,2026-11-11 07:27:53
+A,LA1_1760349664,24.0,pelea,azul,3.0,"Pelea en el carril central, que termina siendo totalmente a favor del equipo azul, haciendo un ACE a su favor.",False,685,2026-11-11 07:27:53
+A,LA1_1760349664,27.0,pelea,rojo,3.0,"Pelea que termina siendo totalmente a favor del equipo rojo, haciendo que el mid logre un cuadra-kill y un ACE a su favor.  Aquí comienza el snowball que acaba con barón, y eventualmente la partida. ",False,685,2026-11-11 07:27:53
+A,LA1_1760433201,34.0,estructura,azul,2.0,Buena presión de los carriles superior y medio.,False,358,2026-11-11 16:18:34
+A,KR_8444874150,15.0,pelea,azul,2.0,"Por alguna razón, esta pelea determina el inicio del snowball para terminar la partida. No es una pelea tan clave, pero es suficiente como para afectar al equipo rojo (tal vez les jugó en contra el mental).",False,31,2026-11-11 16:37:26
+A,EUW1_8034080882,23.0,pelea,rojo,3.0,"Pelea que termina favoreciendo totalmente al equipo rojo, haciendo que puedan tirar 2 torres y hacerse dragón. ",False,1749,2026-11-11 17:06:48
+A,EUW1_8034080882,30.0,objetivo,rojo,3.0,"Pelea por el alma de dragón, que termina a favor del equipo rojo (tanto pelea como objetivo), que termina influenciando a también obtener el barón.",False,1749,2026-11-11 17:06:48
+A,EUW1_8034080882,33.0,error,azul,2.0,Equipo rojo se posiciona mal luego de tener una clara ventaja y termina cediendo una triple-kill al mid del equipo azul. ,False,1749,2026-11-11 17:06:48
+A,EUW1_8034080882,36.0,objetivo,azul,3.0,"Pelea que termina totalmente a favor del equipo azul, no solo logrando un ACE, sino que también un dragón ancestral. Con esto terminan la partida.",False,1749,2026-11-11 17:06:48
+A,KR_8442801032,,,,,,True,479,2026-11-11 17:14:54
+A,KR_8445736754,14.0,estructura,rojo,3.0,"Gran push en carriles superior y medio, para lograr tirar sus primeras torres y creando un gran espacio en el mapa. Llegando a asegurar el heraldo.",False,957,2026-11-11 17:30:54
+A,KR_8445736754,20.0,pelea,rojo,3.0,"Pelea totalmente a favor del equipo rojo, que termina en ACE a su favor, significando el alma de dragón, el barón, y el final de la partida. ",False,957,2026-11-11 17:30:54
+A,LA1_1760181103,14.0,objetivo,rojo,3.0,"Pelea por el dragón termina totalmente a favor del equipo rojo, con kills, objetivo, torre e influencia en el heraldo. ",False,346,2026-11-11 19:09:46
+A,LA1_1760181103,21.0,estructura,rojo,3.0,"El mid del equipo rojo hace una gran presión en su carril, llegando a tirar la torre, matar a 2 contrincantes y bonificación del barón. Esto hace que exista aún más presión en mid con más peleas ganadas a favor del equipo rojo. Este es el inicio del snowball para ganar la partida. ",False,346,2026-11-11 19:09:46
+A,LA1_1760055598,18.0,pelea,rojo,3.0,"Toda la partida llevaron la ventaja el equipo rojo, pero a partir de este punto no había posibilidad del equipo azul para remontar (a menos que el equipo rojo cometiera un error catastrófico). ",False,182,2026-11-11 19:12:50
+A,EUW1_8035668214,17,objetivo,azul,3.0,"A pesar que es el equipo rojo el que se lleva el heraldo, pierde la batalla que ocurrió por el mismo, dando una gran ventaja de oro/kills al mid del equipo azul. ",False,295,2026-11-11 19:17:47
+A,EUW1_8035668214,28,pelea,azul,3.0,"Pelea que termina totalmente a favor del equipo azul, haciendo que se lleven fácilmente el dragón y el barón, siendo el inicio del snowball para terminar la partida. ",False,295,2026-11-11 19:17:47
