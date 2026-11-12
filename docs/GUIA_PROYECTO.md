@@ -28,9 +28,9 @@
 | B5 Baselines + evaluación (A) | ✅ Completado: M0 AUC 0.794, M1 0.810, M2 0.811 en test. **La GRU debe superar a M2.** Detalle en `results/b5_resumen.md` |
 | B7 TCN + curva (A) | ✅ Completado (dom 8): TCN, búsquedas de MLP y TCN, curva de aprendizaje de M2 y M4 (la GRU gana en todos los tamaños; los dos se aplanan después de 12k). Detalle en `results/b7_resumen.md` |
 | B6 Entrenamiento DL (B) | ✅ Completado (sáb 7, noche): GRU test AUC 0.8123 ± 0.0002 (3 semillas), +0.0017 vs M2 (significativo pero mínimo). Mejor config: hidden 128, 2 capas, dropout 0.1, lr 3e-4. Detalle en `results/b6_resumen.md`. A corrigió antes `fit_temperature` (LBFGS con `strong_wolfe`) |
-| B9 Anotación + E3/E4 (A) | 🟡 E3/E4 ✅ (`results/b9_e3e4.md`: un modelo global sirve para todos los tiers y regiones). Falta anotar las 35 partidas de A y descargar partidas propias (falta API key en la PC de A) |
+| B9 Anotación + E3/E4 (A) | ✅ Completado (mié 11): E3/E4 (`results/b9_e3e4.md`: un modelo global sirve para todos los tiers y regiones), 35 partidas anotadas (`annotations/A.csv`) y partidas propias descargadas desde la PC de B (ver B10) |
 | B8 Momentos + anotación (B) | ✅ Completado (lun 9): detector, herramienta Streamlit, protocolo, selección de 55 partidas. B lleva 13 anotadas |
-| B10 Valor (B) | 🟡 Código ✅ (lun 9): `src/value_model.py` + `src/agreement.py`, N3 de B corrida (TCN final ×3, E6 λ 0.1 y 0.5 ×3). B terminó sus 35 (mié 11). **Falta:** las 35 de A (y su `annotations/A.csv` para el acuerdo), anotar las 8 propias y cronometrar `f_rev`. Resultados en `results/b10_valor.md` (ver B10) |
+| B10 Valor (B) | 🟡 Código ✅ (lun 9): `src/value_model.py` + `src/agreement.py`, N3 de B corrida (TCN final ×3, E6 λ 0.1 y 0.5 ×3). A y B terminaron sus 35 (mié 11): valor y acuerdo calculados con las 55 partidas (ver B10). **Falta:** anotar las 8 propias y cronometrar `f_rev` |
 
 **Para A (compañero), de B6/B8:**
 - Curva de aprendizaje de M4: `python src/learning_curve.py --models m4 --set model.hidden=128 model.layers=2 model.dropout=0.1 train.lr=0.0003`.
@@ -416,11 +416,11 @@ Valor_mes = N_rev × (Ahorro_promedio / 60) × C_h − C_infra − N_rev × C_pr
 
 **Noche N2:** B corre GRU y MLP finales con 3 semillas + calibración.
 
-### B9 · A · Lun 9 – Mar 10 · Anotación + E3/E4 (5 h) · Debe/Podría
+### B9 · A · Lun 9 – Mar 10 · Anotación + E3/E4 (5 h) · Debe/Podría · **COMPLETADO (mié 11 nov)**
 
-- [ ] Anotar 35 partidas, incluidas las 15 compartidas (humano; venv de A listo con `streamlit` y `data/anotacion/` extraído).
+- [x] Anotar 35 partidas, incluidas las 15 compartidas: A las subió el mié 11 (`annotations/A.csv`). Acuerdo con B: F1 0.68 (ver B10).
 - [x] Configs de E3 y E4 (subconjuntos de train por tier y región, con tamaños iguales) **y corridos** (adelantado de N3): `python src/experiments_e3e4.py`, ~5 min. El grupo evaluado se quita de val en ambas condiciones.
-- [ ] Jugar o descargar 5–10 partidas propias **nuevas** con `collect.py --riot-id`, para la demo y como entradas fuera de entrenamiento. **Falta una API key en la PC de A** (`.env`).
+- [x] Jugar o descargar 5–10 partidas propias **nuevas**: descargadas el lun 9 desde la PC de B con las cuentas de A y B (9 de noviembre, parche 16.22; 8 para anotar y NA1_5676698765 reservada para la demo). Ya no hace falta la API key en la PC de A para esto.
 
 **Resultado E3/E4** (detalle en `results/b9_e3e4.md`): **E3:** entrenar solo con Diamond+Master rinde igual en Silver+Gold que entrenar con todos los tiers (Δ dentro del ruido). **E4:** entrenar sin LA1 no empeora LA1 (incluso +0.002 de AUC con la GRU): un solo modelo global sirve para todas las regiones. **Para E5 (B12):** LA1 (0.800) y NA (0.805) son más difíciles de predecir que EUW/KR (0.822) con cualquier modelo; por tier no hay patrón de elo.
 
@@ -433,27 +433,30 @@ Valor_mes = N_rev × (Ahorro_promedio / 60) × C_h − C_infra − N_rev × C_pr
 - [ ] Las partidas propias se pueden revisar y anotar **juntos** (no entran en las métricas; `agreement.py` solo usa val/test). Si se anotan juntos, guardar con una sola letra.
 - [ ] **Cronometrar 3–5 repeticiones completas** en el cliente (mide f_rev). **Urgente:** el cliente solo reproduce repeticiones del parche actual; cuando salga el siguiente parche se pierden.
 - [x] `src/value_model.py` (usa `configs/value.yaml`): valor por partida y por mes, curva valor vs θ con θ* elegido por modelo en val y reportado en test (IC 95 % bootstrap por partida, Δ pareado vs M0), oráculo (techo), tornado (rango del yaml, ±20 %, ±50 %, re-eligiendo θ* y viendo si cambia el ganador), escenarios pesimista/optimista y punto de equilibrio. `--min-conf 2` = sensibilidad sin momentos dudosos. Salidas: `results/b10_valor.md`, `b10_valor_theta.csv`, `b10_tornado.csv`, `figures/b10_*.png`. Tests: `tests/test_b10_value.py`. **Se vuelve a correr (~1 min) cuando haya más anotaciones.**
-- [x] `src/agreement.py`: acuerdo A vs B (F1 de momentos a ±2 min, recall en ambos sentidos, % mismo equipo y tipo) → `results/b10_acuerdo.csv`. **Falta que exista `annotations/A.csv`.**
+- [x] `src/agreement.py`: acuerdo A vs B (F1 de momentos a ±2 min, recall en ambos sentidos, % mismo equipo y tipo) → `results/b10_acuerdo.csv`. Corrido el mié 11 con las 15 compartidas (ver abajo).
 - [x] `select_annotation.py` ahora también extrae `frames.csv` (R0 y demo de partidas propias).
 
-**Resultados con las 35 de B (mié 11 nov; 18 val + 17 test; falta sumar las de A)** · `results/b10_valor.md`:
+**Acuerdo entre anotadores (mié 11 nov, 15 compartidas, ±2 min)** · `results/b10_acuerdo.csv`: A marcó 34 momentos, B 45, coinciden 27 → **F1 humano = 0.68** (de lo que marcó A, B encontró 79 %; de lo de B, A encontró 60 %: B marca más). En las coincidencias, mismo equipo 96 % pero mismo tipo solo 37 % (las categorías pelea/objetivo/pick se confunden; no usar el tipo como métrica). **0.68 es el techo realista del F1 de cualquier detector.**
 
-| Modelo | θ* | Ahorro por partida | USD/mes [IC 95 %] | Δ vs M0 |
-|---|---|---|---|---|
-| Oráculo (techo) | — | 29.7 min (76 %) | 198 [165, 235] | +80 |
-| R0 regla sin ML | — | 18.0 min (46 %) | 120 [88, 153] | +2 [−17, +18] |
-| M0 logística solo oro | 0.09 | 17.7 min (45 %) | 118 [86, 152] | — |
-| **M4 GRU** | 0.12 | 15.8 min (40 %) | 105 [68, 144] | −13 [−28, +3] |
-| M5 TCN | 0.13 | 15.3 min | 102 | −16 [−32, −1] |
-| M4 E6 λ0.5 | 0.13 | 15.0 min | 100 | −19 [−35, −2] |
-| M2 LightGBM | 0.04 | 13.9 min (36 %) | 93 [56, 132] | −25 [−43, −8] |
+**Resultados finales de B10 (mié 11 nov; A + B: 70 anotaciones, 55 partidas, 27 val + 28 test)** · `results/b10_valor.md`:
 
-1. **El producto sí tiene valor:** cualquier detector ahorra 14–18 min de 39 por partida (≈ USD 93–120/mes por equipo con los parámetros base), y solo deja de ahorrar si f_rev < 0.77.
-2. **Más AUC ≠ más valor:** M2 tiene más AUC que M0 pero da menos valor; M4 le gana a M2 en valor (+12 USD/mes), pero no a M0 ni a R0. Hallazgo central para 4.5/4.8.
+| Modelo | θ* | Clips/partida | F1 | Ahorro por partida | USD/mes [IC 95 %] | Δ vs M0 [IC 95 %] |
+|---|---|---|---|---|---|---|
+| Oráculo (techo) | — | 2.6 | 1.00 | 29.0 min (77 %) | 194 [171, 216] | +72 |
+| R0 regla sin ML | — | 3.9 | 0.57 | 19.9 min (53 %) | 132 [111, 152] | +11 [−8, +30] |
+| M0 logística solo oro | 0.17 | 2.2 | 0.47 | 18.3 min (49 %) | 122 [92, 152] | — |
+| **M4 GRU** | 0.23 | 1.9 | 0.41 | 17.4 min (46 %) | 116 [84, 147] | −5 [−17, +6] |
+| M4 E6 λ0.5 | 0.22 | 1.6 | 0.39 | 17.4 min | 116 [84, 146] | −5 [−18, +6] |
+| M5 TCN | 0.17 | 3.2 | 0.45 | 17.2 min | 115 [86, 142] | −7 [−20, +8] |
+| M3 MLP | 0.23 | 2.1 | 0.36 | 16.3 min | 109 [81, 137] | −13 [−25, −1] |
+| M2 LightGBM | 0.27 | 1.6 | 0.32 | 16.1 min (43 %) | 108 [77, 138] | −14 [−25, −3] |
+
+1. **El producto sí tiene valor:** cualquier detector ahorra 16–20 min de 38 por partida (≈ USD 108–132/mes por equipo con los parámetros base) y solo deja de ahorrar si f_rev < 0.70. Para pagar una suscripción de USD 8/mes bastan ~1.4 partidas revisadas al mes.
+2. **Más AUC ≠ más valor:** M2, M1 y M3 (más AUC que M0) dan **significativamente menos** valor que M0 (−13/−14 USD/mes). **M4 (GRU) es el mejor modelo de ML junto con E6 y la TCN**, empata con M0 (−5, IC incluye 0) y le gana a M2 por ~8 USD/mes. Ningún modelo supera a R0 (diferencias dentro del ruido). Hallazgo central para 4.5/4.8: la historia (GRU/TCN) recupera el valor que pierden los modelos "snapshot" (M1–M3), cuya curva salta poco.
 3. **Sesgo a discutir (4.3/4.7):** se anota mirando el log de eventos, y R0 se dispara con esos mismos eventos (barón, ace, inhibidor); M0 solo ve el oro, que salta con las peleas del log. El ground truth favorece a los detectores "de eventos". Con anotaciones hechas viendo la repetición podría cambiar.
-4. **Sensibilidad:** f_rev, N_rev y C_h mueven el valor de todos por igual; t_clip y t_miss pueden cambiar el ganador (con t_clip 4 o t_miss 12 gana M0 o M4 E6 λ0.5). Con `--min-conf 2` (sin momentos dudosos) el orden no cambia.
-5. M2 y M1 eligen θ* en el borde de la grilla (0.04–0.05): sus curvas saltan poco y piden todos los clips posibles (tope 5).
-6. E6 λ0.1 detecta exactamente lo mismo que M4; λ0.5 suaviza pero pierde recall (0.44 vs 0.52) → **E6 no mejora el valor**.
+4. **La curva valor vs θ es casi plana** (≈ USD 100–125 para θ entre 0.04 y 0.30): elegir θ importa poco; los modelos de ML prefieren θ alto (pocos clips, ~2 por partida) y R0 marca ~4.
+5. **Sensibilidad:** f_rev, N_rev y C_h escalan el valor de todos por igual (no cambian el orden); t_clip y t_miss sí pueden cambiar el ganador entre R0 y las variantes de M4. Con `--min-conf 2` (sin momentos dudosos) el orden no cambia (R0 134, M0 125, M4 119, M2 111).
+6. **E6 no mejora el valor:** λ0.1 y λ0.5 quedan igual que M4 (dentro de ±1 USD/mes).
 
 **Noche N3 (B) · ✅ hecha de día (lun 9, ~3 min de GPU):** TCN final ×3 semillas (test AUC 0.8124 ± 0.0002) y **E6** (GRU con penalización de saltos): λ 0.1 → AUC 0.8122, λ 0.5 → AUC 0.8119 (−0.0004 vs M4) con la curva más suave (salto medio por minuto 0.063 → 0.056 en test, s42). Corridas `results/runs/tcn_final__s*`, `e6_sm0.1__s*`, `e6_sm0.5__s*`; tablas `results/hp/tcn_final.csv`, `e6_sm0.*.csv`; por semilla en `results/b6_semillas.csv`.
 
