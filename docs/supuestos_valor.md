@@ -38,7 +38,7 @@ Valor_mes = N_rev × (Ahorro / 60) × C_h  −  C_infra  −  N_rev × C_pred
 | Parámetro | Qué es | Base | Rango (sensibilidad) | De dónde sale | Estado |
 |---|---|---|---|---|---|
 | D | Duración media de una partida | **29.5 min** | — | Nuestros datos: 27,000 partidas (`results/b4_eda.md`) | Dato |
-| f_rev | Factor de revisión: minutos de revisión por minuto de partida (pausas, retrocesos, notas) | 1.3 | 1.0 – 2.0 | No hay estándar publicado; los anuncios de coaches hablan de ~1 h por partida revisada con el jugador | **Medir** (B10 con partidas propias, B14 con usuarios) |
+| f_rev | Factor de revisión: minutos de revisión por minuto de partida (pausas, retrocesos, notas) | **1.38** (supuesto inicial: 1.3) | 1.09 – 1.67 (mín/máx medidos; antes 1.0 – 2.0) | **Medido en B10** (9–11 nov): 3 repeticiones de partidas propias, 35 / 45 / 50 min para 32.1 / 32.4 / 29.9 min de juego (`annotations/revisiones_repeticion.csv`). No hay estándar publicado; los anuncios de coaches hablan de ~1 h por partida revisada con el jugador | Medido (n = 3; ampliar en B14 con usuarios) |
 | T_base | f_rev × D | 38 min | 30 – 59 min | Derivado | Derivado |
 | t_setup | Abrir y leer el reporte | 2 min | 1 – 3 min | Estimación | **Medir** (B14) |
 | t_clip | Revisar un momento (≈1 min antes y después + notas) | 2.5 min | 1.5 – 4 min | Estimación | **Medir** (B14) |

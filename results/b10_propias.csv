@@ -1,0 +1,4 @@
+match_id,duracion_min,gana,theta,momentos_humanos,momentos_modelo,tp,fp,fn,mismo_equipo,r0_tp,r0_fp,r0_fn
+NA1_5676698765,32.1,azul,0.23,8,1,1,0,7,1,3,1,5
+NA1_5675359401,32.4,azul,0.23,8,2,2,0,6,2,3,1,5
+NA1_5676507367,29.9,azul,0.23,6,2,2,0,4,2,4,1,2

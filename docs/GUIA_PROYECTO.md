@@ -30,7 +30,7 @@
 | B6 Entrenamiento DL (B) | ✅ Completado (sáb 7, noche): GRU test AUC 0.8123 ± 0.0002 (3 semillas), +0.0017 vs M2 (significativo pero mínimo). Mejor config: hidden 128, 2 capas, dropout 0.1, lr 3e-4. Detalle en `results/b6_resumen.md`. A corrigió antes `fit_temperature` (LBFGS con `strong_wolfe`) |
 | B9 Anotación + E3/E4 (A) | ✅ Completado (mié 11): E3/E4 (`results/b9_e3e4.md`: un modelo global sirve para todos los tiers y regiones), 35 partidas anotadas (`annotations/A.csv`) y partidas propias descargadas desde la PC de B (ver B10) |
 | B8 Momentos + anotación (B) | ✅ Completado (lun 9): detector, herramienta Streamlit, protocolo, selección de 55 partidas. B lleva 13 anotadas |
-| B10 Valor (B) | 🟡 Código ✅ (lun 9): `src/value_model.py` + `src/agreement.py`, N3 de B corrida (TCN final ×3, E6 λ 0.1 y 0.5 ×3). A y B terminaron sus 35 (mié 11): valor y acuerdo calculados con las 55 partidas (ver B10). **Falta:** anotar las 8 propias y cronometrar `f_rev` |
+| B10 Valor (B) | ✅ Código ✅ (lun 9): `src/value_model.py` + `src/agreement.py`, N3 de B corrida (TCN final ×3, E6 λ 0.1 y 0.5 ×3). ✅ Completado (jue 12): valor y acuerdo con las 55 partidas de A y B, f_rev medido = 1.38, momentos de 3 repeticiones en `annotations/revisiones_momentos.csv` (ver B10) |
 
 **Para A (compañero), de B6/B8:**
 - Curva de aprendizaje de M4: `python src/learning_curve.py --models m4 --set model.hidden=128 model.layers=2 model.dropout=0.1 train.lr=0.0003`.
@@ -426,32 +426,36 @@ Valor_mes = N_rev × (Ahorro_promedio / 60) × C_h − C_infra − N_rev × C_pr
 
 **Noche N3:** A corre E3 + E4 ✅ (hecho de día). **N4** (opcional): Transformer M6.
 
-### B10 · B · Lun 9 – Mar 10 · Anotación + función de valor (6 h) · Debe
+### B10 · B · Lun 9 – Mar 10 · Anotación + función de valor (6 h) · Debe · **COMPLETADO (jue 12 nov)**
 
 - [x] Anotar 35 partidas (incluidas las 15 compartidas): **B terminó las 35 el mié 11 nov** (18 val + 17 test). Las 8 propias ya están en la selección; falta anotarlas.
 - [ ] Partidas propias: descargadas (lun 9) 22 en `data/csv/na1_own/` (cuentas de B y A; 10 jugadas juntos). **Solo usar las 9 de noviembre (parche 16.22)**; las 12 de feb–may son de parches 16.4–16.11 (otro meta). Agregar 8 con `python src/select_annotation.py --add-own NA1_5675157508 NA1_5675183207 NA1_5675359401 NA1_5676507367 NA1_5676526695 NA1_5676554848 NA1_5676575937 NA1_5676682391` y **guardar NA1_5676698765 sin anotar para la demo** (NA1_5676554848 es la única reciente donde gana rojo, por si se quiere mostrar también).
 - [ ] Las partidas propias se pueden revisar y anotar **juntos** (no entran en las métricas; `agreement.py` solo usa val/test). Si se anotan juntos, guardar con una sola letra.
-- [ ] **Cronometrar 3–5 repeticiones completas** en el cliente (mide f_rev). **Urgente:** el cliente solo reproduce repeticiones del parche actual; cuando salga el siguiente parche se pierden.
+- [x] **Cronometrar repeticiones (f_rev):** 3 medidas el 9–11 nov (`annotations/revisiones_repeticion.csv`): 35, 45 y 50 min para partidas de 32, 32 y 30 min → **f_rev = 1.38** (rango 1.09–1.67), cerca del supuesto de 1.3. Ya está en `configs/value.yaml` y en los resultados de abajo. Una la revisó un amigo (la más rápida) y dos B.
+- [x] **Momentos vistos en la repetición** (no en el log): `annotations/revisiones_momentos.csv`, 25 notas de las 3 partidas (minuto, tipo, equipo beneficiado, nota; `es_momento = False` para comentarios generales, `minuto_aprox = True` cuando el minuto se dedujo de la hora del chat). Sirven para comparar con el modelo en la demo y para discutir el sesgo del punto 3.
+- [x] **Comparación modelo vs repetición** (jue 12): `python src/predict_matches.py` pasa partidas crudas por la GRU (CSV → features → `scaler.json` → `best.pt` → temperatura) y compara sus clips con `revisiones_momentos.csv`. `--check` verifica que reproduce `predictions.npz` (diferencia máx. 4e-5 en 10 partidas de val/test). Salidas: `results/b10_propias.md`, `b10_propias.csv`, `b10_propias_curvas.csv`, `figures/b10_propias.png`. **Resultado (3 partidas, ilustrativo):** la GRU con θ* = 0.23 propone 1–2 clips por partida y **los 5 coinciden** con un momento visto en la repetición y con el equipo correcto (precisión 1.00), pero solo cubre 5 de 22 (recall 0.23); R0 marca más (precisión 0.77, recall 0.45). Ejemplo para la demo: NA1_5675359401, donde la GRU marca justo la pelea de rojo del min 5 y el pick + barón de azul del min 24–27. **B11 puede reutilizar `Predictor` y `load_raw` de este script para la app.** *NA1_5676698765 (la reservada para la demo) fue una de las revisadas: sigue sirviendo para la demo porque el modelo nunca la vio.* Pendiente opcional: cronometrar 1–2 más. **Urgente:** el cliente solo reproduce repeticiones del parche actual; cuando salga el siguiente parche se pierden.
 - [x] `src/value_model.py` (usa `configs/value.yaml`): valor por partida y por mes, curva valor vs θ con θ* elegido por modelo en val y reportado en test (IC 95 % bootstrap por partida, Δ pareado vs M0), oráculo (techo), tornado (rango del yaml, ±20 %, ±50 %, re-eligiendo θ* y viendo si cambia el ganador), escenarios pesimista/optimista y punto de equilibrio. `--min-conf 2` = sensibilidad sin momentos dudosos. Salidas: `results/b10_valor.md`, `b10_valor_theta.csv`, `b10_tornado.csv`, `figures/b10_*.png`. Tests: `tests/test_b10_value.py`. **Se vuelve a correr (~1 min) cuando haya más anotaciones.**
 - [x] `src/agreement.py`: acuerdo A vs B (F1 de momentos a ±2 min, recall en ambos sentidos, % mismo equipo y tipo) → `results/b10_acuerdo.csv`. Corrido el mié 11 con las 15 compartidas (ver abajo).
 - [x] `select_annotation.py` ahora también extrae `frames.csv` (R0 y demo de partidas propias).
 
 **Acuerdo entre anotadores (mié 11 nov, 15 compartidas, ±2 min)** · `results/b10_acuerdo.csv`: A marcó 34 momentos, B 45, coinciden 27 → **F1 humano = 0.68** (de lo que marcó A, B encontró 79 %; de lo de B, A encontró 60 %: B marca más). En las coincidencias, mismo equipo 96 % pero mismo tipo solo 37 % (las categorías pelea/objetivo/pick se confunden; no usar el tipo como métrica). **0.68 es el techo realista del F1 de cualquier detector.**
 
-**Resultados finales de B10 (mié 11 nov; A + B: 70 anotaciones, 55 partidas, 27 val + 28 test)** · `results/b10_valor.md`:
+**Resultados finales de B10 (jue 12 nov; A + B: 70 anotaciones, 55 partidas, 27 val + 28 test; f_rev medido = 1.38)** · `results/b10_valor.md`:
 
-| Modelo | θ* | Clips/partida | F1 | Ahorro por partida | USD/mes [IC 95 %] | Δ vs M0 [IC 95 %] |
+| Modelo | θ* | Clips/partida | F1 | Ahorro por partida | USD/mes | Δ vs M0 [IC 95 %] |
 |---|---|---|---|---|---|---|
-| Oráculo (techo) | — | 2.6 | 1.00 | 29.0 min (77 %) | 194 [171, 216] | +72 |
-| R0 regla sin ML | — | 3.9 | 0.57 | 19.9 min (53 %) | 132 [111, 152] | +11 [−8, +30] |
-| M0 logística solo oro | 0.17 | 2.2 | 0.47 | 18.3 min (49 %) | 122 [92, 152] | — |
-| **M4 GRU** | 0.23 | 1.9 | 0.41 | 17.4 min (46 %) | 116 [84, 147] | −5 [−17, +6] |
-| M4 E6 λ0.5 | 0.22 | 1.6 | 0.39 | 17.4 min | 116 [84, 146] | −5 [−18, +6] |
-| M5 TCN | 0.17 | 3.2 | 0.45 | 17.2 min | 115 [86, 142] | −7 [−20, +8] |
-| M3 MLP | 0.23 | 2.1 | 0.36 | 16.3 min | 109 [81, 137] | −13 [−25, −1] |
-| M2 LightGBM | 0.27 | 1.6 | 0.32 | 16.1 min (43 %) | 108 [77, 138] | −14 [−25, −3] |
+| Oráculo (techo) | — | 2.6 | 1.00 | 31.3 min (79 %) | 209 | +72 |
+| R0 regla sin ML | — | 3.9 | 0.57 | 22.2 min (56 %) | 148 | +11 [−8, +30] |
+| M0 logística solo oro | 0.17 | 2.2 | 0.47 | 20.6 min (52 %) | 137 | — |
+| **M4 GRU** | 0.23 | 1.9 | 0.41 | 19.7 min (50 %) | 132 | −5 [−17, +6] |
+| M4 E6 λ0.5 | 0.22 | 1.6 | 0.39 | 19.7 min | 132 | −5 [−18, +6] |
+| M5 TCN | 0.17 | 3.2 | 0.45 | 19.5 min | 130 | −7 [−20, +8] |
+| M3 MLP | 0.23 | 2.1 | 0.36 | 18.6 min | 124 | −13 [−25, −1] |
+| M2 LightGBM | 0.27 | 1.6 | 0.32 | 18.5 min (46 %) | 123 | −14 [−25, −3] |
 
-1. **El producto sí tiene valor:** cualquier detector ahorra 16–20 min de 38 por partida (≈ USD 108–132/mes por equipo con los parámetros base) y solo deja de ahorrar si f_rev < 0.70. Para pagar una suscripción de USD 8/mes bastan ~1.4 partidas revisadas al mes.
+*(f_rev sube o baja el valor de todos los modelos por igual: el término f_rev × D es el mismo para todos, así que los Δ entre modelos no dependen de f_rev.)*
+
+1. **El producto sí tiene valor:** cualquier detector ahorra 18–22 min de 40 por partida (≈ USD 123–148/mes por equipo con los parámetros base) y solo deja de ahorrar si f_rev < 0.70 (la revisión medida más rápida fue 1.09). Para pagar una suscripción de USD 8/mes bastan ~1.4 partidas revisadas al mes.
 2. **Más AUC ≠ más valor:** M2, M1 y M3 (más AUC que M0) dan **significativamente menos** valor que M0 (−13/−14 USD/mes). **M4 (GRU) es el mejor modelo de ML junto con E6 y la TCN**, empata con M0 (−5, IC incluye 0) y le gana a M2 por ~8 USD/mes. Ningún modelo supera a R0 (diferencias dentro del ruido). Hallazgo central para 4.5/4.8: la historia (GRU/TCN) recupera el valor que pierden los modelos "snapshot" (M1–M3), cuya curva salta poco.
 3. **Sesgo a discutir (4.3/4.7):** se anota mirando el log de eventos, y R0 se dispara con esos mismos eventos (barón, ace, inhibidor); M0 solo ve el oro, que salta con las peleas del log. El ground truth favorece a los detectores "de eventos". Con anotaciones hechas viendo la repetición podría cambiar.
 4. **La curva valor vs θ es casi plana** (≈ USD 100–125 para θ entre 0.04 y 0.30): elegir θ importa poco; los modelos de ML prefieren θ alto (pocos clips, ~2 por partida) y R0 marca ~4.
