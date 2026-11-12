@@ -32,7 +32,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 from riot_data import config  # noqa: E402
 from src.features import (EVENT_COLS, EVENT_TYPES_USED, FEATURE_NAMES, FRAME_COLS,  # noqa: E402
-                          Scaler, match_to_features)
+                          Scaler, dedup_events, match_to_features)
 from src.models import build_model  # noqa: E402
 from src.moments import DEFAULTS, detect_moments, match_moments, moments_from_minutes  # noqa: E402
 
@@ -58,6 +58,8 @@ def load_raw(match_ids: list[str]) -> dict[str, dict[str, pd.DataFrame]]:
             tabs[name] = df[df["match_id"].isin(need)]
         for mid in need & set(tabs["frames"]["match_id"]):
             out[mid] = {k: v[v["match_id"] == mid] for k, v in tabs.items()}
+            # los CSV de collect.py traen los eventos repetidos del timeline; datos_merge no (merge.py)
+            out[mid]["events"] = dedup_events(out[mid]["events"])
     missing = ids - set(out)
     if missing:
         raise SystemExit(f"No hay datos crudos de {sorted(missing)} (¿collect.py --riot-id?)")

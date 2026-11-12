@@ -92,6 +92,19 @@ EVENT_TYPES_USED = {"CHAMPION_KILL", "CHAMPION_SPECIAL_KILL", "ELITE_MONSTER_KIL
 
 # ---------------------------------------------------------------- utilidades
 
+def dedup_events(events: pd.DataFrame) -> pd.DataFrame:
+    """Quita filas de eventos IDÉNTICAS en todas sus columnas, igual que merge.py (línea ~158).
+
+    El timeline de Riot repite algunos eventos tal cual (sobre todo WARD_PLACED "UNDEFINED" y
+    alguna placa). El dataset de entrenamiento (datos_merge) ya pasó por esta limpieza, así que
+    los datos que NO vienen de datos_merge (la app, partidas propias de collect.py) deben pasar
+    por aquí antes de match_to_features. No deduplicar solo por las columnas que usan las
+    features: borraría eventos reales distintos (p. ej. dos larvas en el mismo milisegundo).
+    """
+    return events.drop_duplicates(ignore_index=True) if len(events) else events
+
+
+
 def _side_of_pid(pid: np.ndarray, team_of: dict[int, int]) -> np.ndarray:
     """+1 si el participante es azul, -1 si es rojo, 0 si no hay participante (p. ej. torre)."""
     out = np.zeros(len(pid), dtype=np.int8)
