@@ -97,7 +97,7 @@ Las temperaturas y las épocas también coinciden. Si se usan los `best.pt` orig
 ## Pendiente
 
 - [x] `.env` con la API key en la PC de A (jue 12): latencia de Riot medida y partidas propias analizadas desde Riot. Para el despliegue (B13), la key va como secreto del proveedor.
-- [ ] Probar `/player` con un Riot ID real.
+- [x] Probar `/player` con un Riot ID real (jue 12, cuenta de A): 5 partidas ranked en 2.4 s (7 llamadas a Riot); luego `/analyze` de la primera en 1.2 s.
 - [ ] **UX con θ* = 0.23:** 2 de las 9 partidas propias salen con 0 momentos (el detector es conservador: ~1.9 clips por partida en B10). Opción para B13: mostrar también "momentos candidatos" por debajo de θ, marcados como menos seguros.
 - [ ] Decidir qué detector usa el producto. Con los parámetros base, B10 da R0 > M0 > M4 en valor (la diferencia no es significativa). La app hoy usa la GRU (M4); la API está lista para exportar otro modelo o θ.
 - [ ] Partidas de demo precalculadas en `app/demo/` (B13).
