@@ -30,6 +30,7 @@
 | B6 Entrenamiento DL (B) | ✅ Completado (sáb 7, noche): GRU test AUC 0.8123 ± 0.0002 (3 semillas), +0.0017 vs M2 (significativo pero mínimo). Mejor config: hidden 128, 2 capas, dropout 0.1, lr 3e-4. Detalle en `results/b6_resumen.md`. A corrigió antes `fit_temperature` (LBFGS con `strong_wolfe`) |
 | B9 Anotación + E3/E4 (A) | ✅ Completado (mié 11): E3/E4 (`results/b9_e3e4.md`: un modelo global sirve para todos los tiers y regiones), 35 partidas anotadas (`annotations/A.csv`) y partidas propias descargadas desde la PC de B (ver B10) |
 | B8 Momentos + anotación (B) | ✅ Completado (lun 9): detector, herramienta Streamlit, protocolo, selección de 55 partidas. B lleva 13 anotadas |
+| B11 Backend (A) | 🟡 Casi completo (jue 12): `app/api.py` + `app/inference.py` + `src/export_model.py`, inferencia p95 87 ms, 53 tests. **Falta:** API key en la PC de A (medir Riot y `/player`) y decidir el detector del producto (R0 vs M4). **Bug arreglado que afecta a B10:** ver B11 |
 | B10 Valor (B) | ✅ Código ✅ (lun 9): `src/value_model.py` + `src/agreement.py`, N3 de B corrida (TCN final ×3, E6 λ 0.1 y 0.5 ×3). ✅ Completado (jue 12): valor y acuerdo con las 55 partidas de A y B, f_rev medido = 1.38, momentos de 3 repeticiones en `annotations/revisiones_momentos.csv` (ver B10) |
 
 **Para A (compañero), de B6/B8:**
@@ -464,17 +465,20 @@ Valor_mes = N_rev × (Ahorro_promedio / 60) × C_h − C_infra − N_rev × C_pr
 
 **Noche N3 (B) · ✅ hecha de día (lun 9, ~3 min de GPU):** TCN final ×3 semillas (test AUC 0.8124 ± 0.0002) y **E6** (GRU con penalización de saltos): λ 0.1 → AUC 0.8122, λ 0.5 → AUC 0.8119 (−0.0004 vs M4) con la curva más suave (salto medio por minuto 0.063 → 0.056 en test, s42). Corridas `results/runs/tcn_final__s*`, `e6_sm0.1__s*`, `e6_sm0.5__s*`; tablas `results/hp/tcn_final.csv`, `e6_sm0.*.csv`; por semilla en `results/b6_semillas.csv`.
 
-### B11 · A · Mié 11 – Jue 12 · Backend e inferencia (6 h) · Debe
+### B11 · A · Mié 11 – Jue 12 · Backend e inferencia (6 h) · Debe · **CASI COMPLETO (jue 12 nov): falta la API key para medir Riot**
 
-- [ ] Exportar el modelo ganador (state_dict en CPU o TorchScript) + `scaler.json` + temperatura + θ* a `models/` (fuera de git; subirlo a Drive o como Release).
-- [ ] `app/api.py` (FastAPI):
+- [x] Exportar el modelo ganador (state_dict en CPU) + `scaler.json` + temperatura + θ* a `models/` (fuera de git): `python src/export_model.py` → `models/m4_gru/` (GRU × 3 semillas, θ* = 0.23 de B10). Reentrenado en la PC de A con el `config.yaml` exacto de B6 (`--retrain`; val AUC idéntico); con los `best.pt` de B, correr sin `--retrain`.
+- [x] `app/api.py` (FastAPI) + `app/inference.py`:
   - `GET /player?riot_id=&platform=` → lista de partidas ranked recientes.
-  - `GET /analyze?match_id=` → curva, momentos y explicaciones.
-  - Reutiliza `riot_data/` y `src/features.py`.
-- [ ] Explicación por momento (sección 8) y manejo de errores.
-- [ ] Medir latencia (100 llamadas: p50/p95, separando API de Riot e inferencia) y agregar caché.
+  - `GET /analyze?match_id=` → curva (semilla 42) con banda (min–max de 3 semillas), momentos y explicaciones.
+  - Reutiliza `riot_data/` y `src/features.py`. Correr: `uvicorn app.api:app --port 8000` (docs en `/docs`).
+- [x] Explicación por momento (sección 8: ablación por grupos + eventos de la ventana) y manejo de errores (400/404/422/503, avisos de cola y parche, caché si Riot falla). Registro de predicciones en `data/app_cache/predicciones.jsonl`.
+- [~] Medir latencia (100 llamadas: p50/p95, separando API de Riot e inferencia) y agregar caché: **inferencia p50 48 ms / p95 87 ms**; caché ~2 ms. **Falta la parte de Riot** (`python app/bench_latency.py --riot 10`, necesita `.env`).
+- [x] Tests: `tests/test_b11_app.py` (7, con modelo diminuto y Riot falso).
 
-**Terminado cuando:** una partida propia nueva devuelve la curva y los momentos en < 3 s.
+**Bug encontrado (afecta a B10):** el timeline de Riot repite eventos idénticos y `merge.py` los había quitado del dataset de entrenamiento, pero la app y `predict_matches.py` no. Diferencia de hasta 0.09 en P. Arreglado con `src/features.py: dedup_events` (filas idénticas completas, igual que `merge.py`); ahora la app reproduce `predictions.npz` (dif. ≤ 1e-4). **B: volver a correr `python src/predict_matches.py`** (los `results/b10_propias.*` son de antes del arreglo). Detalle en `results/b11_resumen.md`.
+
+**Terminado cuando:** una partida propia nueva devuelve la curva y los momentos en < 3 s. (Inferencia < 0.1 s; falta sumar Riot, estimado 0.5–1.5 s.)
 
 ### B12 · B · Mié 11 – Jue 12 · Resultados de valor, sesgos y explicabilidad (6 h) · Debe
 
