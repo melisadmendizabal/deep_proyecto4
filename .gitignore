@@ -5,11 +5,15 @@
 data/
 
 # Modelos entrenados y artefactos pesados
-/models/
+/models/*
 *.pt
 *.pth
 *.ckpt
 *.onnx
+# EXCEPCIÓN (B13): el modelo que usa la app desplegada (GRU × 3 semillas + scaler + manifest, ~2.4 MB,
+# sin datos personales) sí va a git para que Render lo tome del repo. Se regenera con src/export_model.py.
+!/models/m4_gru/
+!/models/m4_gru/*.pt
 
 # Python
 __pycache__/

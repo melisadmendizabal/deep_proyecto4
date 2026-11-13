@@ -1,0 +1,88 @@
+{
+  "name": "M4",
+  "model_type": "gru",
+  "feature_names_all": [
+    "minute",
+    "gold_diff",
+    "gold_diff_rel",
+    "xp_diff",
+    "cs_diff",
+    "level_diff",
+    "current_gold_diff",
+    "gold_diff_top",
+    "gold_diff_jungle",
+    "gold_diff_middle",
+    "gold_diff_bottom",
+    "gold_diff_utility",
+    "kills_diff",
+    "kills_diff_2m",
+    "first_blood",
+    "aces_diff",
+    "towers_outer_diff",
+    "towers_inner_diff",
+    "towers_base_diff",
+    "towers_nexus_diff",
+    "plates_diff",
+    "inhibs_down_diff",
+    "dragons_diff",
+    "dragon_soul",
+    "elder_active",
+    "barons_diff",
+    "baron_active",
+    "heralds_diff",
+    "grubs_diff",
+    "wards_placed_diff",
+    "wards_killed_diff",
+    "wards_placed_3m_diff",
+    "wards_killed_3m_diff",
+    "gold_diff_d1",
+    "gold_diff_d3"
+  ],
+  "members": [
+    {
+      "file": "seed_42.pt",
+      "seed": 42,
+      "temperature": 1.0420940443124924,
+      "source": "models\\_train\\gru_final__s42",
+      "retrained_here": true,
+      "val_loss": 0.49232,
+      "val_auc": 0.81234
+    },
+    {
+      "file": "seed_43.pt",
+      "seed": 43,
+      "temperature": 0.9960915451525898,
+      "source": "models\\_train\\gru_final__s43",
+      "retrained_here": true,
+      "val_loss": 0.49238,
+      "val_auc": 0.81224
+    },
+    {
+      "file": "seed_44.pt",
+      "seed": 44,
+      "temperature": 0.9921253145583246,
+      "source": "models\\_train\\gru_final__s44",
+      "retrained_here": true,
+      "val_loss": 0.49185,
+      "val_auc": 0.81237
+    }
+  ],
+  "detector": {
+    "theta": 0.23,
+    "windows": [
+      1,
+      2
+    ],
+    "merge_gap": 2,
+    "top_k": 5
+  },
+  "train_patches": [
+    "16.19",
+    "16.20",
+    "16.21"
+  ],
+  "queue_id": 420,
+  "min_duration_s": 900,
+  "exported_utc": "2026-11-12 19:08:27",
+  "git_commit": "8c26d88"
+}

@@ -1,0 +1,20 @@
+# Despliegue de Fight Diff en Render (B13). Pasos completos: docs/despliegue.md
+services:
+  - type: web
+    name: fight-diff
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements-deploy.txt
+    startCommand: uvicorn app.api:app --host 0.0.0.0 --port $PORT --workers 1
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.10
+      - key: OMP_NUM_THREADS       # el plan gratis tiene 0.1 CPU: un solo hilo para PyTorch
+        value: "1"
+      - key: MKL_NUM_THREADS
+        value: "1"
+      - key: RIOT_API_KEY          # secreto: se pega en el panel de Render, nunca en git
+        sync: false
+      - key: PUUID_SALT            # secreto: el mismo valor que en el .env del equipo
+        sync: false

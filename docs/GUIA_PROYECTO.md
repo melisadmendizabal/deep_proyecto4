@@ -496,7 +496,7 @@ Valor_mes = N_rev × (Ahorro_promedio / 60) × C_h − C_infra − N_rev × C_pr
   - Lista de momentos con su explicación (reparto por grupo), eventos por equipo y "en la repetición: de mm:00 a mm:00". **Posibles momentos** (θ/2 ≤ salto < θ*, fuera de la zona de baja certeza, máximo 3) en una sección aparte con borde punteado y marcador hueco.
   - Fichas con el valor: revisión completa (f_rev × D) vs solo clips (t_setup + n × t_clip).
   - Colores de datos validados con el validador de paletas (azul `#3a8ee6` / rojo `#e8505b` sobre `#0a1428`: pasan todas las pruebas, ΔE daltonismo 21); el dorado es solo interfaz. Revisado con capturas en escritorio y a 390 px.
-- [ ] Desplegar (Render o Hugging Face Spaces, con la key como secreto).
+- [~] Desplegar (Render o Hugging Face Spaces, con la key como secreto). **Elegido: Render (plan gratis).** Preparado: `render.yaml`, `requirements-deploy.txt` (PyTorch CPU: ~240–260 MB de RAM medidos, cabe en 512 MB) y los pesos de la app en git (`models/m4_gru/`, excepción en `.gitignore`). Pasos en `docs/despliegue.md`. **Falta:** confirmar si la key es personal o development (B) y crear el servicio en el panel (A).
 - [x] **Fallback offline:** 5 partidas propias precalculadas en `app/demo/` (`python app/make_demo.py`); `/analyze` las sirve si Riot falla y el frontend las ofrece como "Partidas de ejemplo".
 - [x] Logging de predicciones (`data/app_cache/predicciones.jsonl`: curva, resultado, features del min 15, tiempos; sin datos personales) + `docs/monitoreo.md` + `app/monitor.py` (log-loss, ECE, AUC y PSI por parche/semana, con alertas). Validado con 300 partidas de test: reproduce la evaluación offline (log-loss 0.503, ECE 0.019) y no da falsas alarmas.
 

@@ -58,5 +58,6 @@ Se pasaron 300 partidas de test por la app (`python app/monitor.py --simulate 30
 
 ## Limitaciones
 
+- En Render gratis el disco es efímero: `predicciones.jsonl` se pierde en cada reinicio o redeploy. Para un monitoreo continuo en producción haría falta un disco persistente (plan pagado) o mandar cada registro a un almacenamiento externo. Para el proyecto, el monitoreo se demuestra con la simulación.
 - El registro solo ve las partidas que la gente analiza: no es una muestra aleatoria (sesgo de selección; por ejemplo, más partidas perdidas que la gente quiere entender).
 - La calidad de los **momentos** (precisión y recall) no se puede monitorear automáticamente: requiere anotación humana. Lo que sí se puede es preguntarle al coach "¿te sirvió este clip?" (sí/no) en la app. Queda como trabajo futuro.

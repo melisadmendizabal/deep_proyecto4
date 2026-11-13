@@ -1,0 +1,11 @@
+# Dependencias SOLO para la app desplegada (Render). PyTorch en versión CPU: la de CUDA ocupa
+# ~490 MB de RAM y no cabe en el plan gratis (512 MB); la CPU usa ~240-260 MB (medido el 13 nov 2026).
+# Versiones probadas juntas. Para entrenar/experimentos usar requirements.txt.
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.6.0+cpu
+numpy==2.5.4
+pandas==3.1.1
+fastapi==0.162.5
+uvicorn[standard]==0.54.0
+PyYAML==6.0.3
+requests==2.34.2
