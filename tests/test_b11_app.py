@@ -72,6 +72,12 @@ def test_analyze_shape_and_band(engine):
         assert share == pytest.approx(1.0, abs=1e-2) or share == 0
     assert {"features_ms", "modelo_ms", "inferencia_total_ms"} <= set(res["tiempos"])
     assert res["avisos"] == []
+    # candidatos (B13): bajo θ, fuera de la zona de baja certeza y lejos de los momentos principales
+    assert len(res["candidatos"]) <= 3
+    for c in res["candidatos"]:
+        assert c["candidato"] and c["minuto"] >= 5
+        assert all(abs(c["minuto"] - m["minuto"]) >= 2 for m in res["momentos"])
+    assert len(res["_monitor"]["features_min15"]) == len(FEATURE_NAMES)
 
 
 def test_warnings_and_errors(engine):
@@ -149,6 +155,7 @@ def client(tmp_path, monkeypatch):
     import app.api as api
     monkeypatch.setattr(api, "CACHE_DIR", tmp_path / "cache")
     monkeypatch.setattr(api, "DEMO_DIR", tmp_path / "demo")
+    monkeypatch.setattr(api.config, "RAW_DIR", tmp_path / "sin_raw")   # forzar el camino "API de Riot"
     fake = FakeRiot(*raw)
     api.init(engine=Engine(make_engine_dir(tmp_path)), riot=fake)
     return TestClient(api.app), raw[0], fake, api
@@ -161,9 +168,14 @@ def test_api_analyze_and_cache(client):
     body = r.json()
     assert body["match_id"] == mid and body["fuente"] == "riot" and len(body["curva"]) > 10
     assert fake.calls == 2
+    assert "_monitor" not in body and body["revision"]["completa_min"] > body["revision"]["con_clips_min"]
     r2 = tc.get("/analyze", params={"match_id": mid})
     assert r2.json()["fuente"] == "memoria" and fake.calls == 2         # no vuelve a llamar a Riot
-    assert (api.CACHE_DIR / "predicciones.jsonl").read_text(encoding="utf-8").count("\n") == 1
+    log = (api.CACHE_DIR / "predicciones.jsonl").read_text(encoding="utf-8").splitlines()
+    assert len(log) == 1
+    rec = json.loads(log[0])
+    assert len(rec["curva_p_azul"]) == len(body["curva"]) and rec["features_min15"]
+    assert "puuid" not in log[0] and "player" not in log[0]
     api.S.memory.clear()
     assert tc.get("/analyze", params={"match_id": mid}).json()["fuente"] == "disco"
 
@@ -176,6 +188,32 @@ def test_api_errors(client):
     assert tc.get("/player", params={"riot_id": "Otro#TAG"}).status_code == 404
     api.S.riot, api.S.riot_error = None, "sin key"
     assert tc.get("/analyze", params={"match_id": "NA1_9999999998"}).status_code == 503
+
+
+def test_frontend_served(client):
+    tc, *_ = client
+    r = tc.get("/")
+    assert r.status_code == 200 and "Fight Diff" in r.text
+    assert tc.get("/static/app.js").status_code == 200
+
+
+def test_monitor_report(tmp_path):
+    """PSI ~0 si los datos vienen de la misma distribución; alto si cambian; métricas correctas."""
+    from app import monitor
+    rng = np.random.default_rng(0)
+    edges, p = [0, 1, 2, 3, 4], [0.25, 0.25, 0.25, 0.25]
+    assert monitor.psi(rng.uniform(0, 4, 2000), edges, p) < 0.02
+    assert monitor.psi(rng.uniform(3, 4, 2000), edges, p) > 1.0
+    recs = []
+    for i in range(40):
+        win = i % 2 == 0
+        curve = list(np.linspace(0.5, 0.9 if win else 0.1, 25).round(4))
+        recs.append({"utc": "2026-11-13 10:00:00", "match_id": f"NA1_{i}", "parche": "16.22", "gana": "azul" if win else "rojo",
+                     "curva_p_azul": curve, "n_momentos": 2, "features_min15": None})
+    log = tmp_path / "p.jsonl"
+    log.write_text("\n".join(json.dumps(r) for r in recs), encoding="utf-8")
+    txt = monitor.report(log, out=tmp_path / "r.md")
+    assert "16.22" in txt and "| 40 |" in txt and "AUC" in txt
 
 
 def test_api_player_and_health(client):

@@ -30,8 +30,10 @@ import time
 from contextlib import asynccontextmanager
 from pathlib import Path
 
+import yaml
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 from app.inference import ROOT, AnalysisError, Engine, platform_of, tables_from_riot
 from riot_data import config
@@ -75,9 +77,33 @@ async def lifespan(_app: FastAPI):
     yield
 
 
-app = FastAPI(title="LoL · momentos decisivos", version="1.0", lifespan=lifespan,
+app = FastAPI(title="Fight Diff · API", version="1.0", lifespan=lifespan,
               description="Probabilidad de victoria minuto a minuto (GRU causal) y momentos "
                           "decisivos de una partida ranked de League of Legends. Solo post-partida.")
+if STATIC_DIR.exists():
+    app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+
+
+def _value_params() -> dict:
+    """Parámetros del modelo de valor (configs/value.yaml, B10) para estimar el tiempo de revisión."""
+    try:
+        cfg = yaml.safe_load((ROOT / "configs" / "value.yaml").read_text(encoding="utf-8"))
+        return {k: float(cfg[k]["base"]) for k in ("f_rev", "t_setup", "t_clip")}
+    except Exception:  # noqa: BLE001 - sin el yaml se usan los valores base documentados
+        return {"f_rev": 1.38, "t_setup": 2.0, "t_clip": 2.5}
+
+
+VALUE = _value_params()
+
+
+def review_estimate(res: dict) -> dict:
+    """Minutos de revisión: partida completa (f_rev × D) vs solo los clips (t_setup + n × t_clip)."""
+    n = len(res.get("momentos", []))
+    full = VALUE["f_rev"] * res["duracion_min"]
+    tool = VALUE["t_setup"] + n * VALUE["t_clip"]
+    return {"completa_min": round(full, 1), "con_clips_min": round(tool, 1),
+            "ahorro_pct": round(100 * (1 - tool / full), 0) if full else 0, "parametros": VALUE,
+            "nota": "Estimación con los parámetros de B10; no incluye el costo de momentos no detectados."}
 
 
 # ------------------------------------------------------------------ utilidades
@@ -163,16 +189,28 @@ def _cached(match_id: str) -> tuple[dict | None, str]:
     return None, ""
 
 
-def _log_prediction(res: dict) -> None:
+def _log_prediction(res: dict, monitor: dict | None) -> None:
+    """Una línea por análisis nuevo (docs/monitoreo.md). Sin datos personales: ni nombres ni puuid."""
     rec = {"utc": time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()), "match_id": res["match_id"],
+           "plataforma": res["plataforma"], "inicio_utc": res.get("inicio_utc", ""),
            "modelo": res["modelo"]["nombre"], "theta": res["modelo"]["theta"], "parche": res["parche"],
            "duracion_min": res["duracion_min"], "gana": res["gana"],
-           "p_final_azul": res["curva"][-1]["p_azul"], "n_momentos": len(res["momentos"]),
+           "curva_p_azul": [c["p_azul"] for c in res["curva"]],
+           "n_momentos": len(res["momentos"]), "n_candidatos": len(res.get("candidatos", [])),
+           "features_min15": (monitor or {}).get("features_min15"),
            "tiempos": res["tiempos"], "avisos": res["avisos"]}
     path = CACHE_DIR / "predicciones.jsonl"
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "a", encoding="utf-8") as f:
         f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+
+
+def _log_error(match_id: str, msg: str) -> None:
+    path = CACHE_DIR / "errores.jsonl"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "a", encoding="utf-8") as f:
+        f.write(json.dumps({"utc": time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()),
+                            "match_id": match_id, "error": msg}, ensure_ascii=False) + "\n")
 
 
 # ------------------------------------------------------------------ endpoints
@@ -197,26 +235,32 @@ def analyze(match_id: str = Query(..., description="p. ej. NA1_5676698765"),
     if not refresh:
         res, src = _cached(mid)
         if res is not None:
-            return {**res, "fuente": src, "tiempos": {**res.get("tiempos", {}),
-                                                      "total_ms": round(1000 * (time.perf_counter() - t0), 1)}}
+            return {**res, "fuente": src, "revision": review_estimate(res),
+                    "tiempos": {**res.get("tiempos", {}), "total_ms": round(1000 * (time.perf_counter() - t0), 1)}}
     try:
         match, timeline, riot_ms = fetch_raw(mid)
     except HTTPException as exc:
         res, src = _cached(mid)
         if exc.status_code == 503 and res is not None:  # sin Riot pero con caché: se muestra igual
-            return {**res, "fuente": src, "avisos": res.get("avisos", []) + [
+            return {**res, "fuente": src, "revision": review_estimate(res), "avisos": res.get("avisos", []) + [
                 f"Sin conexión con la API de Riot ({exc.detail}); se muestra el análisis guardado."]}
         raise
     try:
         tables = tables_from_riot(match, timeline, platform_of(mid))
+    except (KeyError, TypeError, ValueError) as exc:   # Riot cambió el formato de la respuesta
+        _log_error(mid, f"formato de Riot inesperado: {exc!r}")
+        raise HTTPException(502, "La respuesta de la API de Riot no tiene el formato esperado "
+                                 "(¿cambió el esquema de match-v5?). Quedó registrado.") from exc
+    try:
         res = S.engine.analyze(tables, timings={"riot_ms": round(riot_ms, 1)})
     except AnalysisError as exc:
         raise HTTPException(exc.status, str(exc)) from exc
+    monitor = res.pop("_monitor", None)
     res["tiempos"]["total_ms"] = round(1000 * (time.perf_counter() - t0), 1)
     _write_json(CACHE_DIR / "analysis" / f"{mid}.json", res)
     S.memory[mid] = res
-    _log_prediction(res)
-    return {**res, "fuente": "riot" if riot_ms else "raw_cache"}
+    _log_prediction(res, monitor)
+    return {**res, "fuente": "riot" if riot_ms else "raw_cache", "revision": review_estimate(res)}
 
 
 @app.get("/player")

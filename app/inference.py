@@ -37,6 +37,8 @@ from src.moments import detect_moments  # noqa: E402
 
 DEFAULT_MODEL_DIR = ROOT / "models" / "m4_gru"
 LOW_CERTAINTY_MINUTES = 5
+MAX_CANDIDATES = 3
+MONITOR_MINUTE = 15   # minuto cuyas features crudas se registran para vigilar cambios de distribución (PSI)
 EXPLAIN_GROUPS = {          # grupo de la explicación -> grupos del contrato de features
     "economía": ["economia", "rol"],
     "combate": ["combate"],
@@ -95,6 +97,8 @@ class Engine:
             self.members.append(Member(model, cols, float(ck["temperature"]), int(m["seed"])))
         self.det = self.manifest["detector"]
         self.theta = float(self.det["theta"])
+        # umbral de los "posibles momentos" (menos seguros): por defecto la mitad de θ*
+        self.theta_cand = float(self.det.get("theta_candidato", round(self.theta / 2, 3)))
         torch.set_num_threads(max(1, min(4, torch.get_num_threads())))
 
     @property
@@ -168,21 +172,31 @@ class Engine:
                               merge_gap=self.det.get("merge_gap", 2), top_k=self.det.get("top_k", 5))
         t2 = time.perf_counter()
 
-        moments = []
-        for m in sorted(moms, key=lambda x: x.minute):
+        # candidatos: saltos entre θ_cand y θ, lejos de los momentos principales (se muestran aparte)
+        gap = self.det.get("merge_gap", 2)
+        cands = [c for c in detect_moments(main, theta=self.theta_cand, windows=tuple(self.det.get("windows", (1, 2))),
+                                           merge_gap=gap, top_k=None)
+                 if c.score < self.theta and c.minute >= LOW_CERTAINTY_MINUTES   # no en la zona de baja certeza
+                 and all(abs(c.minute - m.minute) >= gap for m in moms)]
+        cands = sorted(sorted(cands, key=lambda c: -c.score)[:MAX_CANDIDATES], key=lambda c: c.minute)
+
+        def describe(m, candidate: bool) -> dict:
             # el clip va de start_minute a minute: la explicación mide el salto en ese mismo tramo
             exp = self.explain(raw, m.start_minute, m.minute, float(main[m.start_minute]))
             evs = window_events(events, ts[m.start_minute], ts[m.minute])
             seed_deltas = probs[:, m.minute] - probs[:, m.start_minute]
-            moments.append({
+            return {
                 "minuto": int(m.minute), "desde_min": int(m.start_minute),
                 "favorece": m.team, "delta_pts": round(100 * m.delta, 1),
                 "p_antes": round(m.p_before, 3), "p_despues": round(m.p_after, 3),
-                "confianza": "alta" if m.score >= 2 * self.theta else "media",
-                "semillas_de_acuerdo": int((np.abs(seed_deltas) >= self.theta).sum()),
-                "explicacion": exp, "eventos": evs,
+                "confianza": "baja" if candidate else ("alta" if m.score >= 2 * self.theta else "media"),
+                "semillas_de_acuerdo": int((np.abs(seed_deltas) >= (self.theta_cand if candidate else self.theta)).sum()),
+                "candidato": candidate, "explicacion": exp, "eventos": evs,
                 "texto": moment_text(m, exp["grupo"], evs),
-            })
+            }
+
+        moments = [describe(m, False) for m in sorted(moms, key=lambda x: x.minute)]
+        candidates = [describe(c, True) for c in cands]
         t3 = time.perf_counter()
         timings.update({"features_ms": round(1000 * (t1 - t0), 1), "modelo_ms": round(1000 * (t2 - t1), 1),
                         "explicacion_ms": round(1000 * (t3 - t2), 1),
@@ -192,13 +206,18 @@ class Engine:
             "parche": patch, "duracion_min": round(dur / 60, 1),
             "gana": "azul" if int(match["blue_win"]) else "rojo",
             "inicio_utc": str(match.get("game_start_utc", "")),
-            "modelo": {"nombre": self.name, "theta": self.theta, "semillas": [m.seed for m in self.members]},
+            "modelo": {"nombre": self.name, "theta": self.theta, "theta_candidato": self.theta_cand,
+                       "semillas": [m.seed for m in self.members]},
             "curva": [{"minuto": int(t), "p_azul": round(float(main[t]), 4),
                        "p_min": round(float(lo[t]), 4), "p_max": round(float(hi[t]), 4),
                        "baja_certeza": bool(t < LOW_CERTAINTY_MINUTES)} for t in range(len(main))],
             "momentos": moments,
+            "candidatos": candidates,
             "avisos": warnings,
             "tiempos": timings,
+            # solo para el registro de monitoreo (la API lo quita antes de responder)
+            "_monitor": {"features_min15": {k: round(float(v), 4) for k, v in raw.iloc[MONITOR_MINUTE].items()}
+                         if len(raw) > MONITOR_MINUTE else None},
         }
 
 

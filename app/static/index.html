@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fight Diff</title>
+  <meta name="description" content="Análisis post-partida: probabilidad de victoria minuto a minuto y momentos decisivos de una partida ranked.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <div class="emblem" aria-hidden="true"></div>
+      <div class="brand">
+        <h1>Fight Diff</h1>
+        <p>Dónde se ganó (o se perdió) tu partida · análisis post-partida</p>
+      </div>
+      <div class="status-pill" id="status"><span class="dot"></span><span>conectando…</span></div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- búsqueda -->
+    <section class="panel" aria-labelledby="buscar-t">
+      <h2 id="buscar-t">Buscar partida</h2>
+      <div class="tabs" role="tablist">
+        <button class="tab" role="tab" id="tab-riot" aria-selected="true" aria-controls="form-riot">Riot ID</button>
+        <button class="tab" role="tab" id="tab-match" aria-selected="false" aria-controls="form-match">Match ID</button>
+      </div>
+      <form id="form-riot" class="search-row" role="tabpanel" aria-labelledby="tab-riot">
+        <div class="field">
+          <label for="riot-id">Riot ID (Nombre#TAG)</label>
+          <input id="riot-id" placeholder="BadLuckLegend#NA1" autocomplete="off" required>
+        </div>
+        <div class="field narrow">
+          <label for="platform">Servidor</label>
+          <select id="platform">
+            <option value="na1">NA</option><option value="la1">LAN</option><option value="la2">LAS</option>
+            <option value="br1">BR</option><option value="euw1">EUW</option><option value="eun1">EUNE</option>
+            <option value="kr">KR</option><option value="jp1">JP</option>
+          </select>
+        </div>
+        <div class="field narrow">
+          <label for="count">Partidas</label>
+          <select id="count"><option>5</option><option>10</option></select>
+        </div>
+        <button class="btn" type="submit">Buscar</button>
+      </form>
+      <form id="form-match" class="search-row hidden" role="tabpanel" aria-labelledby="tab-match">
+        <div class="field">
+          <label for="match-id">Match ID</label>
+          <input id="match-id" placeholder="NA1_5676698765" autocomplete="off" required>
+        </div>
+        <button class="btn" type="submit">Analizar</button>
+      </form>
+      <div class="demo-row hidden" id="demo-row"><span>Partidas de ejemplo (sin conexión):</span></div>
+      <div id="search-msg" aria-live="polite"></div>
+    </section>
+
+    <!-- partidas del jugador -->
+    <section class="panel hidden" id="player-panel" aria-labelledby="player-t">
+      <h2 id="player-t">Partidas recientes</h2>
+      <div class="matches" id="matches"></div>
+    </section>
+
+    <!-- análisis -->
+    <section class="panel hidden" id="analysis" aria-labelledby="an-title">
+      <div class="match-head">
+        <span class="title" id="an-title"></span>
+        <span id="an-winner"></span>
+        <span id="an-side"></span>
+        <span class="meta" id="an-meta"></span>
+        <div class="toggle hidden" id="persp" role="group" aria-label="Perspectiva de la curva">
+          <button type="button" data-p="azul" aria-pressed="true">Equipo azul</button>
+          <button type="button" data-p="mio" aria-pressed="false">Mi equipo</button>
+        </div>
+      </div>
+      <div id="an-warnings"></div>
+
+      <div class="tiles">
+        <div class="tile"><div class="k">Momentos decisivos</div><div class="v" id="t-mom">–</div><div class="s" id="t-mom-s"></div></div>
+        <div class="tile"><div class="k">Revisión completa</div><div class="v" id="t-full">–</div><div class="s">viendo toda la repetición</div></div>
+        <div class="tile"><div class="k">Revisando solo los clips</div><div class="v" id="t-tool">–</div><div class="s" id="t-tool-s"></div></div>
+        <div class="tile"><div class="k">Resultado final</div><div class="v" id="t-final">–</div><div class="s" id="t-final-s"></div></div>
+      </div>
+    </section>
+
+    <section class="panel hidden" id="chart-panel" aria-labelledby="chart-t">
+      <h2 id="chart-t">Probabilidad de victoria <small id="chart-sub"></small></h2>
+      <div class="legend" aria-hidden="true">
+        <span><i class="sw-line"></i>Probabilidad estimada</span>
+        <span><i class="sw-band"></i>Rango entre 3 modelos</span>
+        <span><i class="tri up"></i>Momento a favor de azul</span>
+        <span><i class="tri down"></i>Momento a favor de rojo</span>
+        <span><i class="ring"></i>Posible momento (menos seguro)</span>
+        <span><i class="sw-zone"></i>Minutos 0–4: baja certeza</span>
+      </div>
+      <div class="chart-box"><canvas id="chart" role="img" aria-label="Curva de probabilidad de victoria por minuto"></canvas></div>
+      <details class="data">
+        <summary>Ver los datos de la curva en tabla</summary>
+        <div class="table-scroll"><table id="curve-table"></table></div>
+      </details>
+    </section>
+
+    <section class="panel hidden" id="moments-panel" aria-labelledby="mom-t">
+      <h2 id="mom-t">Momentos decisivos <small>los clips que vale la pena revisar</small></h2>
+      <div class="moments" id="moments"></div>
+      <div class="candidates hidden" id="cand-box">
+        <h3>Posibles momentos <small>menos seguros: el cambio de probabilidad fue menor</small></h3>
+        <div class="moments" id="candidates"></div>
+      </div>
+    </section>
+
+    <footer>
+      <p><strong>Solo análisis post-partida.</strong> No funciona ni debe usarse durante una partida en curso. Mide equipos, no juzga a jugadores individuales.</p>
+      <p>Modelo: GRU causal entrenada con 27,000 partidas ranked (4 regiones, Silver–Master). Proyecto académico · UVG 2026.</p>
+      <p>Fight Diff no está respaldado por Riot Games y no refleja las opiniones de Riot Games ni de nadie
+        oficialmente involucrado en producir o gestionar League of Legends. League of Legends y Riot Games son
+        marcas comerciales o marcas registradas de Riot Games, Inc.</p>
+    </footer>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <script src="/static/app.js"></script>
+</body>
+</html>

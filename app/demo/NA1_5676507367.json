@@ -1,0 +1,418 @@
+{
+ "match_id": "NA1_5676507367",
+ "plataforma": "na1",
+ "parche": "16.22",
+ "duracion_min": 29.9,
+ "gana": "azul",
+ "inicio_utc": "2026-11-09 05:47:19",
+ "modelo": {
+  "nombre": "M4",
+  "theta": 0.23,
+  "theta_candidato": 0.115,
+  "semillas": [
+   42,
+   43,
+   44
+  ]
+ },
+ "curva": [
+  {
+   "minuto": 0,
+   "p_azul": 0.5029,
+   "p_min": 0.4977,
+   "p_max": 0.5029,
+   "baja_certeza": true
+  },
+  {
+   "minuto": 1,
+   "p_azul": 0.4996,
+   "p_min": 0.4934,
+   "p_max": 0.4996,
+   "baja_certeza": true
+  },
+  {
+   "minuto": 2,
+   "p_azul": 0.5265,
+   "p_min": 0.5159,
+   "p_max": 0.5265,
+   "baja_certeza": true
+  },
+  {
+   "minuto": 3,
+   "p_azul": 0.4611,
+   "p_min": 0.4474,
+   "p_max": 0.4611,
+   "baja_certeza": true
+  },
+  {
+   "minuto": 4,
+   "p_azul": 0.5945,
+   "p_min": 0.5793,
+   "p_max": 0.5945,
+   "baja_certeza": true
+  },
+  {
+   "minuto": 5,
+   "p_azul": 0.4927,
+   "p_min": 0.4847,
+   "p_max": 0.4988,
+   "baja_certeza": false
+  },
+  {
+   "minuto": 6,
+   "p_azul": 0.4493,
+   "p_min": 0.4341,
+   "p_max": 0.4493,
+   "baja_certeza": false
+  },
+  {
+   "minuto": 7,
+   "p_azul": 0.4958,
+   "p_min": 0.4847,
+   "p_max": 0.4958,
+   "baja_certeza": false
+  },
+  {
+   "minuto": 8,
+   "p_azul": 0.5301,
+   "p_min": 0.524,
+   "p_max": 0.5301,
+   "baja_certeza": false
+  },
+  {
+   "minuto": 9,
+   "p_azul": 0.4279,
+   "p_min": 0.4153,
+   "p_max": 0.4279,
+   "baja_certeza": false
+  },
+  {
+   "minuto": 10,
+   "p_azul": 0.3536,
+   "p_min": 0.3531,
+   "p_max": 0.3536,
+   "baja_certeza": false
+  },
+  {
+   "minuto": 11,
+   "p_azul": 0.2878,
+   "p_min": 0.2814,
+   "p_max": 0.2883,
+   "baja_certeza": false
+  },
+  {
+   "minuto": 12,
+   "p_azul": 0.2761,
+   "p_min": 0.2613,
+   "p_max": 0.2761,
+   "baja_certeza": false
+  },
+  {
+   "minuto": 13,
+   "p_azul": 0.2025,
+   "p_min": 0.1909,
+   "p_max": 0.2086,
+   "baja_certeza": false
+  },
+  {
+   "minuto": 14,
+   "p_azul": 0.354,
+   "p_min": 0.3333,
+   "p_max": 0.3542,
+   "baja_certeza": false
+  },
+  {
+   "minuto": 15,
+   "p_azul": 0.3813,
+   "p_min": 0.3797,
+   "p_max": 0.392,
+   "baja_certeza": false
+  },
+  {
+   "minuto": 16,
+   "p_azul": 0.3718,
+   "p_min": 0.3484,
+   "p_max": 0.3775,
+   "baja_certeza": false
+  },
+  {
+   "minuto": 17,
+   "p_azul": 0.3588,
+   "p_min": 0.3588,
+   "p_max": 0.3707,
+   "baja_certeza": false
+  },
+  {
+   "minuto": 18,
+   "p_azul": 0.3773,
+   "p_min": 0.3689,
+   "p_max": 0.3773,
+   "baja_certeza": false
+  },
+  {
+   "minuto": 19,
+   "p_azul": 0.2924,
+   "p_min": 0.2924,
+   "p_max": 0.3192,
+   "baja_certeza": false
+  },
+  {
+   "minuto": 20,
+   "p_azul": 0.3263,
+   "p_min": 0.3263,
+   "p_max": 0.345,
+   "baja_certeza": false
+  },
+  {
+   "minuto": 21,
+   "p_azul": 0.2979,
+   "p_min": 0.2979,
+   "p_max": 0.3285,
+   "baja_certeza": false
+  },
+  {
+   "minuto": 22,
+   "p_azul": 0.4778,
+   "p_min": 0.4659,
+   "p_max": 0.4829,
+   "baja_certeza": false
+  },
+  {
+   "minuto": 23,
+   "p_azul": 0.5637,
+   "p_min": 0.542,
+   "p_max": 0.5637,
+   "baja_certeza": false
+  },
+  {
+   "minuto": 24,
+   "p_azul": 0.8616,
+   "p_min": 0.833,
+   "p_max": 0.8616,
+   "baja_certeza": false
+  },
+  {
+   "minuto": 25,
+   "p_azul": 0.9471,
+   "p_min": 0.9341,
+   "p_max": 0.9471,
+   "baja_certeza": false
+  },
+  {
+   "minuto": 26,
+   "p_azul": 0.9608,
+   "p_min": 0.9504,
+   "p_max": 0.9608,
+   "baja_certeza": false
+  },
+  {
+   "minuto": 27,
+   "p_azul": 0.9143,
+   "p_min": 0.8928,
+   "p_max": 0.9143,
+   "baja_certeza": false
+  },
+  {
+   "minuto": 28,
+   "p_azul": 0.8841,
+   "p_min": 0.8575,
+   "p_max": 0.8841,
+   "baja_certeza": false
+  },
+  {
+   "minuto": 29,
+   "p_azul": 0.9358,
+   "p_min": 0.9164,
+   "p_max": 0.9358,
+   "baja_certeza": false
+  },
+  {
+   "minuto": 30,
+   "p_azul": 0.9788,
+   "p_min": 0.9783,
+   "p_max": 0.9801,
+   "baja_certeza": false
+  }
+ ],
+ "momentos": [
+  {
+   "minuto": 24,
+   "desde_min": 21,
+   "favorece": "azul",
+   "delta_pts": 38.4,
+   "p_antes": 0.478,
+   "p_despues": 0.862,
+   "confianza": "media",
+   "semillas_de_acuerdo": 3,
+   "candidato": false,
+   "explicacion": {
+    "grupo": "economía",
+    "aporte": {
+     "economía": 0.678,
+     "combate": 0.154,
+     "objetivos": 0.141,
+     "visión": 0.027
+    },
+    "reduccion_salto": {
+     "economía": 0.3107,
+     "combate": 0.0706,
+     "objetivos": 0.0644,
+     "visión": 0.0124
+    }
+   },
+   "eventos": {
+    "azul": {
+     "kills": 8,
+     "objetivos": [
+      "ace",
+      "dragón"
+     ],
+     "estructuras": [
+      "torre",
+      "torre"
+     ]
+    },
+    "rojo": {
+     "kills": 3,
+     "objetivos": [],
+     "estructuras": []
+    }
+   },
+   "texto": "min 21–24: 38 pts de probabilidad a favor de azul, sobre todo por economía (azul: 8 kills, ace, dragón, 2× torre; rojo: 3 kills)"
+  }
+ ],
+ "candidatos": [
+  {
+   "minuto": 10,
+   "desde_min": 8,
+   "favorece": "rojo",
+   "delta_pts": -17.7,
+   "p_antes": 0.53,
+   "p_despues": 0.354,
+   "confianza": "baja",
+   "semillas_de_acuerdo": 3,
+   "candidato": true,
+   "explicacion": {
+    "grupo": "economía",
+    "aporte": {
+     "economía": 0.756,
+     "combate": 0.169,
+     "objetivos": 0.02,
+     "visión": 0.055
+    },
+    "reduccion_salto": {
+     "economía": 0.1465,
+     "combate": 0.0327,
+     "objetivos": 0.004,
+     "visión": 0.0106
+    }
+   },
+   "eventos": {
+    "azul": {
+     "kills": 2,
+     "objetivos": [],
+     "estructuras": []
+    },
+    "rojo": {
+     "kills": 4,
+     "objetivos": [],
+     "estructuras": []
+    }
+   },
+   "texto": "min 8–10: 18 pts de probabilidad a favor de rojo, sobre todo por economía (azul: 2 kills; rojo: 4 kills)"
+  },
+  {
+   "minuto": 15,
+   "desde_min": 13,
+   "favorece": "azul",
+   "delta_pts": 17.9,
+   "p_antes": 0.203,
+   "p_despues": 0.381,
+   "confianza": "baja",
+   "semillas_de_acuerdo": 3,
+   "candidato": true,
+   "explicacion": {
+    "grupo": "economía",
+    "aporte": {
+     "economía": 0.615,
+     "combate": 0.322,
+     "objetivos": 0.035,
+     "visión": 0.028
+    },
+    "reduccion_salto": {
+     "economía": 0.1274,
+     "combate": 0.0668,
+     "objetivos": 0.0072,
+     "visión": 0.0059
+    }
+   },
+   "eventos": {
+    "azul": {
+     "kills": 5,
+     "objetivos": [],
+     "estructuras": []
+    },
+    "rojo": {
+     "kills": 3,
+     "objetivos": [],
+     "estructuras": [
+      "torre"
+     ]
+    }
+   },
+   "texto": "min 13–15: 18 pts de probabilidad a favor de azul, sobre todo por economía (azul: 5 kills; rojo: 3 kills, torre)"
+  },
+  {
+   "minuto": 22,
+   "desde_min": 21,
+   "favorece": "azul",
+   "delta_pts": 18.0,
+   "p_antes": 0.298,
+   "p_despues": 0.478,
+   "confianza": "baja",
+   "semillas_de_acuerdo": 3,
+   "candidato": true,
+   "explicacion": {
+    "grupo": "economía",
+    "aporte": {
+     "economía": 0.828,
+     "combate": 0.008,
+     "objetivos": 0.037,
+     "visión": 0.127
+    },
+    "reduccion_salto": {
+     "economía": 0.1365,
+     "combate": 0.0014,
+     "objetivos": 0.006,
+     "visión": 0.0209
+    }
+   },
+   "eventos": {
+    "azul": {
+     "kills": 3,
+     "objetivos": [],
+     "estructuras": [
+      "torre"
+     ]
+    },
+    "rojo": {
+     "kills": 2,
+     "objetivos": [],
+     "estructuras": []
+    }
+   },
+   "texto": "min 21–22: 18 pts de probabilidad a favor de azul, sobre todo por economía (azul: 3 kills, torre; rojo: 2 kills)"
+  }
+ ],
+ "avisos": [
+  "Parche 16.22 distinto a los de entrenamiento (16.19, 16.20, 16.21): posible degradación (en test, el parche no visto 16.22 no empeoró)."
+ ],
+ "tiempos": {
+  "riot_ms": 720.6,
+  "features_ms": 8.6,
+  "modelo_ms": 14.9,
+  "explicacion_ms": 27.1,
+  "inferencia_total_ms": 50.7,
+  "total_ms": 893.0
+ }
+}

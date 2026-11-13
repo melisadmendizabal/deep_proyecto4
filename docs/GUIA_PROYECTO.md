@@ -30,7 +30,8 @@
 | B6 Entrenamiento DL (B) | ✅ Completado (sáb 7, noche): GRU test AUC 0.8123 ± 0.0002 (3 semillas), +0.0017 vs M2 (significativo pero mínimo). Mejor config: hidden 128, 2 capas, dropout 0.1, lr 3e-4. Detalle en `results/b6_resumen.md`. A corrigió antes `fit_temperature` (LBFGS con `strong_wolfe`) |
 | B9 Anotación + E3/E4 (A) | ✅ Completado (mié 11): E3/E4 (`results/b9_e3e4.md`: un modelo global sirve para todos los tiers y regiones), 35 partidas anotadas (`annotations/A.csv`) y partidas propias descargadas desde la PC de B (ver B10) |
 | B8 Momentos + anotación (B) | ✅ Completado (lun 9): detector, herramienta Streamlit, protocolo, selección de 55 partidas. B lleva 13 anotadas |
-| B11 Backend (A) | ✅ Completado (jue 12): `app/api.py` + `app/inference.py` + `src/export_model.py`. Partidas propias nuevas en 1.2 s (p50, 9/9 < 3 s; Riot es el 95 %). **Pendiente conjunto:** decidir el detector del producto (R0 vs M4). **Bug arreglado que afecta a B10:** ver B11 |
+| B11 Backend (A) | ✅ Completado (jue 12): `app/api.py` + `app/inference.py` + `src/export_model.py`. Partidas propias nuevas en 1.2 s (p50, 9/9 < 3 s; Riot es el 95 %). Detector del producto: **GRU (M4)**; la iteración híbrida GRU+R0 empata con R0 (`results/b10_hibrido.md`), así que no se adopta. **Bug arreglado que afecta a B10:** ver B11 |
+| B13 Frontend (A) | 🟡 Frontend "Fight Diff", fallback offline (5 partidas en `app/demo/`) y monitoreo (`docs/monitoreo.md`) ✅. **Falta desplegar** |
 | B10 Valor (B) | ✅ Código ✅ (lun 9): `src/value_model.py` + `src/agreement.py`, N3 de B corrida (TCN final ×3, E6 λ 0.1 y 0.5 ×3). ✅ Completado (jue 12): valor y acuerdo con las 55 partidas de A y B, f_rev medido = 1.38, momentos de 3 repeticiones en `annotations/revisiones_momentos.csv` (ver B10) |
 
 **Para A (compañero), de B6/B8:**
@@ -487,15 +488,17 @@ Valor_mes = N_rev × (Ahorro_promedio / 60) × C_h − C_infra − N_rev × C_pr
 - [ ] E5: AUC, ECE y F1 de momentos por tier, región, tramo de minuto y duración.
 - [ ] Explicabilidad: SHAP global de LightGBM, ablación por grupos (o Integrated Gradients) para la GRU, y **3 casos de falla analizados**.
 
-### B13 · A · Vie 13 – Sáb 14 · Frontend + despliegue (6 h) · Debe
+### B13 · A · Vie 13 – Sáb 14 · Frontend + despliegue (6 h) · Debe · **FALTA SOLO DESPLEGAR (vie 13 nov)**
 
-- [ ] `app/static/index.html` + Chart.js:
-  - Entrada por Riot ID o match ID.
-  - Curva con banda de incertidumbre y marcadores de momentos.
-  - Lista de momentos con su explicación.
+- [x] `app/static/index.html` + `style.css` + `app.js` (Chart.js 4.4.1), estética tipo hextech sin assets de Riot y con el aviso legal de Riot. Producto: **"Fight Diff"**. Correr: `uvicorn app.api:app --port 8000` → http://127.0.0.1:8000
+  - Entrada por Riot ID (lista de partidas con ícono de campeón, Data Dragon) o match ID; enlaces directos `/?match=NA1_…&lado=azul` y `/?riot=Nombre%23TAG&plataforma=na1`.
+  - Curva con banda de incertidumbre (min–max de 3 semillas), zona de baja certeza (min 0–4), ventana de cada clip sombreada y marcadores ▲/▼ (forma + color de equipo) numerados; tooltip por minuto; vista "mi equipo"; tabla de datos.
+  - Lista de momentos con su explicación (reparto por grupo), eventos por equipo y "en la repetición: de mm:00 a mm:00". **Posibles momentos** (θ/2 ≤ salto < θ*, fuera de la zona de baja certeza, máximo 3) en una sección aparte con borde punteado y marcador hueco.
+  - Fichas con el valor: revisión completa (f_rev × D) vs solo clips (t_setup + n × t_clip).
+  - Colores de datos validados con el validador de paletas (azul `#3a8ee6` / rojo `#e8505b` sobre `#0a1428`: pasan todas las pruebas, ΔE daltonismo 21); el dorado es solo interfaz. Revisado con capturas en escritorio y a 390 px.
 - [ ] Desplegar (Render o Hugging Face Spaces, con la key como secreto).
-- [ ] **Fallback offline:** 5 partidas precalculadas en caché por si la API falla durante la demo.
-- [ ] Logging de predicciones + `docs/monitoreo.md`.
+- [x] **Fallback offline:** 5 partidas propias precalculadas en `app/demo/` (`python app/make_demo.py`); `/analyze` las sirve si Riot falla y el frontend las ofrece como "Partidas de ejemplo".
+- [x] Logging de predicciones (`data/app_cache/predicciones.jsonl`: curva, resultado, features del min 15, tiempos; sin datos personales) + `docs/monitoreo.md` + `app/monitor.py` (log-loss, ECE, AUC y PSI por parche/semana, con alertas). Validado con 300 partidas de test: reproduce la evaluación offline (log-loss 0.503, ECE 0.019) y no da falsas alarmas.
 
 ### B14 · B · Vie 13 – Sáb 14 · Usabilidad + redacción (5 h) · Debería
 
