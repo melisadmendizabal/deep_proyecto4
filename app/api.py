@@ -263,6 +263,18 @@ def analyze(match_id: str = Query(..., description="p. ej. NA1_5676698765"),
     return {**res, "fuente": "riot" if riot_ms else "raw_cache", "revision": review_estimate(res)}
 
 
+def find_player(match: dict, puuid: str, game_name: str, tag_line: str) -> dict | None:
+    """Participante del jugador: por puuid y, si no, por Riot ID (Riot encripta el puuid distinto
+    según la API key, así que un JSON descargado con otra key no lo tiene; el Riot ID sí)."""
+    parts = match.get("info", {}).get("participants", [])
+    hit = next((p for p in parts if p.get("puuid") == puuid), None)
+    if hit is None:
+        n, t = game_name.casefold(), tag_line.casefold()
+        hit = next((p for p in parts if str(p.get("riotIdGameName", "")).casefold() == n
+                    and str(p.get("riotIdTagline", "")).casefold() == t), None)
+    return hit
+
+
 @app.get("/player")
 def player(riot_id: str = Query(..., description="Nombre#TAG"),
            platform: str = Query("na1", description="na1, la1, euw1, kr..."),
@@ -279,21 +291,31 @@ def player(riot_id: str = Query(..., description="Nombre#TAG"),
     if account is None:
         raise HTTPException(404, f"No existe el Riot ID '{riot_id}'.")
     puuid = account["puuid"]
+    who = (account.get("gameName", name), account.get("tagLine", tag))
     ids = _riot_call(riot.match_ids, region, puuid, count, queue=config.QUEUE_ID) or []
     out = []
     for mid in ids:
         pm = CACHE_DIR / "raw" / f"{mid}.json.gz"
         match = _read_json(pm)
+        me = find_player(match, puuid, *who) if match else None
+        if me is None:
+            # sin caché, o caché bajado con OTRA API key (Riot encripta el puuid distinto por key y
+            # el jugador no aparece por puuid ni por nombre): se descarga de nuevo
+            fresh = _riot_call(riot.match, region, mid)
+            if fresh is not None:
+                match = fresh
+                _write_json(pm, match)
+                me = find_player(match, puuid, *who)
         if match is None:
-            match = _riot_call(riot.match, region, mid)
-            if match is None:
-                continue
-            _write_json(pm, match)
+            continue
         info = match["info"]
-        me = next((p for p in info["participants"] if p.get("puuid") == puuid), {})
-        out.append({"match_id": mid, "campeon": me.get("championName"), "rol": me.get("teamPosition"),
-                    "lado": "azul" if me.get("teamId") == 100 else "rojo", "gano": bool(me.get("win")),
-                    "kda": f"{me.get('kills', 0)}/{me.get('deaths', 0)}/{me.get('assists', 0)}",
+        found = me is not None
+        me = me or {}
+        out.append({"match_id": mid, "jugador_encontrado": found,
+                    "campeon": me.get("championName"), "rol": me.get("teamPosition"),
+                    "lado": ("azul" if me.get("teamId") == 100 else "rojo") if found else None,
+                    "gano": bool(me.get("win")) if found else None,
+                    "kda": f"{me.get('kills', 0)}/{me.get('deaths', 0)}/{me.get('assists', 0)}" if found else None,
                     "duracion_min": round(info["gameDuration"] / 60, 1),
                     "inicio_utc": time.strftime("%Y-%m-%d %H:%M", time.gmtime(
                         info.get("gameStartTimestamp", info["gameCreation"]) / 1000)),

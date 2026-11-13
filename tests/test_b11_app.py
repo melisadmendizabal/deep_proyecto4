@@ -190,6 +190,25 @@ def test_api_errors(client):
     assert tc.get("/analyze", params={"match_id": "NA1_9999999998"}).status_code == 503
 
 
+def test_player_found_by_riot_id_when_puuid_differs(client):
+    """Caché bajado con OTRA API key: el puuid no coincide, pero el Riot ID sí (bug del 14 nov)."""
+    tc, mid, fake, api = client
+    p0 = fake.m["info"]["participants"][0]
+    if not p0.get("riotIdGameName"):
+        pytest.skip("este JSON crudo no trae riotIdGameName")
+    fake.account_by_riot_id = lambda region, name, tag: {
+        "puuid": "puuid-encriptado-con-otra-key", "gameName": p0["riotIdGameName"], "tagLine": p0["riotIdTagline"]}
+    r = tc.get("/player", params={"riot_id": f"{p0['riotIdGameName']}#{p0['riotIdTagline']}",
+                                  "platform": mid.split("_")[0].lower()}).json()
+    card = r["partidas"][0]
+    assert card["jugador_encontrado"] and card["campeon"] == p0["championName"]
+    assert card["lado"] == ("azul" if p0["teamId"] == 100 else "rojo")
+    # ni puuid ni Riot ID coinciden: tarjeta neutra, sin victoria/derrota ni KDA inventados
+    fake.account_by_riot_id = lambda region, name, tag: {"puuid": "x", "gameName": "Nadie", "tagLine": "000"}
+    card = tc.get("/player", params={"riot_id": "Nadie#000", "platform": mid.split("_")[0].lower()}).json()["partidas"][0]
+    assert card["jugador_encontrado"] is False and card["gano"] is None and card["kda"] is None
+
+
 def test_frontend_served(client):
     tc, *_ = client
     r = tc.get("/")

@@ -107,13 +107,17 @@ function renderPlayer(r) {
   r.partidas.forEach((p) => {
     const b = document.createElement("button");
     b.type = "button";
-    b.className = `match-card ${p.gano ? "win" : "loss"}`;
+    const found = p.jugador_encontrado !== false;
+    b.className = `match-card ${found ? (p.gano ? "win" : "loss") : ""}`;
     b.disabled = !p.analizable;
     b.title = p.analizable ? "Analizar esta partida" : "Partida de menos de 15 min: no se analiza";
+    const result = found
+      ? `<span class="result ${p.gano ? "win" : "loss"}">${p.gano ? "VICTORIA" : "DERROTA"}</span> · ${esc(p.kda)} · `
+      : `<span class="meta">no te encontramos en esta partida</span> · `;
     b.innerHTML = `${champIcon(p.campeon)}
-      <div><div class="line1">${esc(p.campeon)} <span class="meta">${esc(p.rol || "")}</span></div>
-      <div class="line2"><span class="result ${p.gano ? "win" : "loss"}">${p.gano ? "VICTORIA" : "DERROTA"}</span> · ${esc(p.kda)} · ${p.duracion_min} min</div>
-      <div class="line3">lado ${esc(p.lado)} · ${esc(p.inicio_utc)} UTC${p.analizada ? " · ya analizada" : ""}</div></div>`;
+      <div><div class="line1">${found ? esc(p.campeon) : "Partida ranked"} <span class="meta">${esc(p.rol || "")}</span></div>
+      <div class="line2">${result}${p.duracion_min} min</div>
+      <div class="line3">${found ? `lado ${esc(p.lado)} · ` : ""}${esc(p.inicio_utc)} UTC${p.analizada ? " · ya analizada" : ""}</div></div>`;
     b.onclick = () => analyze(p.match_id, p.lado);
     box.appendChild(b);
   });
