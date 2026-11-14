@@ -9,3 +9,4 @@ fastapi==0.162.5
 uvicorn[standard]==0.54.0
 PyYAML==6.0.3
 requests==2.34.2
+lightgbm==4.7.0   # solo para M2 (baseline del selector de modelos); se importa al primer uso

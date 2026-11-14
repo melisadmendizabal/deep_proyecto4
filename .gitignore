@@ -10,10 +10,18 @@ data/
 *.pth
 *.ckpt
 *.onnx
-# EXCEPCIÓN (B13): el modelo que usa la app desplegada (GRU × 3 semillas + scaler + manifest, ~2.4 MB,
-# sin datos personales) sí va a git para que Render lo tome del repo. Se regenera con src/export_model.py.
+# EXCEPCIÓN (B13): los modelos que usa la app desplegada (M4 principal + M0-M3, M5 del selector;
+# ~4.5 MB en total, sin datos personales) sí van a git para que Render los tome del repo.
+# Se regeneran con src/export_model.py. models/_train/ (checkpoints completos) sigue fuera.
+!/models/m0_oro/
+!/models/m1_logit/
+!/models/m2_lgbm/
+!/models/m3_mlp/
+!/models/m3_mlp/*.pt
 !/models/m4_gru/
 !/models/m4_gru/*.pt
+!/models/m5_tcn/
+!/models/m5_tcn/*.pt
 
 # Python
 __pycache__/

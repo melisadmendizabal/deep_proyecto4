@@ -18,66 +18,120 @@
         <h1>Fight Diff</h1>
         <p>Dónde se ganó (o se perdió) tu partida · análisis post-partida</p>
       </div>
-      <div class="status-pill" id="status"><span class="dot"></span><span>conectando…</span></div>
+      <div class="status-pill" id="status" aria-live="polite"><span>conectando…</span></div>
     </div>
   </header>
 
   <main class="wrap">
-    <!-- búsqueda -->
-    <section class="panel" aria-labelledby="buscar-t">
-      <h2 id="buscar-t">Buscar partida</h2>
+    <!-- búsqueda + partidas del jugador (un solo panel que se extiende) -->
+    <section class="panel" id="search-panel" aria-labelledby="buscar-t">
+      <h2 id="buscar-t">Analizar una partida</h2>
       <div class="tabs" role="tablist">
-        <button class="tab" role="tab" id="tab-riot" aria-selected="true" aria-controls="form-riot">Riot ID</button>
-        <button class="tab" role="tab" id="tab-match" aria-selected="false" aria-controls="form-match">Match ID</button>
+        <button class="tab" role="tab" id="tab-riot" aria-selected="true" aria-controls="form-riot">Búsqueda por usuario</button>
+        <button class="tab" role="tab" id="tab-match" aria-selected="false" aria-controls="form-match">Búsqueda por partida</button>
+        <button class="tab" role="tab" id="tab-demo" aria-selected="false" aria-controls="form-demo">Uso sin conexión</button>
       </div>
-      <form id="form-riot" class="search-row" role="tabpanel" aria-labelledby="tab-riot">
+
+      <form id="form-riot" class="search-row" role="tabpanel" aria-labelledby="tab-riot" novalidate>
         <div class="field">
-          <label for="riot-id">Riot ID (Nombre#TAG)</label>
-          <input id="riot-id" placeholder="BadLuckLegend#NA1" autocomplete="off" required>
+          <div class="label-row">
+            <label for="riot-id">Riot ID</label>
+            <button type="button" class="info" aria-expanded="false" aria-controls="help-riot" aria-label="Cómo encontrar tu Riot ID">i</button>
+            <div class="help hidden" id="help-riot" role="note">
+              <b>Tu Riot ID es tu nombre + tu tag</b>, por ejemplo <code>BadLuckLegend#NA1</code>.
+              <ul>
+                <li>En el cliente de LoL, arriba a la derecha: pasa el cursor sobre tu nombre (o abre tu <i>Perfil</i>) y verás <code>Nombre #TAG</code>.</li>
+                <li>También aparece en la lista de amigos al pasar el cursor sobre ti, o en account.riotgames.com → <i>Riot ID</i>.</li>
+              </ul>
+              Escríbelo junto, con el <code>#</code>: <code>Nombre#TAG</code>.
+            </div>
+          </div>
+          <input id="riot-id" placeholder="BadLuckLegend#NA1" autocomplete="off" required aria-describedby="riot-hint">
+          <p class="field-msg hint" id="riot-hint">Elige abajo el <b>servidor de tu cuenta</b>: con otro servidor la búsqueda no encuentra tus partidas.</p>
         </div>
         <div class="field narrow">
-          <label for="platform">Servidor</label>
+          <div class="label-row"><label for="platform">Servidor</label></div>
           <select id="platform">
             <option value="na1">NA</option><option value="la1">LAN</option><option value="la2">LAS</option>
             <option value="br1">BR</option><option value="euw1">EUW</option><option value="eun1">EUNE</option>
             <option value="kr">KR</option><option value="jp1">JP</option>
           </select>
+          <p class="field-msg"></p>
         </div>
-        <div class="field narrow">
-          <label for="count">Partidas</label>
-          <select id="count"><option>5</option><option>10</option></select>
+        <div class="field count">
+          <div class="label-row"><label for="count">Cantidad de partidas</label></div>
+          <input id="count" type="number" inputmode="numeric" min="1" max="10" step="1" value="5" aria-describedby="count-msg">
+          <p class="field-msg warn" id="count-msg" aria-live="polite"></p>
         </div>
-        <button class="btn" type="submit">Buscar</button>
+        <div class="field btn-field">
+          <div class="label-row" aria-hidden="true"></div>
+          <button class="btn" type="submit">Buscar</button>
+          <p class="field-msg"></p>
+        </div>
       </form>
-      <form id="form-match" class="search-row hidden" role="tabpanel" aria-labelledby="tab-match">
-        <div class="field">
-          <label for="match-id">Match ID</label>
-          <input id="match-id" placeholder="NA1_5676698765" autocomplete="off" required>
-        </div>
-        <button class="btn" type="submit">Analizar</button>
-      </form>
-      <div class="demo-row hidden" id="demo-row"><span>Partidas de ejemplo (sin conexión):</span></div>
-      <div id="search-msg" aria-live="polite"></div>
-    </section>
 
-    <!-- partidas del jugador -->
-    <section class="panel hidden" id="player-panel" aria-labelledby="player-t">
-      <h2 id="player-t">Partidas recientes</h2>
-      <div class="matches" id="matches"></div>
+      <form id="form-match" class="search-row hidden" role="tabpanel" aria-labelledby="tab-match" novalidate>
+        <div class="field">
+          <div class="label-row">
+            <label for="match-id">ID de la partida</label>
+            <button type="button" class="info" aria-expanded="false" aria-controls="help-match" aria-label="Cómo encontrar el ID de una partida">i</button>
+            <div class="help hidden" id="help-match" role="note">
+              <b>Es el código de una partida</b>: servidor + número, por ejemplo <code>NA1_5676698765</code>.
+              <ul>
+                <li>En el cliente de LoL: <i>Perfil</i> → <i>Historial de partidas</i> → descarga la repetición de la partida.
+                  El archivo queda en <code>Documentos/League of Legends/Replays</code> con el nombre
+                  <code>NA1-5676698765.rofl</code>: puedes pegar ese nombre tal cual.</li>
+                <li>Más fácil: usa la <i>Búsqueda por usuario</i> y elige la partida de la lista.</li>
+              </ul>
+            </div>
+          </div>
+          <input id="match-id" placeholder="NA1_5676698765" autocomplete="off" required aria-describedby="match-hint">
+          <p class="field-msg hint" id="match-hint">También sirve el nombre del archivo de repetición (<code>NA1-5676698765.rofl</code>).</p>
+        </div>
+        <div class="field btn-field">
+          <div class="label-row" aria-hidden="true"></div>
+          <button class="btn" type="submit">Analizar</button>
+          <p class="field-msg"></p>
+        </div>
+      </form>
+
+      <form id="form-demo" class="search-row hidden" role="tabpanel" aria-labelledby="tab-demo">
+        <div class="field">
+          <div class="label-row"><span class="label" id="demo-label">Partida guardada</span></div>
+          <div class="dropdown" id="demo-dd">
+            <button type="button" class="dd-btn" id="demo-dd-btn" aria-haspopup="listbox" aria-expanded="false"
+                    aria-labelledby="demo-label demo-dd-btn"><span class="dd-value">No hay partidas guardadas</span></button>
+            <ul class="dd-list hidden" id="demo-list" role="listbox" tabindex="-1" aria-labelledby="demo-label"></ul>
+          </div>
+          <p class="field-msg hint">Partidas ya analizadas que vienen con la app: funcionan sin internet ni API de Riot.</p>
+        </div>
+        <div class="field btn-field">
+          <div class="label-row" aria-hidden="true"></div>
+          <button class="btn" type="submit">Analizar</button>
+          <p class="field-msg"></p>
+        </div>
+      </form>
+
+      <div id="search-msg" aria-live="polite"></div>
+
+      <div class="results hidden" id="player-panel">
+        <h3 id="player-t">Partidas recientes</h3>
+        <div class="matches" id="matches" role="list"></div>
+      </div>
     </section>
 
     <!-- análisis -->
     <section class="panel hidden" id="analysis" aria-labelledby="an-title">
       <div class="match-head">
         <span class="title" id="an-title"></span>
-        <span id="an-winner"></span>
         <span id="an-side"></span>
         <span class="meta" id="an-meta"></span>
-        <div class="toggle hidden" id="persp" role="group" aria-label="Perspectiva de la curva">
-          <button type="button" data-p="azul" aria-pressed="true">Equipo azul</button>
-          <button type="button" data-p="mio" aria-pressed="false">Mi equipo</button>
+        <div class="model-pick hidden" id="model-pick">
+          <label for="model">Modelo</label>
+          <select id="model"></select>
         </div>
       </div>
+      <p class="model-note hidden" id="model-note"></p>
       <div id="an-warnings"></div>
 
       <div class="tiles">
@@ -89,18 +143,22 @@
     </section>
 
     <section class="panel hidden" id="chart-panel" aria-labelledby="chart-t">
-      <h2 id="chart-t">Probabilidad de victoria <small id="chart-sub"></small></h2>
+      <div class="panel-head">
+        <h2 id="chart-t">Probabilidad de victoria <small id="chart-sub"></small></h2>
+        <div class="toggle" id="persp" role="group" aria-label="De qué equipo se muestra la probabilidad"></div>
+      </div>
       <div class="legend" aria-hidden="true">
         <span><i class="sw-line"></i>Probabilidad estimada</span>
-        <span><i class="sw-band"></i>Rango entre 3 modelos</span>
-        <span><i class="tri up"></i>Momento a favor de azul</span>
-        <span><i class="tri down"></i>Momento a favor de rojo</span>
+        <span id="lg-band"><i class="sw-band"></i><span id="lg-band-t">Rango entre 3 entrenamientos</span></span>
+        <span><i class="tri" id="lg-tri-azul"></i>Momento a favor de azul</span>
+        <span><i class="tri" id="lg-tri-rojo"></i>Momento a favor de rojo</span>
+        <span><i class="sw-win"></i>Tramo de cada momento</span>
         <span><i class="ring"></i>Posible momento (menos seguro)</span>
         <span><i class="sw-zone"></i>Minutos 0–4: baja certeza</span>
       </div>
-      <div class="chart-box"><canvas id="chart" role="img" aria-label="Curva de probabilidad de victoria por minuto"></canvas></div>
+      <div class="chart-box" id="chart-box"><canvas id="chart" role="img" aria-label="Curva de probabilidad de victoria por minuto"></canvas></div>
       <details class="data">
-        <summary>Ver los datos de la curva en tabla</summary>
+        <summary>Ver los datos de la curva en tabla <small>(clic en una fila para señalar ese minuto en la gráfica)</small></summary>
         <div class="table-scroll"><table id="curve-table"></table></div>
       </details>
     </section>
@@ -116,7 +174,8 @@
 
     <footer>
       <p><strong>Solo análisis post-partida.</strong> No funciona ni debe usarse durante una partida en curso. Mide equipos, no juzga a jugadores individuales.</p>
-      <p>Modelo: GRU causal entrenada con 27,000 partidas ranked (4 regiones, Silver–Master). Proyecto académico · UVG 2026.</p>
+      <p>Modelo principal (M4): GRU causal entrenada con 27,000 partidas ranked (4 regiones, Silver–Master); los demás
+        modelos del selector son las alternativas y baselines con los que se comparó. Proyecto académico · UVG 2026.</p>
       <p>Fight Diff no está respaldado por Riot Games y no refleja las opiniones de Riot Games ni de nadie
         oficialmente involucrado en producir o gestionar League of Legends. League of Legends y Riot Games son
         marcas comerciales o marcas registradas de Riot Games, Inc.</p>

@@ -45,6 +45,33 @@ def make_engine_dir(tmp: Path, theta: float = 1e-6) -> Path:
     return d
 
 
+def make_logit_models(tmp: Path) -> Path:
+    """Carpeta tipo models/ con un baseline logístico (formato de export_model.py --baseline m0)."""
+    root = tmp / "models_extra"
+    d = root / "m0_test"
+    d.mkdir(parents=True)
+    Scaler(FEATURE_NAMES, FEATURE_TRANSFORMS, np.zeros(len(FEATURE_NAMES)),
+           np.full(len(FEATURE_NAMES), 1000.0)).save(d / "scaler.json")
+    (d / "logit.json").write_text(json.dumps({"feature_names": ["minute", "gold_diff"], "coef": [0.0, 2.0],
+                                              "intercept": 0.0, "temperature": 1.0}))
+    (d / "manifest.json").write_text(json.dumps({
+        "name": "M0test", "members": [{"file": "logit.json", "kind": "logit", "seed": 0, "temperature": 1.0}],
+        "train_patches": ["16.21"], "queue_id": 420, "min_duration_s": 900,
+        "detector": {"theta": 0.05, "windows": [1, 2], "merge_gap": 2, "top_k": 5}}))
+    return root
+
+
+def test_logit_member_matches_formula(tmp_path):
+    """Un baseline logístico exportado: P = sigmoide((coef · x + b) / T) sobre las features normalizadas."""
+    eng = Engine(make_logit_models(tmp_path) / "m0_test")
+    m = eng.members[0]
+    assert m.kind == "logit" and [FEATURE_NAMES[c] for c in m.cols] == ["minute", "gold_diff"]
+    X = np.zeros((1, 3, len(FEATURE_NAMES)), dtype=np.float32)
+    X[0, :, FEATURE_NAMES.index("gold_diff")] = [-1.0, 0.0, 1.0]
+    p = eng._probs(m, X)[0]
+    assert p == pytest.approx(1 / (1 + np.exp(-2.0 * np.array([-1.0, 0.0, 1.0]))), abs=1e-6)
+
+
 def make_tables(minutes=30, duration_s=None, queue=420, patch="16.21"):
     parts = make_participants()
     parts["champion_name"] = "X"
@@ -156,6 +183,7 @@ def client(tmp_path, monkeypatch):
     monkeypatch.setattr(api, "CACHE_DIR", tmp_path / "cache")
     monkeypatch.setattr(api, "DEMO_DIR", tmp_path / "demo")
     monkeypatch.setattr(api.config, "RAW_DIR", tmp_path / "sin_raw")   # forzar el camino "API de Riot"
+    monkeypatch.setattr(api, "MODELS_ROOT", make_logit_models(tmp_path))
     fake = FakeRiot(*raw)
     api.init(engine=Engine(make_engine_dir(tmp_path)), riot=fake)
     return TestClient(api.app), raw[0], fake, api
@@ -178,6 +206,41 @@ def test_api_analyze_and_cache(client):
     assert "puuid" not in log[0] and "player" not in log[0]
     api.S.memory.clear()
     assert tc.get("/analyze", params={"match_id": mid}).json()["fuente"] == "disco"
+    # el nombre del archivo de repetición del cliente también sirve: "na1-123.rofl" -> NA1_123
+    rofl = mid.replace("_", "-").lower() + ".rofl"
+    assert tc.get("/analyze", params={"match_id": rofl}).json()["match_id"] == mid
+
+
+def test_health_demo_summaries(client):
+    """Pestaña "uso sin conexión": /health resume cada partida de ejemplo (quién ganó, duración)."""
+    tc, mid, fake, api = client
+    res = tc.get("/analyze", params={"match_id": mid}).json()
+    api.DEMO_DIR.mkdir(parents=True)
+    (api.DEMO_DIR / f"{mid}.json").write_text(json.dumps({k: res[k] for k in ("gana", "duracion_min", "parche", "momentos")}))
+    d = tc.get("/health").json()["demos"]
+    assert d == [{"match_id": mid, "gana": res["gana"], "duracion_min": res["duracion_min"],
+                  "parche": res["parche"], "n_momentos": len(res["momentos"])}]
+
+
+def test_api_model_selector(client):
+    """/health lista los modelos (el principal primero); /analyze?model= usa ese modelo y su propio caché."""
+    tc, mid, fake, api = client
+    h = tc.get("/health").json()
+    assert [m["nombre"] for m in h["modelos"]] == ["M4test", "M0test"]
+    assert h["modelos"][0]["principal"] and not h["modelos"][1]["principal"]
+    main = tc.get("/analyze", params={"match_id": mid}).json()
+    alt = tc.get("/analyze", params={"match_id": mid, "model": "m0TEST"})
+    assert alt.status_code == 200, alt.text
+    alt = alt.json()
+    assert main["modelo"]["nombre"] == "M4test" and alt["modelo"]["nombre"] == "M0test"
+    assert alt["modelo"]["semillas"] == [0] and alt["modelo"]["theta"] == 0.05
+    assert alt["curva"] != main["curva"] and alt["fuente"] == "raw_cache"   # ya tenía el JSON crudo
+    assert (api.CACHE_DIR / "analysis" / "M0test" / f"{mid}.json").exists()
+    # el monitoreo solo registra el modelo principal
+    assert len((api.CACHE_DIR / "predicciones.jsonl").read_text(encoding="utf-8").splitlines()) == 1
+    assert tc.get("/analyze", params={"match_id": mid, "model": "M0test"}).json()["fuente"] == "memoria"
+    assert tc.get("/analyze", params={"match_id": mid}).json()["modelo"]["nombre"] == "M4test"
+    assert tc.get("/analyze", params={"match_id": mid, "model": "M9"}).status_code == 400
 
 
 def test_api_errors(client):
@@ -241,5 +304,8 @@ def test_api_player_and_health(client):
     assert r.status_code == 200, r.text
     p = r.json()["partidas"]
     assert p and p[0]["match_id"] == mid and p[0]["campeon"]
+    me = fake.m["info"]["participants"][0]
+    assert p[0]["cs"] == me["totalMinionsKilled"] + me["neutralMinionsKilled"]
+    assert p[0]["vision"] == me["visionScore"] and p[0]["cs_min"] > 0
     h = tc.get("/health").json()
     assert h["ok"] and h["modelo"] == "M4test" and h["api_riot"]

@@ -6,6 +6,14 @@ Uso:
   python src/export_model.py --retrain             # si faltan los best.pt: reentrena con el config.yaml
                                                    # de cada run (los pesos no van a git)
   python src/export_model.py --runs results/runs/tcn_final__s42 ... --name M5 --out models/m5_tcn
+  python src/export_model.py --baseline m2 --name M2 --out models/m2_lgbm     # baselines de B5
+
+Modelos que ofrece la app (selector; M4 es el principal):
+  python src/export_model.py --runs results/runs/mlp_final__s4{2,3,4} --name M3 --out models/m3_mlp --retrain
+  python src/export_model.py --runs results/runs/tcn_final__s4{2,3,4} --name M5 --out models/m5_tcn --retrain
+  python src/export_model.py --baseline m0 --name M0 --out models/m0_oro
+  python src/export_model.py --baseline m1 --name M1 --out models/m1_logit
+  python src/export_model.py --baseline m2 --name M2 --out models/m2_lgbm
 
 Salida (models/, fuera de git; para desplegar se sube a Drive o como Release):
   models/<out>/manifest.json   modelo, θ*, parámetros del detector, temperaturas, parches de train...
@@ -52,6 +60,28 @@ def ensure_weights(run: Path, retrain: bool, full=None) -> Path:
     return local
 
 
+def export_baseline(key: str, out: Path) -> tuple[list[dict], dict]:
+    """M0/M1 (logística: coeficientes a JSON, la app no necesita sklearn) y M2 (LightGBM: model.txt)."""
+    from src.baselines import MODELS, RUNS
+    run = RUNS / MODELS[key]["run"]
+    s = json.loads((run / "summary.json").read_text(encoding="utf-8"))
+    T = float(s["temperature"])
+    if MODELS[key]["kind"] == "logit":
+        import pickle
+        with open(run / "model.pkl", "rb") as f:
+            model = pickle.load(f)
+        (out / "logit.json").write_text(json.dumps({
+            "feature_names": s["feature_names"], "coef": model.coef_[0].tolist(),
+            "intercept": float(model.intercept_[0]), "temperature": T}, indent=1), encoding="utf-8")
+        member = {"file": "logit.json", "kind": "logit", "seed": 0, "temperature": T}
+    else:
+        shutil.copy(run / "model.txt", out / "model.txt")
+        member = {"file": "model.txt", "kind": "lgbm", "seed": 42, "temperature": T}
+    member.update({"source": str(run.relative_to(ROOT)), "val_loss": s.get("val_loss"), "val_auc": s.get("val_auc")})
+    print(f"  {out.relative_to(ROOT)}/{member['file']}  T={T:.3f}  val_auc={s.get('val_auc')}")
+    return [member], s
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--runs", nargs="*", default=[str(r) for r in DEFAULT_RUNS])
@@ -59,16 +89,20 @@ def main():
     ap.add_argument("--out", default=str(ROOT / "models" / "m4_gru"))
     ap.add_argument("--theta", type=float, help="forzar θ (por defecto: θ* elegido en val por B10)")
     ap.add_argument("--retrain", action="store_true")
+    ap.add_argument("--baseline", choices=["m0", "m1", "m2"], help="exportar un baseline de B5 en vez de --runs")
     args = ap.parse_args()
 
-    runs = [Path(r) for r in args.runs]
+    runs = [] if args.baseline else [Path(r) for r in args.runs]
     full = None
     if args.retrain and any(not (r / "best.pt").exists() for r in runs):
         full = load_sequences(ROOT / "features" / "sequences.npz")
-    out = Path(args.out)
+    out = Path(args.out).resolve()
     out.mkdir(parents=True, exist_ok=True)
 
     members, summaries = [], []
+    if args.baseline:
+        members, s = export_baseline(args.baseline, out)
+        summaries.append(s)
     for run in runs:
         src = ensure_weights(run, args.retrain, full)
         ck = torch.load(src / "best.pt", map_location="cpu", weights_only=False)

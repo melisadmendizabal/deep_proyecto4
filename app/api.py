@@ -4,7 +4,9 @@ B11 - API de la app (FastAPI).
   GET /health                                  estado: modelo, θ, si hay API key, partidas en caché
   GET /player?riot_id=Nombre%23TAG&platform=na1&count=5
                                                partidas ranked recientes del jugador
-  GET /analyze?match_id=NA1_123&refresh=false  curva P(gana azul) + banda, momentos y explicaciones
+  GET /analyze?match_id=NA1_123&model=M4&refresh=false
+                                               curva P(gana azul) + banda, momentos y explicaciones
+                                               (model: cualquiera de /health -> modelos; M4 por defecto)
 
 Correr (desde la raíz del repo, con el venv activo):
   uvicorn app.api:app --reload --port 8000        ->  http://127.0.0.1:8000/docs
@@ -16,8 +18,11 @@ Caché (orden de búsqueda de /analyze):
 Si la API de Riot falla (key expirada, sin red) y la partida está en caché, se devuelve igual
 con un aviso. Cada análisis nuevo se registra en data/app_cache/predicciones.jsonl (monitoreo).
 
-Variables de entorno: RIOT_API_KEY (en .env), MODEL_DIR (default models/m4_gru),
-APP_CACHE_DIR (default data/app_cache).
+Variables de entorno: RIOT_API_KEY (en .env), MODEL_DIR (modelo principal, default models/m4_gru),
+MODELS_ROOT (carpeta con los demás modelos exportados, default models/), APP_CACHE_DIR (default data/app_cache).
+
+Modelos: el principal (M4) se carga al arrancar; los demás (M0-M3, M5, exportados con
+src/export_model.py) se cargan la primera vez que alguien los pide en el selector.
 """
 from __future__ import annotations
 
@@ -40,14 +45,30 @@ from riot_data import config
 from riot_data.client import RiotAuthError, RiotClient
 
 MODEL_DIR = Path(os.environ.get("MODEL_DIR", ROOT / "models" / "m4_gru"))
+MODELS_ROOT = Path(os.environ.get("MODELS_ROOT", ROOT / "models"))
 CACHE_DIR = Path(os.environ.get("APP_CACHE_DIR", config.DATA_DIR / "app_cache"))
 DEMO_DIR = ROOT / "app" / "demo"
 STATIC_DIR = ROOT / "app" / "static"
 MATCH_ID_RE = re.compile(r"^[A-Z0-9]{2,5}_\d{6,12}$")
 
+# selector de modelos: etiqueta, descripción y AUC en test (todas las partidas; b5_metricas.csv y
+# b6_semillas.csv, semilla 42). Las diferencias de AUC entre M1-M5 NO son significativas (B5/B6).
+MODEL_INFO = {
+    "M4": ("GRU · modelo principal", "Red recurrente: recuerda toda la partida hasta el minuto actual. "
+           "Es el modelo central del proyecto (el que usa la app por defecto).", 0.812),
+    "M5": ("TCN", "Red convolucional temporal: mira los últimos ~29 minutos.", 0.813),
+    "M3": ("MLP", "Red neuronal sin memoria: solo ve el minuto actual.", 0.812),
+    "M2": ("LightGBM · baseline", "Árboles de decisión con las features del minuto + tendencia de oro.", 0.811),
+    "M1": ("Logística · baseline", "Regresión logística con todas las features del minuto actual.", 0.810),
+    "M0": ("Solo oro · baseline", "Regresión logística con solo la diferencia de oro y el minuto.", 0.794),
+}
+
 
 class State:
-    engine: Engine | None = None
+    engine: Engine | None = None       # modelo principal (M4)
+    engines: dict[str, Engine] = {}    # todos los cargados, por nombre (incluye el principal)
+    model_dirs: dict[str, Path] = {}   # modelos disponibles para el selector
+    models_lock = threading.Lock()
     riot: RiotClient | None = None
     riot_error: str = ""
     lock = threading.Lock()            # el limitador de tasa de RiotClient no es thread-safe
@@ -60,6 +81,8 @@ S = State()
 def init(engine: Engine | None = None, riot: RiotClient | None = None) -> None:
     """Carga el modelo y el cliente de Riot (los tests pasan los suyos)."""
     S.engine = engine or Engine(MODEL_DIR)
+    S.engines = {S.engine.name: S.engine}
+    S.model_dirs = _discover_models()
     if riot is not None:
         S.riot, S.riot_error = riot, ""
     else:
@@ -68,6 +91,47 @@ def init(engine: Engine | None = None, riot: RiotClient | None = None) -> None:
         except RiotAuthError as exc:
             S.riot, S.riot_error = None, str(exc)
     S.memory = {}
+
+
+def _discover_models() -> dict[str, Path]:
+    """Carpetas de MODELS_ROOT con manifest.json (models/m0_oro, m1_logit, ...), por nombre de modelo."""
+    out = {}
+    for mf in sorted(MODELS_ROOT.glob("*/manifest.json")) if MODELS_ROOT.exists() else []:
+        try:
+            name = json.loads(mf.read_text(encoding="utf-8"))["name"]
+        except (OSError, ValueError, KeyError):
+            continue
+        out.setdefault(name, mf.parent)
+    return out
+
+
+def _engine(name: str | None) -> Engine:
+    """Motor del modelo pedido (el principal si no se pide ninguno). Los demás se cargan al primer uso."""
+    name = (name or "").strip()
+    if not name or name.upper() == S.engine.name.upper():
+        return S.engine
+    key = next((k for k in S.model_dirs if k.upper() == name.upper()), None)
+    if key is None:
+        raise HTTPException(400, f"Modelo '{name}' no disponible. Disponibles: {', '.join(_model_names())}")
+    with S.models_lock:
+        if key not in S.engines:
+            S.engines[key] = Engine(S.model_dirs[key])
+    return S.engines[key]
+
+
+def _model_names() -> list[str]:
+    order = list(MODEL_INFO)
+    others = [n for n in S.model_dirs if n != S.engine.name]
+    return [S.engine.name] + sorted(others, key=lambda n: (order.index(n) if n in order else 99, n))
+
+
+def _model_list() -> list[dict]:
+    out = []
+    for n in _model_names():
+        label, desc, auc = MODEL_INFO.get(n, (n, "", None))
+        out.append({"nombre": n, "etiqueta": label, "descripcion": desc, "auc_test": auc,
+                    "principal": n == S.engine.name})
+    return out
 
 
 @asynccontextmanager
@@ -108,7 +172,8 @@ def review_estimate(res: dict) -> dict:
 
 # ------------------------------------------------------------------ utilidades
 def _norm_match_id(match_id: str) -> str:
-    mid = match_id.strip().upper()
+    # también acepta el nombre del archivo de repetición del cliente: "NA1-5676698765.rofl"
+    mid = re.sub(r"\.ROFL$", "", match_id.strip().upper()).replace("-", "_")
     if not MATCH_ID_RE.match(mid):
         raise HTTPException(400, f"'{match_id}' no parece un match ID (ejemplo: NA1_5676698765). "
                                  "Si tienes un Riot ID, búscalo en /player.")
@@ -177,14 +242,28 @@ def fetch_raw(match_id: str) -> tuple[dict, dict, float]:
     return match, timeline, ms
 
 
-def _cached(match_id: str) -> tuple[dict | None, str]:
-    if match_id in S.memory:
-        return S.memory[match_id], "memoria"
-    for path, src in ((CACHE_DIR / "analysis" / f"{match_id}.json", "disco"),
-                      (DEMO_DIR / f"{match_id}.json", "demo")):
+def _cache_key(match_id: str, eng: Engine) -> str:
+    return match_id if eng is S.engine else f"{eng.name}/{match_id}"
+
+
+def _analysis_path(match_id: str, eng: Engine) -> Path:
+    """Principal: analysis/<id>.json (como siempre); los demás: analysis/<modelo>/<id>.json."""
+    base = CACHE_DIR / "analysis"
+    return base / f"{match_id}.json" if eng is S.engine else base / eng.name / f"{match_id}.json"
+
+
+def _cached(match_id: str, eng: Engine | None = None) -> tuple[dict | None, str]:
+    eng = eng or S.engine
+    key = _cache_key(match_id, eng)
+    if key in S.memory:
+        return S.memory[key], "memoria"
+    paths = [(_analysis_path(match_id, eng), "disco")]
+    if eng is S.engine:                       # las partidas de ejemplo están hechas con el principal
+        paths.append((DEMO_DIR / f"{match_id}.json", "demo"))
+    for path, src in paths:
         res = _read_json(path)
         if res is not None:
-            S.memory[match_id] = res
+            S.memory[key] = res
             return res, src
     return None, ""
 
@@ -221,26 +300,43 @@ def health():
             "theta": eng.theta if eng else None,
             "semillas": [m.seed for m in eng.members] if eng else [],
             "parches_entrenamiento": eng.manifest.get("train_patches") if eng else [],
+            "modelos": _model_list() if eng else [],
             "api_riot": S.riot is not None, "api_riot_error": S.riot_error or None,
             "partidas_en_cache": len(list((CACHE_DIR / "analysis").glob("*.json")))
             if (CACHE_DIR / "analysis").exists() else 0,
-            "partidas_demo": sorted(p.stem for p in DEMO_DIR.glob("*.json")) if DEMO_DIR.exists() else []}
+            "partidas_demo": sorted(p.stem for p in DEMO_DIR.glob("*.json")) if DEMO_DIR.exists() else [],
+            "demos": _demo_summaries()}
+
+
+def _demo_summaries() -> list[dict]:
+    """Resumen de cada partida de ejemplo (pestaña "uso sin conexión"): quién ganó, duración..."""
+    out = []
+    for p in sorted(DEMO_DIR.glob("*.json")) if DEMO_DIR.exists() else []:
+        try:
+            d = _read_json(p)
+            out.append({"match_id": p.stem, "gana": d["gana"], "duracion_min": d["duracion_min"],
+                        "parche": d.get("parche", ""), "n_momentos": len(d.get("momentos", []))})
+        except (OSError, ValueError, KeyError):
+            continue
+    return out
 
 
 @app.get("/analyze")
 def analyze(match_id: str = Query(..., description="p. ej. NA1_5676698765"),
+            model: str | None = Query(None, description="M0-M5 (ver /health); por defecto el principal, M4"),
             refresh: bool = Query(False, description="ignorar el caché y recalcular")):
     t0 = time.perf_counter()
     mid = _norm_match_id(match_id)
+    eng = _engine(model)
     if not refresh:
-        res, src = _cached(mid)
+        res, src = _cached(mid, eng)
         if res is not None:
             return {**res, "fuente": src, "revision": review_estimate(res),
                     "tiempos": {**res.get("tiempos", {}), "total_ms": round(1000 * (time.perf_counter() - t0), 1)}}
     try:
         match, timeline, riot_ms = fetch_raw(mid)
     except HTTPException as exc:
-        res, src = _cached(mid)
+        res, src = _cached(mid, eng)
         if exc.status_code == 503 and res is not None:  # sin Riot pero con caché: se muestra igual
             return {**res, "fuente": src, "revision": review_estimate(res), "avisos": res.get("avisos", []) + [
                 f"Sin conexión con la API de Riot ({exc.detail}); se muestra el análisis guardado."]}
@@ -252,14 +348,15 @@ def analyze(match_id: str = Query(..., description="p. ej. NA1_5676698765"),
         raise HTTPException(502, "La respuesta de la API de Riot no tiene el formato esperado "
                                  "(¿cambió el esquema de match-v5?). Quedó registrado.") from exc
     try:
-        res = S.engine.analyze(tables, timings={"riot_ms": round(riot_ms, 1)})
+        res = eng.analyze(tables, timings={"riot_ms": round(riot_ms, 1)})
     except AnalysisError as exc:
         raise HTTPException(exc.status, str(exc)) from exc
     monitor = res.pop("_monitor", None)
     res["tiempos"]["total_ms"] = round(1000 * (time.perf_counter() - t0), 1)
-    _write_json(CACHE_DIR / "analysis" / f"{mid}.json", res)
-    S.memory[mid] = res
-    _log_prediction(res, monitor)
+    _write_json(_analysis_path(mid, eng), res)
+    S.memory[_cache_key(mid, eng)] = res
+    if eng is S.engine:            # el monitoreo vigila el modelo en producción (el principal)
+        _log_prediction(res, monitor)
     return {**res, "fuente": "riot" if riot_ms else "raw_cache", "revision": review_estimate(res)}
 
 
@@ -311,12 +408,20 @@ def player(riot_id: str = Query(..., description="Nombre#TAG"),
         info = match["info"]
         found = me is not None
         me = me or {}
+        dur_min = info["gameDuration"] / 60
+        cs = int(me.get("totalMinionsKilled", 0)) + int(me.get("neutralMinionsKilled", 0))
+        vision = me.get("visionScore")
         out.append({"match_id": mid, "jugador_encontrado": found,
                     "campeon": me.get("championName"), "rol": me.get("teamPosition"),
                     "lado": ("azul" if me.get("teamId") == 100 else "rojo") if found else None,
                     "gano": bool(me.get("win")) if found else None,
                     "kda": f"{me.get('kills', 0)}/{me.get('deaths', 0)}/{me.get('assists', 0)}" if found else None,
-                    "duracion_min": round(info["gameDuration"] / 60, 1),
+                    # farm (súbditos + monstruos de jungla) y puntaje de visión, también por minuto
+                    "cs": cs if found else None,
+                    "cs_min": round(cs / dur_min, 1) if found and dur_min else None,
+                    "vision": int(vision) if found and vision is not None else None,
+                    "vision_min": round(vision / dur_min, 1) if found and vision is not None and dur_min else None,
+                    "duracion_min": round(dur_min, 1),
                     "inicio_utc": time.strftime("%Y-%m-%d %H:%M", time.gmtime(
                         info.get("gameStartTimestamp", info["gameCreation"]) / 1000)),
                     "analizable": info["gameDuration"] >= 15 * 60,

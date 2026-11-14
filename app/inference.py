@@ -57,10 +57,13 @@ class AnalysisError(ValueError):
 
 @dataclass
 class Member:
-    model: torch.nn.Module
+    """Un modelo del ensamble. kind: "torch" (GRU/TCN/MLP), "logit" (M0/M1) o "lgbm" (M2).
+    Los baselines son snapshot (una fila por minuto): ven el minuto actual, no la historia."""
+    model: object
     cols: list[int]
     temperature: float
     seed: int
+    kind: str = "torch"
 
 
 # ------------------------------------------------------------------ datos
@@ -76,6 +79,28 @@ def platform_of(match_id: str) -> str:
 
 
 # ------------------------------------------------------------------ motor
+def load_member(model_dir: Path, m: dict) -> Member:
+    """Un miembro del manifest. Archivos (los escribe src/export_model.py):
+    torch: seed_<s>.pt · logit: <f>.json con coef/intercept · lgbm: model.txt (+ feature_names en el manifest)."""
+    kind = m.get("kind", "torch")
+    if kind == "logit":
+        d = json.loads((model_dir / m["file"]).read_text(encoding="utf-8"))
+        cols = [FEATURE_NAMES.index(n) for n in d["feature_names"]]
+        params = {"coef": np.asarray(d["coef"], dtype=np.float32), "intercept": float(d["intercept"])}
+        return Member(params, cols, float(d["temperature"]), int(m.get("seed", 0)), "logit")
+    if kind == "lgbm":
+        import lightgbm as lgb   # solo si se usa M2 (no lo necesitan los demás modelos)
+        booster = lgb.Booster(model_file=str(model_dir / m["file"]))
+        cols = [FEATURE_NAMES.index(n) for n in booster.feature_name()]
+        return Member(booster, cols, float(m["temperature"]), int(m.get("seed", 0)), "lgbm")
+    ck = torch.load(model_dir / m["file"], map_location="cpu", weights_only=False)
+    cols = [FEATURE_NAMES.index(n) for n in ck["feature_names"]]
+    model = build_model(ck["model_cfg"], len(cols))
+    model.load_state_dict(ck["state_dict"])
+    model.eval()
+    return Member(model, cols, float(ck["temperature"]), int(m["seed"]), "torch")
+
+
 class Engine:
     def __init__(self, model_dir: str | Path = DEFAULT_MODEL_DIR):
         model_dir = Path(model_dir)
@@ -89,12 +114,7 @@ class Engine:
             raise ValueError("scaler.json no coincide con FEATURE_NAMES de src/features.py")
         self.members: list[Member] = []
         for m in self.manifest["members"]:
-            ck = torch.load(model_dir / m["file"], map_location="cpu", weights_only=False)
-            cols = [FEATURE_NAMES.index(n) for n in ck["feature_names"]]
-            model = build_model(ck["model_cfg"], len(cols))
-            model.load_state_dict(ck["state_dict"])
-            model.eval()
-            self.members.append(Member(model, cols, float(ck["temperature"]), int(m["seed"])))
+            self.members.append(load_member(model_dir, m))
         self.det = self.manifest["detector"]
         self.theta = float(self.det["theta"])
         # umbral de los "posibles momentos" (menos seguros): por defecto la mitad de θ*
@@ -109,10 +129,17 @@ class Engine:
     @torch.no_grad()
     def _probs(self, member: Member, X: np.ndarray) -> np.ndarray:
         """X normalizado [B, T, F_todas] -> P(gana azul) [B, T]."""
-        x = torch.as_tensor(X[..., member.cols], dtype=torch.float32)
-        mask = torch.ones(x.shape[:2], dtype=torch.bool)
-        logits = member.model(x, mask).float().numpy()
-        return 1.0 / (1.0 + np.exp(-logits / member.temperature))
+        x = X[..., member.cols].astype(np.float32)
+        if member.kind == "logit":
+            logits = x @ member.model["coef"] + member.model["intercept"]
+        elif member.kind == "lgbm":
+            b, t, f = x.shape
+            logits = member.model.predict(x.reshape(-1, f), raw_score=True).reshape(b, t)
+        else:
+            xt = torch.as_tensor(x)
+            mask = torch.ones(xt.shape[:2], dtype=torch.bool)
+            logits = member.model(xt, mask).float().numpy()
+        return 1.0 / (1.0 + np.exp(-np.asarray(logits, dtype=np.float64) / member.temperature))
 
     def predict(self, raw: pd.DataFrame) -> np.ndarray:
         """Features crudas [T, F] -> P(gana azul) por semilla [S, T]."""
