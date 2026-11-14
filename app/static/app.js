@@ -168,7 +168,7 @@ function modelNote(r) {
   if (!info || info.principal) return "";
   const auc = (x) => (x == null ? "" : `AUC en test ${x.toFixed(3)}`);
   return `Estás viendo <b>${esc(info.nombre)} · ${esc(info.etiqueta)}</b>: ${esc(info.descripcion)} (${auc(info.auc_test)}).
-    El modelo principal es <b>${esc(main?.nombre || "M4")}</b>${main?.auc_test ? ` (${auc(main.auc_test)})` : ""}.
+    El modelo principal es <b>${esc(main?.nombre || "M6")}</b>${main?.auc_test ? ` (${auc(main.auc_test)})` : ""}.
     Cada modelo usa su propio umbral de momento: aquí θ = ${Math.round(100 * r.modelo.theta)} pts.`;
 }
 

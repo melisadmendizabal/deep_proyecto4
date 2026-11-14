@@ -27,3 +27,5 @@ def register(name: str, cls) -> None:
 # B7: registrar aquí los modelos extra, para que train.py los encuentre sin importarlos aparte
 from .tcn import TCNModel  # noqa: E402
 register("tcn", TCNModel)
+from .transformer import TransformerModel  # noqa: E402
+register("transformer", TransformerModel)

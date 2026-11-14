@@ -7,7 +7,9 @@ Mismo pipeline que el entrenamiento (no hay código de features aparte):
   -> src.moments.detect_moments con el θ* que eligió B10 en val.
 
 - Curva y momentos: la PRIMERA semilla del manifest (s42), la misma con la que B10 eligió θ* y
-  calculó el valor, para que la app muestre lo mismo que se reporta.
+  calculó el valor, para que la app muestre lo mismo que se reporta. Si el manifest dice
+  "curva": "promedio" (M6+draft), la curva es el promedio de las semillas recalibrado con
+  "temperatura_promedio" (src/mejoras_eval.py), y θ* se eligió para ese promedio.
 - Banda de incertidumbre: mínimo y máximo entre las semillas (guía, sección 8).
 - Explicación por momento (guía, sección 8): ablación por grupos. Se congela un grupo de
   features en su valor de ANTES de la jugada y se recalcula P(t); el grupo que más achica el
@@ -74,6 +76,14 @@ def tables_from_riot(match: dict, timeline: dict, platform: str, tier: str = "")
     return tables
 
 
+def champions_of(parts: pd.DataFrame) -> np.ndarray | None:
+    """championId de los participantes 1..10 (1-5 azul, 6-10 rojo), como sequences.npz -> champions."""
+    if parts is None or "champion_id" not in parts or len(parts) != 10:
+        return None
+    p = parts.sort_values("participant_id")
+    return pd.to_numeric(p["champion_id"], errors="coerce").fillna(0).astype(np.int64).to_numpy()
+
+
 def platform_of(match_id: str) -> str:
     return match_id.split("_", 1)[0].lower()
 
@@ -115,6 +125,8 @@ class Engine:
         self.members: list[Member] = []
         for m in self.manifest["members"]:
             self.members.append(load_member(model_dir, m))
+        self.average = self.manifest.get("curva") == "promedio"
+        self.avg_temperature = float(self.manifest.get("temperatura_promedio", 1.0))
         self.det = self.manifest["detector"]
         self.theta = float(self.det["theta"])
         # umbral de los "posibles momentos" (menos seguros): por defecto la mitad de θ*
@@ -127,8 +139,8 @@ class Engine:
 
     # ---- predicción
     @torch.no_grad()
-    def _probs(self, member: Member, X: np.ndarray) -> np.ndarray:
-        """X normalizado [B, T, F_todas] -> P(gana azul) [B, T]."""
+    def _probs(self, member: Member, X: np.ndarray, champions: np.ndarray | None = None) -> np.ndarray:
+        """X normalizado [B, T, F_todas] -> P(gana azul) [B, T]. champions [10]: solo modelos con draft (M6)."""
         x = X[..., member.cols].astype(np.float32)
         if member.kind == "logit":
             logits = x @ member.model["coef"] + member.model["intercept"]
@@ -138,16 +150,34 @@ class Engine:
         else:
             xt = torch.as_tensor(x)
             mask = torch.ones(xt.shape[:2], dtype=torch.bool)
-            logits = member.model(xt, mask).float().numpy()
+            if getattr(member.model, "uses_champions", False):
+                if champions is None:
+                    raise AnalysisError("Este modelo necesita los campeones de la partida", 500)
+                ch = torch.tensor(np.asarray(champions), dtype=torch.long).reshape(1, -1).expand(xt.shape[0], -1)
+                logits = member.model(xt, mask, champions=ch).float().numpy()
+            else:
+                logits = member.model(xt, mask).float().numpy()
         return 1.0 / (1.0 + np.exp(-np.asarray(logits, dtype=np.float64) / member.temperature))
 
-    def predict(self, raw: pd.DataFrame) -> np.ndarray:
+    def predict(self, raw: pd.DataFrame, champions: np.ndarray | None = None) -> np.ndarray:
         """Features crudas [T, F] -> P(gana azul) por semilla [S, T]."""
         X = self.scaler.transform(raw.to_numpy(dtype=np.float32))[None]
-        return np.stack([self._probs(m, X)[0] for m in self.members])
+        return np.stack([self._probs(m, X, champions)[0] for m in self.members])
+
+    def _main(self, X: np.ndarray, champions: np.ndarray | None = None) -> np.ndarray:
+        """Curva principal [B, T]: la primera semilla, o el promedio recalibrado de todas."""
+        if not self.average:
+            return self._probs(self.members[0], X, champions)
+        return self.combine(np.stack([self._probs(m, X, champions) for m in self.members]))
+
+    def combine(self, probs: np.ndarray) -> np.ndarray:
+        """Promedio de semillas [S, ...] -> probabilidad recalibrada (igual que mejoras_eval.make_ensemble)."""
+        mean = np.clip(probs.mean(0), 1e-6, 1 - 1e-6)
+        return 1.0 / (1.0 + np.exp(-np.log(mean / (1 - mean)) / self.avg_temperature))
 
     # ---- explicación
-    def explain(self, raw: pd.DataFrame, start: int, end: int, p_before: float) -> dict:
+    def explain(self, raw: pd.DataFrame, start: int, end: int, p_before: float,
+                champions: np.ndarray | None = None) -> dict:
         """Ablación por grupos sobre el modelo principal: congelar cada grupo en el minuto `start`."""
         base = raw.to_numpy(dtype=np.float32)
         variants = []
@@ -157,7 +187,7 @@ class Engine:
             v[start + 1:end + 1, cols] = base[start, cols]
             variants.append(v)
         X = self.scaler.transform(np.stack([base] + variants))
-        p = self._probs(self.members[0], X)[:, end]
+        p = self._main(X, champions)[:, end]
         jump = abs(p[0] - p_before)
         reduction = {g: float(jump - abs(pv - p_before)) for g, pv in zip(EXPLAIN_GROUPS, p[1:])}
         pos = {g: max(r, 0.0) for g, r in reduction.items()}
@@ -192,9 +222,11 @@ class Engine:
         raw = match_to_features(frames[FRAME_COLS], ev.reindex(columns=EVENT_COLS), parts)
         ts = np.asarray(raw.attrs["timestamp_ms"])
         t1 = time.perf_counter()
-        probs = self.predict(raw)                         # [S, T]
-        main = probs[0]
-        lo, hi = probs.min(0), probs.max(0)
+        champs = champions_of(parts)
+        probs = self.predict(raw, champs)                 # [S, T]
+        main = self.combine(probs) if self.average else probs[0]
+        # la recalibración del promedio puede dejar la curva un poco fuera del rango de las semillas
+        lo, hi = np.minimum(probs.min(0), main), np.maximum(probs.max(0), main)
         moms = detect_moments(main, theta=self.theta, windows=tuple(self.det.get("windows", (1, 2))),
                               merge_gap=self.det.get("merge_gap", 2), top_k=self.det.get("top_k", 5))
         t2 = time.perf_counter()
@@ -209,7 +241,7 @@ class Engine:
 
         def describe(m, candidate: bool) -> dict:
             # el clip va de start_minute a minute: la explicación mide el salto en ese mismo tramo
-            exp = self.explain(raw, m.start_minute, m.minute, float(main[m.start_minute]))
+            exp = self.explain(raw, m.start_minute, m.minute, float(main[m.start_minute]), champs)
             evs = window_events(events, ts[m.start_minute], ts[m.minute])
             seed_deltas = probs[:, m.minute] - probs[:, m.start_minute]
             return {

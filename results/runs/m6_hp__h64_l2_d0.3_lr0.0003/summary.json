@@ -1,0 +1,19 @@
+{
+  "run_id": "m6_hp__h64_l2_d0.3_lr0.0003",
+  "name": "m6_hp__h64_l2_d0.3_lr0.0003",
+  "model": "transformer",
+  "best_epoch": 21,
+  "epochs_run": 26,
+  "val_loss": 0.49325,
+  "val_auc": 0.81145,
+  "val_brier": 0.17636,
+  "val_loss_calibrated": 0.49319,
+  "temperature": 1.0243,
+  "n_train": 18294,
+  "n_val": 4056,
+  "n_features": 33,
+  "n_params": 75457,
+  "train_seconds": 36.6,
+  "device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+  "git_commit": "cbe01f6"
+}

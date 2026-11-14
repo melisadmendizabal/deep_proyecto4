@@ -1,0 +1,5 @@
+# M4 + draft: la GRU de M4 (h128, 2 capas) + campeones. Con lr 3e-4 el early stopping corta antes de que
+# los embeddings de campeones aprendan (2 de 3 semillas sin mejora), por eso se buscan lr y dropout.
+# Se corre con --seeds 42 43 44 y se elige por el PROMEDIO de val_loss de las 3 semillas.
+train.lr: [0.001, 0.0003]
+model.dropout: [0.1, 0.3]

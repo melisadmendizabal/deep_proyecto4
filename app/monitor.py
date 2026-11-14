@@ -60,12 +60,23 @@ def build_ref() -> None:
             continue
         counts = np.histogram(x, bins=edges)[0]
         ref["features"][f] = {"edges": edges.tolist(), "p": (counts / counts.sum()).tolist()}
-    s = pd.read_csv(ROOT / "results" / "b5_metricas.csv")
-    m4 = s[(s["modelo"] == "M4") & (s["split"] == "test") & (s["subconjunto"] == "todas")]
-    ref["test_logloss"] = float(m4["logloss"].iloc[0]) if len(m4) else 0.52
+    ref["test_logloss"] = main_model_test_logloss()
     REF.write_text(json.dumps(ref, indent=1), encoding="utf-8")
     print(f"Referencia: {len(ref['features'])} features del minuto {MINUTE} de {ref['n_train']:,} partidas de train "
           f"-> {REF.relative_to(ROOT)} (log-loss de test {ref['test_logloss']:.3f})")
+
+
+def main_model_test_logloss() -> float:
+    """Log-loss de test del modelo principal de la app: M6+draft (promedio de 3 semillas,
+    results/mejoras_tecnicas.csv); si no existe, M4 (results/b5_metricas.csv)."""
+    t = ROOT / "results" / "mejoras_tecnicas.csv"
+    if t.exists():
+        m = pd.read_csv(t).set_index("modelo")
+        if "M6+draft ens3" in m.index:
+            return float(m.loc["M6+draft ens3", "logloss"])
+    s = pd.read_csv(ROOT / "results" / "b5_metricas.csv")
+    m4 = s[(s["modelo"] == "M4") & (s["split"] == "test") & (s["subconjunto"] == "todas")]
+    return float(m4["logloss"].iloc[0]) if len(m4) else 0.52
 
 
 def psi(values: np.ndarray, edges: list[float], p_ref: list[float]) -> float:

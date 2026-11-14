@@ -1,0 +1,24 @@
+# M6 - Transformer causal (+ campeones con model.champions=true). Misma receta que la GRU.
+name: transformer_base
+data:
+  path: features/sequences.npz
+  exclude_afk_train: true
+  drop_groups: [tendencia]   # como la GRU: ya ve la historia
+model:
+  type: transformer
+  hidden: 64
+  layers: 2
+  heads: 4
+  dropout: 0.1
+  champions: false
+  champ_dim: 16
+  champ_dropout: 0.1
+train:
+  lr: 0.001
+  weight_decay: 0.0001
+  batch_size: 128
+  max_epochs: 50
+  patience: 5
+  grad_clip: 1.0
+  smooth_lambda: 0.0
+  seed: 42

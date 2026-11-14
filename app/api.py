@@ -4,9 +4,9 @@ B11 - API de la app (FastAPI).
   GET /health                                  estado: modelo, θ, si hay API key, partidas en caché
   GET /player?riot_id=Nombre%23TAG&platform=na1&count=5
                                                partidas ranked recientes del jugador
-  GET /analyze?match_id=NA1_123&model=M4&refresh=false
+  GET /analyze?match_id=NA1_123&model=M6&refresh=false
                                                curva P(gana azul) + banda, momentos y explicaciones
-                                               (model: cualquiera de /health -> modelos; M4 por defecto)
+                                               (model: cualquiera de /health -> modelos; M6 por defecto)
 
 Correr (desde la raíz del repo, con el venv activo):
   uvicorn app.api:app --reload --port 8000        ->  http://127.0.0.1:8000/docs
@@ -21,7 +21,7 @@ con un aviso. Cada análisis nuevo se registra en data/app_cache/predicciones.js
 Variables de entorno: RIOT_API_KEY (en .env), MODEL_DIR (modelo principal, default models/m4_gru),
 MODELS_ROOT (carpeta con los demás modelos exportados, default models/), APP_CACHE_DIR (default data/app_cache).
 
-Modelos: el principal (M4) se carga al arrancar; los demás (M0-M3, M5, exportados con
+Modelos: el principal (M6 + campeones) se carga al arrancar; los demás (M0-M5, M4+draft, exportados con
 src/export_model.py) se cargan la primera vez que alguien los pide en el selector.
 """
 from __future__ import annotations
@@ -44,7 +44,7 @@ from app.inference import ROOT, AnalysisError, Engine, platform_of, tables_from_
 from riot_data import config
 from riot_data.client import RiotAuthError, RiotClient
 
-MODEL_DIR = Path(os.environ.get("MODEL_DIR", ROOT / "models" / "m4_gru"))
+MODEL_DIR = Path(os.environ.get("MODEL_DIR", ROOT / "models" / "m6_draft"))   # principal: M6 (results/mejoras.md)
 MODELS_ROOT = Path(os.environ.get("MODELS_ROOT", ROOT / "models"))
 CACHE_DIR = Path(os.environ.get("APP_CACHE_DIR", config.DATA_DIR / "app_cache"))
 DEMO_DIR = ROOT / "app" / "demo"
@@ -54,8 +54,14 @@ MATCH_ID_RE = re.compile(r"^[A-Z0-9]{2,5}_\d{6,12}$")
 # selector de modelos: etiqueta, descripción y AUC en test (todas las partidas; b5_metricas.csv y
 # b6_semillas.csv, semilla 42). Las diferencias de AUC entre M1-M5 NO son significativas (B5/B6).
 MODEL_INFO = {
-    "M4": ("GRU · modelo principal", "Red recurrente: recuerda toda la partida hasta el minuto actual. "
-           "Es el modelo central del proyecto (el que usa la app por defecto).", 0.812),
+    "M6": ("Transformer + campeones · modelo principal",
+           "Red de atención causal que, además de la partida minuto a minuto, conoce los 10 campeones "
+           "(draft); curva = promedio de 3 entrenamientos. Es el modelo principal de la app: el de mejor "
+           "AUC del proyecto (results/mejoras.md).", 0.821),
+    "M4+draft": ("GRU + campeones", "La GRU de M4 más los 10 campeones (draft); curva = promedio de 3 "
+                 "entrenamientos. Empata con M6 (results/mejoras.md).", 0.819),
+    "M4": ("GRU · modelo original", "Red recurrente: recuerda toda la partida hasta el minuto actual. Fue el "
+           "modelo principal del plan (B6-B12); no conoce los campeones.", 0.812),
     "M5": ("TCN", "Red convolucional temporal: mira los últimos ~29 minutos.", 0.813),
     "M3": ("MLP", "Red neuronal sin memoria: solo ve el minuto actual.", 0.812),
     "M2": ("LightGBM · baseline", "Árboles de decisión con las features del minuto + tendencia de oro.", 0.811),
@@ -65,7 +71,7 @@ MODEL_INFO = {
 
 
 class State:
-    engine: Engine | None = None       # modelo principal (M4)
+    engine: Engine | None = None       # modelo principal (M6 + campeones)
     engines: dict[str, Engine] = {}    # todos los cargados, por nombre (incluye el principal)
     model_dirs: dict[str, Path] = {}   # modelos disponibles para el selector
     models_lock = threading.Lock()
@@ -262,7 +268,9 @@ def _cached(match_id: str, eng: Engine | None = None) -> tuple[dict | None, str]
         paths.append((DEMO_DIR / f"{match_id}.json", "demo"))
     for path, src in paths:
         res = _read_json(path)
-        if res is not None:
+        # solo sirve si lo calculó ESTE modelo: al cambiar el principal (M4 -> M6), los análisis
+        # guardados en analysis/<id>.json y app/demo/ son de otro modelo y se recalculan
+        if res is not None and res.get("modelo", {}).get("nombre") == eng.name:
             S.memory[key] = res
             return res, src
     return None, ""
@@ -323,7 +331,7 @@ def _demo_summaries() -> list[dict]:
 
 @app.get("/analyze")
 def analyze(match_id: str = Query(..., description="p. ej. NA1_5676698765"),
-            model: str | None = Query(None, description="M0-M5 (ver /health); por defecto el principal, M4"),
+            model: str | None = Query(None, description="M0-M6, M4+draft (ver /health); por defecto el principal, M6"),
             refresh: bool = Query(False, description="ignorar el caché y recalcular")):
     t0 = time.perf_counter()
     mid = _norm_match_id(match_id)

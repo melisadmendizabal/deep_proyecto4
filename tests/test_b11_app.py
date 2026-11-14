@@ -61,6 +61,36 @@ def make_logit_models(tmp: Path) -> Path:
     return root
 
 
+def test_engine_with_draft_model_uses_match_champions(tmp_path):
+    """M6+draft en la app: los championId salen de participants (1-5 azul) y cambian la curva."""
+    from app.inference import champions_of
+    d = tmp_path / "m6d"
+    d.mkdir()
+    Scaler(FEATURE_NAMES, FEATURE_TRANSFORMS, np.zeros(len(FEATURE_NAMES)),
+           np.full(len(FEATURE_NAMES), 1000.0)).save(d / "scaler.json")
+    names = [n for n, g in zip(FEATURE_NAMES, FEATURE_GROUPS) if g != "tendencia"]
+    torch.manual_seed(0)
+    cfg = {"type": "transformer", "hidden": 16, "layers": 1, "heads": 2, "dropout": 0.0, "champions": True}
+    model = build_model(cfg, len(names))
+    torch.nn.init.normal_(model.champ.weight, std=3.0)        # que el draft pese (modelo sin entrenar)
+    torch.save({"model_cfg": cfg, "feature_names": names, "state_dict": model.state_dict(),
+                "temperature": 1.0}, d / "seed_42.pt")
+    (d / "manifest.json").write_text(json.dumps({
+        "name": "M6test", "members": [{"file": "seed_42.pt", "seed": 42, "temperature": 1.0}],
+        "train_patches": ["16.21"], "queue_id": 420, "min_duration_s": 900,
+        "detector": {"theta": 1e-6, "windows": [1, 2], "merge_gap": 2, "top_k": 5}}))
+    eng = Engine(d)
+    t = make_tables()
+    t["participants"]["champion_id"] = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+    assert champions_of(t["participants"].iloc[::-1]).tolist() == [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+    a = eng.analyze(t)
+    t2 = make_tables()
+    t2["participants"]["champion_id"] = [60, 70, 80, 90, 100, 10, 20, 30, 40, 50]   # azul <-> rojo
+    b = eng.analyze(t2)
+    assert [c["p_azul"] for c in a["curva"]] != [c["p_azul"] for c in b["curva"]]
+    assert a["momentos"] and a["momentos"][0]["explicacion"]["grupo"] in EXPLAIN_GROUPS
+
+
 def test_logit_member_matches_formula(tmp_path):
     """Un baseline logístico exportado: P = sigmoide((coef · x + b) / T) sobre las features normalizadas."""
     eng = Engine(make_logit_models(tmp_path) / "m0_test")
@@ -209,6 +239,19 @@ def test_api_analyze_and_cache(client):
     # el nombre del archivo de repetición del cliente también sirve: "na1-123.rofl" -> NA1_123
     rofl = mid.replace("_", "-").lower() + ".rofl"
     assert tc.get("/analyze", params={"match_id": rofl}).json()["match_id"] == mid
+
+
+def test_cache_from_another_model_is_ignored(client):
+    """Al cambiar el modelo principal, los análisis guardados con el anterior no se sirven como si fueran del nuevo."""
+    tc, mid, fake, api = client
+    res = tc.get("/analyze", params={"match_id": mid}).json()
+    stale = {**res, "modelo": {**res["modelo"], "nombre": "M4viejo"}}
+    for path in (api.CACHE_DIR / "analysis" / f"{mid}.json", api.DEMO_DIR / f"{mid}.json"):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(stale), encoding="utf-8")
+    api.S.memory.clear()
+    again = tc.get("/analyze", params={"match_id": mid}).json()
+    assert again["modelo"]["nombre"] == "M4test" and again["fuente"] in ("riot", "raw_cache")
 
 
 def test_health_demo_summaries(client):

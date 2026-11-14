@@ -96,12 +96,15 @@ class SequenceData:
                        feature_groups=self.feature_groups[keep])
 
     def to_tensors(self, device: str | torch.device) -> dict[str, torch.Tensor]:
-        return {
+        out = {
             "X": torch.as_tensor(self.X, dtype=torch.float32, device=device),
             "mask": torch.as_tensor(self.mask, dtype=torch.bool, device=device),
             "lengths": torch.as_tensor(self.lengths.astype(np.int64), device=device),
             "y": torch.as_tensor(self.y.astype(np.float32), device=device),
         }
+        if self.champions is not None:   # M6: IDs de los 10 campeones (solo los usan los modelos con draft)
+            out["champions"] = torch.as_tensor(self.champions.astype(np.int64), device=device)
+        return out
 
 
 def validate(arrays: dict[str, np.ndarray]) -> None:
@@ -176,9 +179,12 @@ def iterate_batches(tensors: dict[str, torch.Tensor], batch_size: int, shuffle: 
     for start in range(0, n, batch_size):
         idx = order[start:start + batch_size]
         t_max = int(tensors["lengths"][idx].max())
-        yield {
+        batch = {
             "X": tensors["X"][idx, :t_max],
             "mask": tensors["mask"][idx, :t_max],
             "y": tensors["y"][idx],
             "idx": idx,
         }
+        if "champions" in tensors:
+            batch["champions"] = tensors["champions"][idx]
+        yield batch

@@ -1,0 +1,34 @@
+name: m6_hp__h64_l2_d0.3_lr0.0003
+data:
+  path: features/sequences.npz
+  exclude_afk_train: true
+  drop_groups:
+  - tendencia
+  drop_names: []
+  tiers: null
+  platforms: null
+  max_train_matches: null
+  subset_seed: 0
+model:
+  type: transformer
+  hidden: 64
+  layers: 2
+  dropout: 0.3
+  heads: 4
+  champions: false
+  champ_dim: 16
+  champ_dropout: 0.1
+train:
+  lr: 0.0003
+  weight_decay: 0.0001
+  batch_size: 128
+  max_epochs: 50
+  patience: 5
+  grad_clip: 1.0
+  smooth_lambda: 0.0
+  seed: 42
+  lr_factor: 0.5
+  lr_patience: 2
+  device: auto
+output:
+  dir: results/runs

@@ -1,0 +1,17 @@
+model.hidden,model.layers,model.dropout,train.lr,run_id,name,model,best_epoch,epochs_run,val_loss,val_auc,val_brier,val_loss_calibrated,temperature,n_train,n_val,n_features,n_params,train_seconds,device,git_commit
+64,2,0.3,0.001,m6_hp__h64_l2_d0.3_lr0.001,m6_hp__h64_l2_d0.3_lr0.001,transformer,21,26,0.49245,0.81199,0.17606,0.4924,1.0214,18294,4056,33,75457,36.2,NVIDIA GeForce RTX 4060 Laptop GPU,cbe01f6
+64,2,0.1,0.001,m6_hp__h64_l2_d0.1_lr0.001,m6_hp__h64_l2_d0.1_lr0.001,transformer,14,19,0.49248,0.812,0.17616,0.49239,1.0316,18294,4056,33,75457,23.3,NVIDIA GeForce RTX 4060 Laptop GPU,cbe01f6
+64,3,0.3,0.001,m6_hp__h64_l3_d0.3_lr0.001,m6_hp__h64_l3_d0.3_lr0.001,transformer,21,26,0.4926,0.81179,0.17611,0.49258,1.0144,18294,4056,33,108929,40.6,NVIDIA GeForce RTX 4060 Laptop GPU,cbe01f6
+128,2,0.1,0.0003,m6_hp__h128_l2_d0.1_lr0.0003,m6_hp__h128_l2_d0.1_lr0.0003,transformer,14,19,0.49278,0.81174,0.17629,0.49268,1.0344,18294,4056,33,286081,23.3,NVIDIA GeForce RTX 4060 Laptop GPU,cbe01f6
+128,2,0.3,0.0003,m6_hp__h128_l2_d0.3_lr0.0003,m6_hp__h128_l2_d0.3_lr0.0003,transformer,21,26,0.49299,0.81164,0.17629,0.49288,1.0353,18294,4056,33,286081,35.2,NVIDIA GeForce RTX 4060 Laptop GPU,cbe01f6
+128,3,0.3,0.0003,m6_hp__h128_l3_d0.3_lr0.0003,m6_hp__h128_l3_d0.3_lr0.0003,transformer,21,26,0.49299,0.81164,0.17626,0.49291,1.0287,18294,4056,33,418561,48.4,NVIDIA GeForce RTX 4060 Laptop GPU,cbe01f6
+64,2,0.1,0.0003,m6_hp__h64_l2_d0.1_lr0.0003,m6_hp__h64_l2_d0.1_lr0.0003,transformer,21,26,0.4932,0.81161,0.17635,0.4932,1.0037,18294,4056,33,75457,29.8,NVIDIA GeForce RTX 4060 Laptop GPU,cbe01f6
+64,2,0.3,0.0003,m6_hp__h64_l2_d0.3_lr0.0003,m6_hp__h64_l2_d0.3_lr0.0003,transformer,21,26,0.49325,0.81145,0.17636,0.49319,1.0243,18294,4056,33,75457,36.6,NVIDIA GeForce RTX 4060 Laptop GPU,cbe01f6
+64,3,0.1,0.0003,m6_hp__h64_l3_d0.1_lr0.0003,m6_hp__h64_l3_d0.1_lr0.0003,transformer,14,19,0.49336,0.81145,0.17642,0.49335,1.0113,18294,4056,33,108929,30.4,NVIDIA GeForce RTX 4060 Laptop GPU,cbe01f6
+64,3,0.3,0.0003,m6_hp__h64_l3_d0.3_lr0.0003,m6_hp__h64_l3_d0.3_lr0.0003,transformer,21,26,0.49368,0.81112,0.17651,0.49362,1.0248,18294,4056,33,108929,42.2,NVIDIA GeForce RTX 4060 Laptop GPU,cbe01f6
+128,2,0.1,0.001,m6_hp__h128_l2_d0.1_lr0.001,m6_hp__h128_l2_d0.1_lr0.001,transformer,4,9,0.4937,0.81102,0.17637,0.49365,0.976,18294,4056,33,286081,12.5,NVIDIA GeForce RTX 4060 Laptop GPU,cbe01f6
+128,3,0.1,0.001,m6_hp__h128_l3_d0.1_lr0.001,m6_hp__h128_l3_d0.1_lr0.001,transformer,4,9,0.49376,0.81105,0.17631,0.49366,0.9678,18294,4056,33,418561,16.7,NVIDIA GeForce RTX 4060 Laptop GPU,cbe01f6
+64,3,0.1,0.001,m6_hp__h64_l3_d0.1_lr0.001,m6_hp__h64_l3_d0.1_lr0.001,transformer,4,9,0.49398,0.81095,0.17659,0.49397,1.0101,18294,4056,33,108929,18.2,NVIDIA GeForce RTX 4060 Laptop GPU,cbe01f6
+128,2,0.3,0.001,m6_hp__h128_l2_d0.3_lr0.001,m6_hp__h128_l2_d0.3_lr0.001,transformer,4,9,0.49405,0.81089,0.17656,0.49403,1.0158,18294,4056,33,286081,10.7,NVIDIA GeForce RTX 4060 Laptop GPU,cbe01f6
+128,3,0.3,0.001,m6_hp__h128_l3_d0.3_lr0.001,m6_hp__h128_l3_d0.3_lr0.001,transformer,4,9,0.49435,0.81077,0.17668,0.49432,1.0177,18294,4056,33,418561,15.8,NVIDIA GeForce RTX 4060 Laptop GPU,cbe01f6
+128,3,0.1,0.0003,m6_hp__h128_l3_d0.1_lr0.0003,m6_hp__h128_l3_d0.1_lr0.0003,transformer,4,9,0.49456,0.81076,0.17701,0.49424,1.0578,18294,4056,33,418561,15.8,NVIDIA GeForce RTX 4060 Laptop GPU,cbe01f6

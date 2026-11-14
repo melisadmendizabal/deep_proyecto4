@@ -109,6 +109,15 @@ def masked_bce(logits: torch.Tensor, y: torch.Tensor, mask: torch.Tensor,
     return loss
 
 
+def forward(model, b: dict) -> torch.Tensor:
+    """Logits de un batch. Los campeones solo se pasan a los modelos con draft (M6, uses_champions)."""
+    if getattr(model, "uses_champions", False):
+        if "champions" not in b:
+            raise ValueError("El modelo usa campeones, pero sequences.npz no trae 'champions'")
+        return model(b["X"], b["mask"], champions=b["champions"])
+    return model(b["X"], b["mask"])
+
+
 @torch.no_grad()
 def predict_logits(model, tensors, batch_size: int = 512) -> np.ndarray:
     """Logits [N, T_total] con NaN en el padding."""
@@ -116,7 +125,7 @@ def predict_logits(model, tensors, batch_size: int = 512) -> np.ndarray:
     n, t = tensors["mask"].shape
     out = np.full((n, t), np.nan, dtype=np.float32)
     for b in iterate_batches(tensors, batch_size, shuffle=False):
-        logits = model(b["X"], b["mask"]).float()
+        logits = forward(model, b).float()
         logits = logits.masked_fill(~b["mask"], float("nan"))
         out[b["idx"].cpu().numpy(), :logits.shape[1]] = logits.cpu().numpy()
     return out
@@ -245,7 +254,7 @@ def run(cfg: dict, run_dir: str | Path, resume: bool = False,
         total, count = 0.0, 0
         for b in iterate_batches(tr_t, tc["batch_size"], shuffle=True, generator=gen):
             opt.zero_grad(set_to_none=True)
-            loss = masked_bce(model(b["X"], b["mask"]), b["y"], b["mask"], tc["smooth_lambda"])
+            loss = masked_bce(forward(model, b), b["y"], b["mask"], tc["smooth_lambda"])
             loss.backward()
             if tc["grad_clip"]:
                 torch.nn.utils.clip_grad_norm_(model.parameters(), tc["grad_clip"])

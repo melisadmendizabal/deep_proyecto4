@@ -32,6 +32,7 @@
 | B8 Momentos + anotación (B) | ✅ Completado (lun 9): detector, herramienta Streamlit, protocolo, selección de 55 partidas. B lleva 13 anotadas |
 | B11 Backend (A) | ✅ Completado (jue 12): `app/api.py` + `app/inference.py` + `src/export_model.py`. Partidas propias nuevas en 1.2 s (p50, 9/9 < 3 s; Riot es el 95 %). Detector del producto: **GRU (M4)**; la iteración híbrida GRU+R0 empata con R0 (`results/b10_hibrido.md`), así que no se adopta. **Bug arreglado que afecta a B10:** ver B11 |
 | B13 Frontend (A) | 🟡 Frontend "Fight Diff", fallback offline (5 partidas en `app/demo/`) y monitoreo (`docs/monitoreo.md`) ✅. **Falta desplegar** |
+| Mejoras post-B10 (A) | ✅ (vie 13): **M6 Transformer causal** y campeones (draft) como embeddings, en M6 y en la GRU (M4+draft). Los campeones sí importan: **M6+draft (promedio de 3 semillas) AUC 0.821, +0.008 vs M4** (IC sin cruzar 0), M4+draft 0.819 (empate con M6); sin campeones M6 = M4. El valor no cambia (todos ~130 USD/mes, R0 sigue igual o mejor). **La app usa M6+draft como modelo principal** (`models/m6_draft`, θ* = 0.15); M4 queda en el selector. Detalle: `results/mejoras.md` (`python src/mejoras_eval.py`). Toca `train.py` (función `forward`), `datasets.py` y `models/gru.py` (opción `champions`, apagada por defecto) |
 | B10 Valor (B) | ✅ Código ✅ (lun 9): `src/value_model.py` + `src/agreement.py`, N3 de B corrida (TCN final ×3, E6 λ 0.1 y 0.5 ×3). ✅ Completado (jue 12): valor y acuerdo con las 55 partidas de A y B, f_rev medido = 1.38, momentos de 3 repeticiones en `annotations/revisiones_momentos.csv` (ver B10) |
 
 **Para A (compañero), de B6/B8:**
@@ -401,7 +402,7 @@ Valor_mes = N_rev × (Ahorro_promedio / 60) × C_h − C_infra − N_rev × C_pr
 ### B7 · A · Dom 8 · TCN + curva de aprendizaje (5 h) · Debería/Debe · **COMPLETADO (dom 8 nov)**
 
 - [x] Revisar con B los resultados de N1 y fijar la mejor configuración de GRU y de MLP. **MLP ✅** (búsqueda corrida por A: h64, 2 capas, dropout 0.3, lr 1e-3; `results/hp/mlp_hp.csv`). **GRU ✅** (B, sáb 7 noche): hidden 128, 2 capas, dropout 0.1, lr 3e-4 (`results/hp/gru_hp.csv`).
-- [x] `src/models/tcn.py` (convoluciones causales dilatadas) + búsqueda de la TCN (adelantada de N2): h64, 3 bloques, dropout 0.3, lr 1e-3 (`results/hp/tcn_hp.csv`). M6 Transformer: no por ahora.
+- [x] `src/models/tcn.py` (convoluciones causales dilatadas) + búsqueda de la TCN (adelantada de N2): h64, 3 bloques, dropout 0.3, lr 1e-3 (`results/hp/tcn_hp.csv`). M6 Transformer: no por ahora (se hizo después, vie 13: ver "Mejoras post-B10" arriba y `results/mejoras.md`).
 - [x] `src/learning_curve.py`: submuestras de train {1k, 3k, 6k, 12k, todo} con semilla fija; M2 y M4 con la mejor configuración y 3 semillas (~4 min).
 
 **Resultado** (detalle en `results/b7_resumen.md`): las búsquedas tardan 3–5 min, no horas. Grids planos (±0.001 de log-loss). En test, TCN +0.002 de AUC vs M2 (significativo pero chico), MLP +0.001. **E2:** la GRU gana a M2 en todos los tamaños, y más con pocos datos (+0.004 de AUC con 1k); la GRU con 6k ≈ M2 con 18k. Los dos se aplanan: de 12k a 18k ganan < 0.001, así que más partidas casi no ayudarían.

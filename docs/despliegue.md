@@ -30,7 +30,7 @@ Con PyTorch CUDA la app usaba ~490 MB y no cabía; por eso `requirements-deploy.
    git pull
    git push
    ```
-   Verifica en https://github.com/melisadmendizabal/deep_proyecto4 que aparezcan `render.yaml` y las carpetas de `models/`: `m4_gru` (el principal) y `m0_oro`, `m1_logit`, `m2_lgbm`, `m3_mlp`, `m5_tcn` (selector de modelos). `models/_train/` NO debe subirse.
+   Verifica en https://github.com/melisadmendizabal/deep_proyecto4 que aparezcan `render.yaml` y las carpetas de `models/`: `m6_draft` (el principal: Transformer + campeones) y `m4_draft`, `m4_gru`, `m0_oro`, `m1_logit`, `m2_lgbm`, `m3_mlp`, `m5_tcn` (selector de modelos). `models/_train/` NO debe subirse.
 
 ---
 
@@ -80,8 +80,8 @@ Clic en **Create Web Service**. En **Logs** deberías ver, en orden:
 ### 6. Verificar
 1. Abre `https://<tu-servicio>.onrender.com/health`. Debe responder un JSON con:
    - `"ok": true`
-   - `"modelo": "M4"`, `"theta": 0.23`
-   - `"modelos"` con 6 entradas (M4 primero, `"principal": true`).
+   - `"modelo": "M6"`, `"theta": 0.15`
+   - `"modelos"` con 8 entradas (M6 primero, `"principal": true`).
    - `"api_riot": true` (si sale `false`, revisa `RIOT_API_KEY`)
    - `"partidas_demo"` con 5 partidas.
 2. Abre `https://<tu-servicio>.onrender.com/`:
@@ -97,9 +97,11 @@ Clic en **Create Web Service**. En **Logs** deberías ver, en orden:
 2. Render → tu servicio → **Environment** → edita `RIOT_API_KEY` → **Save Changes**. El servicio se reinicia solo (~1 min).
 
 ### 8. Actualizar la app después de un cambio de código o de modelo
-Si Melisa cambia θ* o deciden usar sus `best.pt`:
+Si cambian θ* o reentrenan un modelo (comandos completos en el encabezado de `src/export_model.py`):
 ```powershell
-python src/export_model.py          # o con --theta X; regenera models/m4_gru/
+# el principal (M6 + campeones, promedio de 3 semillas):
+python src/export_model.py --runs results/runs/m6d_final__s42 results/runs/m6d_final__s43 results/runs/m6d_final__s44 --name "M6+draft ens3" --manifest-name M6 --out models/m6_draft --promedio --theta 0.15
+python app/make_demo.py             # rehace las partidas de ejemplo con el modelo nuevo
 # los demás modelos del selector: ver los comandos en el encabezado de src/export_model.py
 git add models && git commit -m "Modelo de la app actualizado" && git push
 ```
@@ -116,7 +118,7 @@ Luego, en Render: **Manual Deploy** → **Deploy latest commit**.
 | Buscar un Riot ID da 503 "la API key es inválida o expiró" | development key vencida | regenerar y actualizar (paso 7) |
 | Logs con `Out of memory` o reinicios | se pasó de 512 MB | revisar **Metrics**; plan B: Hugging Face Spaces (16 GB gratis) |
 | La primera visita tarda ~1 min | el servicio estaba dormido | normal en el plan gratis: abrir la app unos minutos antes de la demo |
-| `No existe models/m4_gru/manifest.json` | no se subieron los pesos | revisar el paso 3 de "Antes de empezar" |
+| `No existe models/m6_draft/manifest.json` | no se subieron los pesos | revisar el paso 3 de "Antes de empezar" |
 | El selector solo muestra M4, o M2 da error 500 | no se subieron `models/m*/`, o falta `lightgbm` en el build | revisar el paso 3 y `requirements-deploy.txt` |
 
 ## El día de la demo

@@ -14,6 +14,7 @@ Modelos que ofrece la app (selector; M4 es el principal):
   python src/export_model.py --baseline m0 --name M0 --out models/m0_oro
   python src/export_model.py --baseline m1 --name M1 --out models/m1_logit
   python src/export_model.py --baseline m2 --name M2 --out models/m2_lgbm
+  python src/export_model.py --runs results/runs/m6d_final__s4{2,3,4} --name "M6+draft ens3" --out models/m6_draft       --promedio --theta 0.15      # M6 Transformer + campeones, curva = promedio de semillas (results/mejoras.md)
 
 Salida (models/, fuera de git; para desplegar se sube a Drive o como Release):
   models/<out>/manifest.json   modelo, θ*, parámetros del detector, temperaturas, parches de train...
@@ -82,6 +83,18 @@ def export_baseline(key: str, out: Path) -> tuple[list[dict], dict]:
     return [member], s
 
 
+def _average_info(runs: list[Path]) -> dict:
+    """Temperatura del promedio de semillas, ajustada en val igual que en src/mejoras_eval.py."""
+    from src.mejoras_eval import make_ensemble
+    import tempfile
+    with tempfile.TemporaryDirectory() as tmp:
+        ens = make_ensemble([r.name for r in runs], Path(tmp))
+        with np.load(ens / "predictions.npz", allow_pickle=False) as z:
+            T = float(z["temperature"])
+    print(f"  curva = promedio de {len(runs)} semillas, temperatura del promedio {T:.4f}")
+    return {"curva": "promedio", "temperatura_promedio": T}
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--runs", nargs="*", default=[str(r) for r in DEFAULT_RUNS])
@@ -90,9 +103,12 @@ def main():
     ap.add_argument("--theta", type=float, help="forzar θ (por defecto: θ* elegido en val por B10)")
     ap.add_argument("--retrain", action="store_true")
     ap.add_argument("--baseline", choices=["m0", "m1", "m2"], help="exportar un baseline de B5 en vez de --runs")
+    ap.add_argument("--promedio", action="store_true",
+                    help="curva = promedio de las semillas recalibrado en val (src/mejoras_eval.make_ensemble)")
+    ap.add_argument("--manifest-name", help="nombre que muestra la app (default: --name)")
     args = ap.parse_args()
 
-    runs = [] if args.baseline else [Path(r) for r in args.runs]
+    runs = [] if args.baseline else [Path(r).resolve() for r in args.runs]
     full = None
     if args.retrain and any(not (r / "best.pt").exists() for r in runs):
         full = load_sequences(ROOT / "features" / "sequences.npz")
@@ -126,11 +142,12 @@ def main():
         with np.load(seq, allow_pickle=False) as z:
             patches = sorted(set(z["patch"][z["split"] == "train"].tolist()))
     manifest = {
-        "name": args.name, "model_type": summaries[0].get("model"),
+        "name": args.manifest_name or args.name, "model_type": summaries[0].get("model"),
         "feature_names_all": list(FEATURE_NAMES), "members": members,
         "detector": {**{k: (list(v) if isinstance(v, tuple) else v) for k, v in DEFAULTS.items()},
                      "theta": theta},
         "train_patches": patches, "queue_id": 420, "min_duration_s": 15 * 60,
+        **(_average_info(runs) if args.promedio else {}),
         "exported_utc": time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()), "git_commit": git_commit(),
     }
     (out / "manifest.json").write_text(json.dumps(manifest, indent=2, ensure_ascii=False), encoding="utf-8")

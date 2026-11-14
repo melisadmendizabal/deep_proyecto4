@@ -1,0 +1,4 @@
+train.seed,run_id,name,model,best_epoch,epochs_run,val_loss,val_auc,val_brier,val_loss_calibrated,temperature,n_train,n_val,n_features,n_params,train_seconds,device,git_commit
+43,m6_final__s43,m6_final__s43,transformer,19,24,0.49244,0.81203,0.17604,0.49233,1.0355,18294,4056,33,75457,27.9,NVIDIA GeForce RTX 4060 Laptop GPU,cbe01f6
+42,m6_final__s42,m6_final__s42,transformer,21,26,0.49245,0.81199,0.17606,0.4924,1.0214,18294,4056,33,75457,31.0,NVIDIA GeForce RTX 4060 Laptop GPU,cbe01f6
+44,m6_final__s44,m6_final__s44,transformer,13,18,0.49286,0.81148,0.17623,0.49281,1.0212,18294,4056,33,75457,24.3,NVIDIA GeForce RTX 4060 Laptop GPU,cbe01f6

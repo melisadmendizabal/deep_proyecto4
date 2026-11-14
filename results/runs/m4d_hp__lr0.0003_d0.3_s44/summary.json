@@ -1,0 +1,19 @@
+{
+  "run_id": "m4d_hp__lr0.0003_d0.3_s44",
+  "name": "m4d_hp__lr0.0003_d0.3_s44",
+  "model": "gru",
+  "best_epoch": 13,
+  "epochs_run": 18,
+  "val_loss": 0.49347,
+  "val_auc": 0.81092,
+  "val_brier": 0.17651,
+  "val_loss_calibrated": 0.49341,
+  "temperature": 1.0249,
+  "n_train": 18294,
+  "n_val": 4056,
+  "n_features": 33,
+  "n_params": 233473,
+  "train_seconds": 17.8,
+  "device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+  "git_commit": "cbe01f6"
+}

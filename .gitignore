@@ -22,6 +22,10 @@ data/
 !/models/m4_gru/*.pt
 !/models/m5_tcn/
 !/models/m5_tcn/*.pt
+!/models/m6_draft/
+!/models/m6_draft/*.pt
+!/models/m4_draft/
+!/models/m4_draft/*.pt
 
 # Python
 __pycache__/

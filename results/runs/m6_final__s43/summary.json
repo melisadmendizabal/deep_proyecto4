@@ -1,0 +1,19 @@
+{
+  "run_id": "m6_final__s43",
+  "name": "m6_final__s43",
+  "model": "transformer",
+  "best_epoch": 19,
+  "epochs_run": 24,
+  "val_loss": 0.49244,
+  "val_auc": 0.81203,
+  "val_brier": 0.17604,
+  "val_loss_calibrated": 0.49233,
+  "temperature": 1.0355,
+  "n_train": 18294,
+  "n_val": 4056,
+  "n_features": 33,
+  "n_params": 75457,
+  "train_seconds": 27.9,
+  "device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+  "git_commit": "cbe01f6"
+}

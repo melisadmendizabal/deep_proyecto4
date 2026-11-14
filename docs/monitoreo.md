@@ -25,7 +25,7 @@ Cada análisis nuevo agrega una línea a `data/app_cache/predicciones.jsonl` (fu
 
 | Métrica | Agrupada por | Valor de referencia (test) | Alerta si |
 |---|---|---|---|
-| Log-loss por minuto | parche, semana | 0.520 | > 0.570 |
+| Log-loss por minuto | parche, semana | 0.511 (M6 + campeones; era 0.520 con M4) | > 0.561 |
 | ECE (10 bins) | parche, semana | ~0.02 | > 0.05 → recalibrar la temperatura con datos recientes |
 | AUC en el minuto 15 | parche, semana | ~0.84 | se reporta (sin umbral fijo) |
 | Momentos por partida | parche, semana | 1.9 (B10) | fuera de [0.8, 4] → revisar θ |
