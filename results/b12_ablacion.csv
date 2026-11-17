@@ -1,0 +1,16 @@
+modelo,grupo_quitado,auc,logloss,d_auc,d_logloss
+M4 GRU,ninguno,0.81244,0.52036,0.00000,0.00000
+M4 GRU,combate,0.81099,0.52118,-0.00145,0.00081
+M4 GRU,contexto,0.81193,0.52146,-0.00051,0.00110
+M4 GRU,economia,0.78940,0.55888,-0.02304,0.03851
+M4 GRU,objetivos,0.79466,0.54117,-0.01778,0.02080
+M4 GRU,rol,0.81059,0.52153,-0.00185,0.00116
+M4 GRU,vision,0.81236,0.52009,-0.00009,-0.00027
+M6 + campeones,ninguno,0.82070,0.51118,0.00000,0.00000
+M6 + campeones,combate,0.81978,0.51173,-0.00093,0.00055
+M6 + campeones,contexto,0.82062,0.51196,-0.00009,0.00078
+M6 + campeones,economia,0.78436,0.56360,-0.03634,0.05242
+M6 + campeones,objetivos,0.80463,0.53058,-0.01608,0.01940
+M6 + campeones,rol,0.81933,0.51190,-0.00137,0.00072
+M6 + campeones,vision,0.82073,0.51093,0.00002,-0.00024
+M6 + campeones,campeones,0.81135,0.52396,-0.00935,0.01278

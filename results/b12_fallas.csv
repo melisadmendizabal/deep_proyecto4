@@ -1,0 +1,197 @@
+match_id,tipo_fila,anotador,minuto_jugada,equipo_anotado,tipo,confianza,detectado,equipo_ok,r0_detecta,salto_max,salto_favorece,cortado_top_k,p_antes,theta,nota,favorece,delta_pts,grupo,anotado,texto,r0_cerca
+EUW1_8035197666,anotado,B,34,rojo,pelea,2.0,True,False,True,0.275,rojo,False,0.347,0.15,"Posiblemente el smolder escaló y lograron 2 ace seguidos, suficientes para ejercer mucha presión, aprovecharon para hacer barón y terminar  o pushear lo suficiente",,,,,,
+EUW1_8035197666,detectado,,13,,,,,,,,,,,,,azul,20.6,economía,False,"min 11–14: 21 pts de probabilidad a favor de azul, sobre todo por economía (azul: 4 kills, 2× larvas; rojo: 1 kill, larvas)",False
+EUW1_8035197666,detectado,,21,,,,,,,,,,,,,rojo,-30.8,economía,False,"min 20–22: 31 pts de probabilidad a favor de rojo, sobre todo por economía (azul: 1 kill, torre; rojo: 6 kills, dragón)",True
+EUW1_8035197666,detectado,,27,,,,,,,,,,,,,rojo,-19.7,objetivos,False,"min 26–28: 20 pts de probabilidad a favor de rojo, sobre todo por objetivos (azul: torre; rojo: 2 kills, dragón, barón)",True
+EUW1_8035197666,detectado,,32,,,,,,,,,,,,,azul,21.7,economía,True,"min 31–33: 22 pts de probabilidad a favor de azul, sobre todo por economía (azul: 4 kills, dragón; rojo: 3 kills)",True
+EUW1_8035197666,detectado,,35,,,,,,,,,,,,,rojo,-27.5,economía,True,"min 33–36: 28 pts de probabilidad a favor de rojo, sobre todo por economía (azul: 2 kills; rojo: 6 kills, 2× ace, torre, inhibidor)",True
+EUW1_8035315280,anotado,A,27,azul,pelea,3.0,True,True,True,0.164,azul,False,0.862,0.15,"Pelea en mid, que termina muy favorecida para el equipo azul.",,,,,,
+EUW1_8035315280,detectado,,9,,,,,,,,,,,,,rojo,-23.8,economía,False,"min 7–10: 24 pts de probabilidad a favor de rojo, sobre todo por economía (rojo: 5 kills, 3× larvas)",False
+EUW1_8035315280,detectado,,11,,,,,,,,,,,,,azul,29.9,economía,False,"min 10–12: 30 pts de probabilidad a favor de azul, sobre todo por economía (azul: 5 kills; rojo: 1 kill)",False
+EUW1_8035315280,detectado,,13,,,,,,,,,,,,,azul,20.2,economía,False,"min 11–14: 20 pts de probabilidad a favor de azul, sobre todo por economía (azul: 5 kills, dragón; rojo: 3 kills)",True
+EUW1_8035315280,detectado,,15,,,,,,,,,,,,,rojo,-22.3,economía,False,"min 14–16: 22 pts de probabilidad a favor de rojo, sobre todo por economía (azul: 2 kills; rojo: 5 kills, 3× torre)",True
+EUW1_8035315280,detectado,,25,,,,,,,,,,,,,azul,16.4,economía,True,"min 23–26: 16 pts de probabilidad a favor de azul, sobre todo por economía (azul: 7 kills, dragón, ace, 2× torre; rojo: 3 kills, torre)",True
+EUW1_8035492359,anotado,A,18,azul,pelea,2.0,True,True,True,0.282,azul,False,0.429,0.15,Pelea a favor del equipo auzl,,,,,,
+EUW1_8035492359,anotado,A,24,azul,estructura,3.0,True,True,True,0.211,rojo,False,0.779,0.15,Aprovecharon la bonificación del barón para tirar 3 torres ,,,,,,
+EUW1_8035492359,anotado,A,31,rojo,pelea,3.0,True,True,True,0.329,rojo,False,0.313,0.15,"Pelea que termina totalmente a favor del equipo rojo, suficiente como para terminar la partida",,,,,,
+EUW1_8035492359,detectado,,19,,,,,,,,,,,,,azul,28.2,economía,True,"min 18–20: 28 pts de probabilidad a favor de azul, sobre todo por economía (azul: 6 kills; rojo: 2 kills, torre)",True
+EUW1_8035492359,detectado,,21,,,,,,,,,,,,,rojo,-23.6,economía,False,"min 20–22: 24 pts de probabilidad a favor de rojo, sobre todo por economía (azul: 1 kill, dragón, torre; rojo: 4 kills)",True
+EUW1_8035492359,detectado,,25,,,,,,,,,,,,,azul,19.4,economía,True,"min 23–26: 19 pts de probabilidad a favor de azul, sobre todo por economía (azul: 4 kills, barón, 3× torre; rojo: 1 kill, dragón, torre)",True
+EUW1_8035492359,detectado,,27,,,,,,,,,,,,,rojo,-25.0,economía,False,"min 26–28: 25 pts de probabilidad a favor de rojo, sobre todo por economía (rojo: 1 kill)",True
+EUW1_8035492359,detectado,,32,,,,,,,,,,,,,rojo,-32.9,objetivos,True,"min 31–33: 33 pts de probabilidad a favor de rojo, sobre todo por objetivos (azul: torre; rojo: 4 kills, dragón, 3× torre, inhibidor)",True
+EUW1_8035668214,anotado,A,17,azul,objetivo,3.0,True,True,False,0.226,azul,False,0.682,0.15,"A pesar que es el equipo rojo el que se lleva el heraldo, pierde la batalla que ocurrió por el mismo, dando una gran ventaja de oro/kills al mid del equipo azul. ",,,,,,
+EUW1_8035668214,anotado,A,28,azul,pelea,3.0,True,False,True,0.257,azul,False,0.674,0.15,"Pelea que termina totalmente a favor del equipo azul, haciendo que se lleven fácilmente el dragón y el barón, siendo el inicio del snowball para terminar la partida. ",,,,,,
+EUW1_8035668214,anotado,B,28,azul,objetivo,3.0,True,False,True,0.257,azul,False,0.674,0.15,Excelente pelea que finaliza con dos objetivos bastante fuertes que permiten cerrar partida,,,,,,
+EUW1_8035668214,anotado,B,17,azul,pick,2.0,True,True,False,0.226,azul,False,0.682,0.15,Pelea que marca una diferencia clara de asesinatos y permite realizar un excelente objetivo,,,,,,
+EUW1_8035668214,detectado,,15,,,,,,,,,,,,,azul,21.4,economía,True,"min 14–16: 21 pts de probabilidad a favor de azul, sobre todo por economía (azul: 4 kills, 2× torre)",False
+EUW1_8035668214,detectado,,18,,,,,,,,,,,,,azul,22.6,economía,True,"min 17–19: 23 pts de probabilidad a favor de azul, sobre todo por economía (azul: 4 kills, dragón; rojo: 1 kill, heraldo)",False
+EUW1_8035668214,detectado,,27,,,,,,,,,,,,,rojo,-23.7,economía,True,"min 25–28: 24 pts de probabilidad a favor de rojo, sobre todo por economía (rojo: 3 kills, torre)",True
+EUW1_8035668214,detectado,,29,,,,,,,,,,,,,azul,25.7,combate,True,"min 28–30: 26 pts de probabilidad a favor de azul, sobre todo por combate (azul: 5 kills, dragón, barón; rojo: torre)",True
+EUW1_8035668214,detectado,,31,,,,,,,,,,,,,azul,20.8,objetivos,False,"min 31–32: 21 pts de probabilidad a favor de azul, sobre todo por objetivos (azul: 2 kills, 2× inhibidor, 2× torre)",True
+EUW1_8035705111,anotado,A,17,rojo,pelea,2.0,False,False,True,0.019,azul,False,0.018,0.15,"Pelea que termina muy a favor del equipo rojo, llevándose el jungla una triple-kill",,,,,,
+EUW1_8035705111,anotado,A,19,rojo,objetivo,3.0,False,False,True,0.014,rojo,False,0.024,0.15,"Pelea por el heraldo, que termina totalmente a favor del equipo rojo, significando también el siguiente dragón, y siendo el inicio de un snowball con el que terminan la partida. ",,,,,,
+EUW1_8035705111,detectado,,2,,,,,,,,,,,,,rojo,-21.8,economía,False,"min 2–3: 22 pts de probabilidad a favor de rojo, sobre todo por economía (rojo: 2 kills)",False
+EUW1_8035705111,detectado,,5,,,,,,,,,,,,,rojo,-27.3,economía,False,"min 4–6: 27 pts de probabilidad a favor de rojo, sobre todo por economía (rojo: 3 kills)",False
+KR_8444529674,anotado,A,24,azul,pelea,3.0,True,True,True,0.225,azul,False,0.761,0.15,"Pelea totalmente a favor del equipo azul, que termina siendo el snowball para el final de la partida. ",,,,,,
+KR_8444529674,anotado,B,23,azul,estructura,2.0,True,True,True,0.19,azul,False,0.572,0.15,Buen push ,,,,,,
+KR_8444529674,detectado,,10,,,,,,,,,,,,,rojo,-22.0,economía,False,"min 9–11: 22 pts de probabilidad a favor de rojo, sobre todo por economía (azul: 2 kills; rojo: 4 kills, 3× larvas)",False
+KR_8444529674,detectado,,14,,,,,,,,,,,,,azul,22.0,economía,False,"min 13–15: 22 pts de probabilidad a favor de azul, sobre todo por economía (azul: 5 kills, torre; rojo: 1 kill, dragón)",True
+KR_8444529674,detectado,,18,,,,,,,,,,,,,rojo,-19.6,economía,False,"min 17–19: 20 pts de probabilidad a favor de rojo, sobre todo por economía (azul: 2 kills; rojo: 5 kills, heraldo)",True
+KR_8444529674,detectado,,24,,,,,,,,,,,,,azul,18.9,economía,True,"min 24–25: 19 pts de probabilidad a favor de azul, sobre todo por economía (azul: 4 kills, dragón; rojo: 2 kills)",True
+KR_8444529674,detectado,,26,,,,,,,,,,,,,azul,22.5,objetivos,True,"min 24–27: 23 pts de probabilidad a favor de azul, sobre todo por objetivos (azul: 9 kills, dragón, ace, 2× torre; rojo: 2 kills)",True
+KR_8444601933,anotado,B,16,rojo,pick,2.0,True,True,True,0.344,rojo,False,0.426,0.15,Pick con el jungla que permite realiazar el heraldo  y buen pusheo al rededor del mapa,,,,,,
+KR_8444601933,anotado,B,18,azul,pelea,2.0,True,False,True,0.344,rojo,False,0.426,0.15,Darius fideado con 5 asesinatos a su favor,,,,,,
+KR_8444601933,anotado,B,27,azul,pelea,3.0,True,True,True,0.292,azul,False,0.735,0.15,Buena pelea semi grupal con un ace y un barón inmediato que permite pushear,,,,,,
+KR_8444601933,detectado,,4,,,,,,,,,,,,,rojo,-26.4,economía,False,"min 3–5: 26 pts de probabilidad a favor de rojo, sobre todo por economía (rojo: 3 kills)",False
+KR_8444601933,detectado,,9,,,,,,,,,,,,,rojo,-30.4,economía,False,"min 8–10: 30 pts de probabilidad a favor de rojo, sobre todo por economía (rojo: 4 kills, 3× larvas)",False
+KR_8444601933,detectado,,16,,,,,,,,,,,,,rojo,-34.4,economía,True,"min 14–17: 34 pts de probabilidad a favor de rojo, sobre todo por economía (azul: 2 kills, torre; rojo: 8 kills, heraldo, torre)",True
+KR_8444601933,detectado,,28,,,,,,,,,,,,,azul,29.2,economía,True,"min 26–29: 29 pts de probabilidad a favor de azul, sobre todo por economía (azul: 8 kills, ace, barón, 3× torre; rojo: 2 kills)",True
+KR_8444601933,detectado,,31,,,,,,,,,,,,,azul,28.0,objetivos,False,"min 30–32: 28 pts de probabilidad a favor de azul, sobre todo por objetivos (azul: 6 kills, 2× torre, inhibidor; rojo: torre)",True
+KR_8444656219,anotado,B,10,azul,pelea,2.0,False,False,False,0.11,azul,False,0.803,0.15,Diana fideada con buenas rotaciones,,,,,,
+KR_8444656219,detectado,,6,,,,,,,,,,,,,azul,18.6,economía,False,"min 5–7: 19 pts de probabilidad a favor de azul, sobre todo por economía (azul: 4 kills, dragón; rojo: 1 kill)",False
+KR_8444730369,anotado,A,20,rojo,estructura,2.0,True,True,True,0.158,rojo,False,0.116,0.15,Buena presión en el carril superior.,,,,,,
+KR_8444730369,anotado,A,25,rojo,objetivo,3.0,False,False,True,0.092,rojo,False,0.056,0.15,"Pelea por la bonificación del barón, que termina realmente a favor del equipo rojo. ",,,,,,
+KR_8444730369,anotado,B,14,rojo,estructura,2.0,True,False,False,0.153,azul,False,0.286,0.15,"Buena presión, logran derribar 3 torres principales rapidamente",,,,,,
+KR_8444730369,anotado,B,18,rojo,objetivo,3.0,False,False,False,0.147,rojo,False,0.226,0.15,Logran pelear heraldo lo cual sirve para aumentar la presión que ya tenían,,,,,,
+KR_8444730369,anotado,B,25,rojo,pick,3.0,False,False,True,0.092,rojo,False,0.056,0.15,Fiora mata al jungla y logran hacer barón y pushear mas,,,,,,
+KR_8444730369,detectado,,2,,,,,,,,,,,,,rojo,-19.8,economía,False,"min 1–3: 20 pts de probabilidad a favor de rojo, sobre todo por economía (azul: 1 kill; rojo: 3 kills)",False
+KR_8444730369,detectado,,6,,,,,,,,,,,,,azul,20.8,economía,False,"min 6–7: 21 pts de probabilidad a favor de azul, sobre todo por economía (azul: 2 kills)",False
+KR_8444730369,detectado,,11,,,,,,,,,,,,,rojo,-18.1,economía,False,"min 10–12: 18 pts de probabilidad a favor de rojo, sobre todo por economía (azul: 2 kills; rojo: 3 kills, dragón)",False
+KR_8444730369,detectado,,13,,,,,,,,,,,,,azul,15.3,economía,True,"min 12–14: 15 pts de probabilidad a favor de azul, sobre todo por economía (azul: 3 kills, torre; rojo: 1 kill)",False
+KR_8444730369,detectado,,21,,,,,,,,,,,,,rojo,-15.8,economía,True,"min 20–22: 16 pts de probabilidad a favor de rojo, sobre todo por economía (azul: 1 kill, dragón, torre; rojo: 6 kills, 3× torre)",True
+KR_8444875248,anotado,A,21,azul,pick,3.0,True,True,False,0.386,azul,False,0.787,0.15,"El jungla del equipo azul mata al jungla del equipo rojo, asegurando un objetivo de barón sin dificultad. Con ese barón ejercen una gran presión en carriles mid y top.",,,,,,
+KR_8444875248,anotado,A,27,rojo,error,3.0,True,True,True,0.311,rojo,False,0.732,0.15,"Mala jugada por parte del equipo azul, que llevan amplia ventaja de mapa, termina en ACE y barón a favor del equipo rojo. ",,,,,,
+KR_8444875248,anotado,A,29,rojo,pelea,3.0,True,True,True,0.568,azul,False,0.373,0.15,"Pelea que termina en una penta-kill a favor del bottom del equipo rojo, creando una gran ventaja de oro para el carry y tirando torre e inhibidor en el carril central. ",,,,,,
+KR_8444875248,anotado,A,31,azul,error,3.0,True,False,True,0.568,azul,False,0.373,0.15,"Error del equipo rojo de estar separados y no estabilizar la situación, luego de haber tenido la pelea ventajosa previa. Mueren todos (el jungla estaba tirando torre en top), el equipo azul hace alma de dragón y terminan la partida.  ",,,,,,
+KR_8444875248,anotado,B,12,rojo,pelea,2.0,False,False,False,0.209,rojo,True,0.506,0.15,Katarina fideeada,,,,,,
+KR_8444875248,anotado,B,16,rojo,estructura,2.0,False,False,True,0.195,rojo,True,0.399,0.15,Buena pelea que permite derribar torres,,,,,,
+KR_8444875248,anotado,B,21,azul,pick,3.0,True,True,False,0.386,azul,False,0.787,0.15,Pelea entre junglas que permite obtener el barón y permite pushear hasta el minuto 25,,,,,,
+KR_8444875248,anotado,B,29,rojo,pelea,2.0,True,True,True,0.568,azul,False,0.373,0.15,"Penta de katarina pero mala ejecución de equipo, no realizan ningun objetivo o pushean en grupo",,,,,,
+KR_8444875248,anotado,B,31,azul,objetivo,2.0,True,False,True,0.568,azul,False,0.373,0.15,"Buena respuesta del push del equipo rojo, con objetivo terminado y push suficiente que el equipo rojo dio por terminada la partida aunque pusieron revivir y pelear",,,,,,
+KR_8444875248,detectado,,9,,,,,,,,,,,,,azul,26.4,economía,False,"min 8–10: 26 pts de probabilidad a favor de azul, sobre todo por economía (azul: 2 kills, dragón; rojo: 3× larvas)",False
+KR_8444875248,detectado,,19,,,,,,,,,,,,,azul,23.0,economía,True,"min 18–20: 23 pts de probabilidad a favor de azul, sobre todo por economía (azul: 5 kills, 2× torre; rojo: 3 kills)",True
+KR_8444875248,detectado,,23,,,,,,,,,,,,,azul,38.6,economía,True,"min 22–24: 39 pts de probabilidad a favor de azul, sobre todo por economía (azul: 2 kills, barón, 3× torre, 2× inhibidor; rojo: torre)",True
+KR_8444875248,detectado,,29,,,,,,,,,,,,,rojo,-31.1,economía,True,"min 27–30: 31 pts de probabilidad a favor de rojo, sobre todo por economía (azul: 5 kills, torre; rojo: 10 kills, 2× ace, barón)",True
+KR_8444875248,detectado,,31,,,,,,,,,,,,,azul,56.8,objetivos,True,"min 31–32: 57 pts de probabilidad a favor de azul, sobre todo por objetivos (azul: 4 kills, dragón, 2× torre, inhibidor; rojo: 1 kill, torre)",True
+KR_8445472884,anotado,A,8,rojo,objetivo,3.0,True,True,True,0.217,rojo,False,0.271,0.15,"Gank del jungla del equipo rojo, agarrando el equipo rojo un buen tempo, y haciendo las 3 larvas.",,,,,,
+KR_8445472884,anotado,A,16,rojo,pelea,3.0,False,False,True,0.056,rojo,False,0.054,0.15,Pelea totalmente a favor del equipo rojo; termina en ACE para ellos.,,,,,,
+KR_8445472884,anotado,A,18,rojo,pelea,3.0,False,False,True,0.039,rojo,False,0.013,0.15,"Pelea totalmente a favor del equipo rojo; el jungla rojo se hace una cuadra-kill. A consecuencia, pueden tirar muchas estructuras en las 3 lineas",,,,,,
+KR_8445472884,anotado,A,19,rojo,objetivo,2.0,False,False,True,0.039,rojo,False,0.013,0.15,"Heraldo realizado, y snowball para el final de la partida",,,,,,
+KR_8445472884,detectado,,8,,,,,,,,,,,,,rojo,-21.7,economía,True,"min 7–9: 22 pts de probabilidad a favor de rojo, sobre todo por economía (rojo: 4 kills)",True
+KR_8445483239,detectado,,7,,,,,,,,,,,,,rojo,-18.6,economía,False,"min 6–8: 19 pts de probabilidad a favor de rojo, sobre todo por economía (azul: 1 kill; rojo: 4 kills)",False
+KR_8445483239,detectado,,13,,,,,,,,,,,,,rojo,-19.5,economía,False,"min 12–14: 19 pts de probabilidad a favor de rojo, sobre todo por economía (azul: 1 kill; rojo: 5 kills, dragón)",True
+KR_8445736754,anotado,A,14,rojo,estructura,3.0,False,False,True,0.121,rojo,False,0.173,0.15,"Gran push en carriles superior y medio, para lograr tirar sus primeras torres y creando un gran espacio en el mapa. Llegando a asegurar el heraldo.",,,,,,
+KR_8445736754,anotado,A,20,rojo,pelea,3.0,False,False,True,0.049,rojo,False,0.087,0.15,"Pelea totalmente a favor del equipo rojo, que termina en ACE a su favor, significando el alma de dragón, el barón, y el final de la partida. ",,,,,,
+KR_8445736754,detectado,,11,,,,,,,,,,,,,rojo,-15.4,economía,False,"min 10–12: 15 pts de probabilidad a favor de rojo, sobre todo por economía (azul: 2 kills; rojo: 2 kills, larvas, dragón)",False
+LA1_1760201868,anotado,A,27,rojo,pelea,2.0,True,True,False,0.209,rojo,False,0.073,0.15,"Pelea a favor del equipo rojo; el jungla rojo se lleva una triple-kill, una torre y un dragon",,,,,,
+LA1_1760201868,anotado,A,35,rojo,pelea,2.0,True,True,True,0.224,rojo,False,0.172,0.15,"Pelea a favor del equipo rojo, que termina la partida.",,,,,,
+LA1_1760201868,detectado,,6,,,,,,,,,,,,,azul,22.6,economía,False,"min 5–7: 23 pts de probabilidad a favor de azul, sobre todo por economía (azul: 2 kills, dragón)",False
+LA1_1760201868,detectado,,14,,,,,,,,,,,,,rojo,-28.7,economía,False,"min 13–15: 29 pts de probabilidad a favor de rojo, sobre todo por economía (azul: 2 kills; rojo: 5 kills)",True
+LA1_1760201868,detectado,,23,,,,,,,,,,,,,rojo,-18.0,economía,False,"min 22–24: 18 pts de probabilidad a favor de rojo, sobre todo por economía (azul: 2 kills; rojo: 5 kills, dragón, torre)",True
+LA1_1760201868,detectado,,28,,,,,,,,,,,,,rojo,-20.9,combate,True,"min 27–29: 21 pts de probabilidad a favor de rojo, sobre todo por combate (rojo: 4 kills, dragón, torre)",False
+LA1_1760201868,detectado,,35,,,,,,,,,,,,,rojo,-22.4,objetivos,True,"min 34–36: 22 pts de probabilidad a favor de rojo, sobre todo por objetivos (azul: 1 kill, barón; rojo: 5 kills, dragón, ace, 2× torre, inhibidor)",True
+LA1_1760256825,anotado,B,11,azul,pick,2.0,True,True,True,0.214,azul,False,0.733,0.15,Mataron a la bottline del equipo rojo y al jungla y lograron pelear el dragón de fuego. La pelea se extendió hasta matar nuevamente y luego tiraron torre de mid,,,,,,
+LA1_1760256825,anotado,B,15,azul,estructura,3.0,False,False,True,0.206,azul,False,0.911,0.15,"Buena presión ejercida, lo que les otorga Heraldo y una diferencia de ventaja mas grande con 2 estructuras derribadas",,,,,,
+LA1_1760256825,detectado,,12,,,,,,,,,,,,,azul,21.4,economía,True,"min 11–13: 21 pts de probabilidad a favor de azul, sobre todo por economía (azul: 5 kills, dragón; rojo: 1 kill)",True
+LA1_1760349664,anotado,A,14,rojo,estructura,2.0,True,True,False,0.199,rojo,False,0.25,0.15,Buena presión de torres.,,,,,,
+LA1_1760349664,anotado,A,24,azul,pelea,3.0,True,True,True,0.263,azul,False,0.073,0.15,"Pelea en el carril central, que termina siendo totalmente a favor del equipo azul, haciendo un ACE a su favor.",,,,,,
+LA1_1760349664,anotado,A,27,rojo,pelea,3.0,True,False,True,0.528,rojo,False,0.445,0.15,"Pelea que termina siendo totalmente a favor del equipo rojo, haciendo que el mid logre un cuadra-kill y un ACE a su favor.  Aquí comienza el snowball que acaba con barón, y eventualmente la partida. ",,,,,,
+LA1_1760349664,detectado,,3,,,,,,,,,,,,,rojo,-17.2,economía,False,"min 2–4: 17 pts de probabilidad a favor de rojo, sobre todo por economía (azul: 1 kill; rojo: 2 kills)",False
+LA1_1760349664,detectado,,12,,,,,,,,,,,,,rojo,-19.9,economía,True,"min 11–13: 20 pts de probabilidad a favor de rojo, sobre todo por economía (rojo: 2 kills, dragón)",False
+LA1_1760349664,detectado,,22,,,,,,,,,,,,,azul,26.3,economía,True,"min 22–23: 26 pts de probabilidad a favor de azul, sobre todo por economía (azul: 4 kills, dragón; rojo: 1 kill)",True
+LA1_1760349664,detectado,,25,,,,,,,,,,,,,azul,26.1,economía,True,"min 24–26: 26 pts de probabilidad a favor de azul, sobre todo por economía (azul: 6 kills, 2× ace, 2× torre; rojo: 3 kills)",True
+LA1_1760349664,detectado,,27,,,,,,,,,,,,,rojo,-52.8,economía,True,"min 26–28: 53 pts de probabilidad a favor de rojo, sobre todo por economía (azul: 2 kills; rojo: 6 kills, 2× ace, 2× torre, inhibidor)",True
+LA1_1760433201,anotado,A,34,azul,estructura,2.0,True,True,True,0.211,azul,False,0.748,0.15,Buena presión de los carriles superior y medio.,,,,,,
+LA1_1760433201,detectado,,13,,,,,,,,,,,,,rojo,-22.6,economía,False,"min 12–14: 23 pts de probabilidad a favor de rojo, sobre todo por economía (azul: 2 kills; rojo: 4 kills, dragón)",False
+LA1_1760433201,detectado,,23,,,,,,,,,,,,,azul,29.9,economía,False,"min 23–24: 30 pts de probabilidad a favor de azul, sobre todo por economía (azul: 4 kills, dragón)",True
+LA1_1760433201,detectado,,25,,,,,,,,,,,,,rojo,-19.8,economía,False,"min 24–26: 20 pts de probabilidad a favor de rojo, sobre todo por economía (azul: 1 kill, torre; rojo: 4 kills)",True
+LA1_1760433201,detectado,,29,,,,,,,,,,,,,azul,19.0,objetivos,False,"min 28–30: 19 pts de probabilidad a favor de azul, sobre todo por objetivos (azul: 5 kills, dragón, torre; rojo: 4 kills)",True
+LA1_1760433201,detectado,,33,,,,,,,,,,,,,azul,21.1,economía,True,"min 32–34: 21 pts de probabilidad a favor de azul, sobre todo por economía (azul: 5 kills; rojo: 1 kill)",True
+NA1_5672887032,anotado,A,33,azul,objetivo,3.0,True,True,True,0.226,azul,False,0.653,0.15,"Pelea a favor del equipo azul, para hacerse la bonificación del barón.",,,,,,
+NA1_5672887032,anotado,A,17,rojo,pick,3.0,False,False,False,0.051,rojo,False,0.936,0.15,"El mid del equipo rojo logra matar al jungla del equipo azul, asegurando entonces el dragon facilmente para su jungla.",,,,,,
+NA1_5672887032,anotado,A,20,rojo,error,2.0,False,False,False,0.051,rojo,False,0.936,0.15,"Se exponen mucho a pesar de estar ganando por ventaja, lo que le regala una triple-kill al top del equipo rojo.",,,,,,
+NA1_5672887032,anotado,A,24,rojo,error,3.0,True,True,True,0.371,rojo,False,0.654,0.15,"El equipo azul, principalmente el bottom de ellos (quien es el más fuerte), se expone a una mala pelea, que queda totalmente a favor del equipo rojo, incluyendo un dragón y un barón luego. ACE a favor del equipo rojo",,,,,,
+NA1_5672887032,anotado,A,45,rojo,pelea,3.0,False,False,False,0.105,rojo,False,0.716,0.15,"Pelea para defender la torre de top del equipo rojo, que termina en una balanza totalmente a favor de ellos, suficiente para terminar la partida. ",,,,,,
+NA1_5672887032,anotado,B,9,azul,pick,2.0,False,False,False,0.089,azul,False,0.87,0.15,Pelea de junglas que permite que el equipo azul gane las larvas,,,,,,
+NA1_5672887032,anotado,B,20,rojo,pelea,2.0,False,False,False,0.051,rojo,False,0.936,0.15,"Asesinato triple del olaf, remontada en top ",,,,,,
+NA1_5672887032,anotado,B,22,rojo,estructura,2.0,False,False,False,0.101,rojo,False,0.852,0.15,"El yi se empezó a armar y escalar, logró un asecinato doble junto con el supp y el top, permite mantener un excelente push y ganar dragones y torretas",,,,,,
+NA1_5672887032,anotado,B,33,azul,objetivo,2.0,True,True,True,0.226,azul,False,0.653,0.15,"Buena pelea que pemitió pelear un objetivo, logran pushear, se miran las consecuencias del barón sobre el equipo rojo con asecinatos estructuras y dragón",,,,,,
+NA1_5672887032,anotado,B,39,rojo,error,3.0,True,False,True,0.234,azul,False,0.925,0.15,"Buen push de parte del equipo azul, pero forzaron a cerrar la partida, no consideraron el barón ni que el Yi podia revivir o backear, y los mató a todos porque los Yi escalan y estan en late, eso permitió que el yi los matara a todos, hiciera un barón, elder y finalizzar la partida (error, llegar a late con un yi en el equipo contrario) o pushear sin fuerza como baron",,,,,,
+NA1_5672887032,detectado,,26,,,,,,,,,,,,,rojo,-37.1,economía,True,"min 24–27: 37 pts de probabilidad a favor de rojo, sobre todo por economía (azul: 2 kills; rojo: 7 kills, dragón, ace, torre)",True
+NA1_5672887032,detectado,,32,,,,,,,,,,,,,azul,22.4,combate,True,"min 31–33: 22 pts de probabilidad a favor de azul, sobre todo por combate (azul: 2 kills, dragón; rojo: 1 kill)",True
+NA1_5672887032,detectado,,34,,,,,,,,,,,,,azul,22.6,economía,True,"min 33–35: 23 pts de probabilidad a favor de azul, sobre todo por economía (azul: 4 kills, barón; rojo: 1 kill, torre)",True
+NA1_5672887032,detectado,,40,,,,,,,,,,,,,azul,23.4,objetivos,True,"min 39–41: 23 pts de probabilidad a favor de azul, sobre todo por objetivos (azul: 5 kills, 4× torre, inhibidor; rojo: 4 kills)",True
+NA1_5672887032,detectado,,48,,,,,,,,,,,,,rojo,-37.5,objetivos,False,"min 47–49: 37 pts de probabilidad a favor de rojo, sobre todo por objetivos (azul: 2 kills; rojo: 5 kills, ace, 2× torre, inhibidor)",False
+NA1_5673011529,detectado,,2,,,,,,,,,,,,,rojo,-19.1,economía,False,"min 1–3: 19 pts de probabilidad a favor de rojo, sobre todo por economía (rojo: 2 kills)",False
+NA1_5673011529,detectado,,4,,,,,,,,,,,,,azul,17.5,economía,False,"min 4–5: 18 pts de probabilidad a favor de azul, sobre todo por economía (azul: 2 kills)",False
+NA1_5673011529,detectado,,10,,,,,,,,,,,,,azul,25.3,economía,False,"min 9–11: 25 pts de probabilidad a favor de azul, sobre todo por economía (azul: 4 kills, 3× larvas; rojo: 3 kills)",False
+NA1_5673011529,detectado,,13,,,,,,,,,,,,,rojo,-27.6,economía,False,"min 12–14: 28 pts de probabilidad a favor de rojo, sobre todo por economía (azul: 1 kill, torre; rojo: 4 kills, dragón)",False
+NA1_5673011529,detectado,,16,,,,,,,,,,,,,azul,42.9,economía,False,"min 15–17: 43 pts de probabilidad a favor de azul, sobre todo por economía (azul: 5 kills, heraldo, torre)",True
+NA1_5673205122,anotado,A,8,azul,pick,2.0,False,False,False,0.1,rojo,False,0.315,0.15,"El jungla del equipo azul mata el jungla del equipo rojo, por lo que le asegura un objetivo sencillo.",,,,,,
+NA1_5673205122,anotado,A,17,azul,objetivo,3.0,True,True,True,0.411,azul,False,0.811,0.15,"Pelea por el heraldo, que termina totalmente a favor del equipo azul.  Termina siendo el detonante del snowball que termina el juego.",,,,,,
+NA1_5673205122,detectado,,2,,,,,,,,,,,,,rojo,-21.7,economía,False,"min 2–3: 22 pts de probabilidad a favor de rojo, sobre todo por economía (rojo: 2 kills)",False
+NA1_5673205122,detectado,,13,,,,,,,,,,,,,azul,21.2,economía,False,"min 13–14: 21 pts de probabilidad a favor de azul, sobre todo por economía (azul: 2 kills; rojo: 1 kill)",True
+NA1_5673205122,detectado,,18,,,,,,,,,,,,,azul,41.1,economía,True,"min 17–19: 41 pts de probabilidad a favor de azul, sobre todo por economía (azul: 5 kills, heraldo, dragón, 2× torre)",True
+NA1_5673221392,anotado,B,13,azul,pelea,2.0,True,True,False,0.164,azul,False,0.805,0.15,KSante Fideado,,,,,,
+NA1_5673221392,anotado,B,20,azul,pick,2.0,True,False,True,0.199,azul,False,0.743,0.15,Pelea que termina con derribo de torre  y buenas peleas de equipos de push,,,,,,
+NA1_5673221392,anotado,B,35,azul,objetivo,3.0,True,False,True,0.192,azul,False,0.968,0.15,Elder que permite pushear y terminar partida,,,,,,
+NA1_5673221392,detectado,,14,,,,,,,,,,,,,azul,16.4,economía,True,"min 13–15: 16 pts de probabilidad a favor de azul, sobre todo por economía (azul: 2 kills, torre)",False
+NA1_5673221392,detectado,,18,,,,,,,,,,,,,rojo,-16.0,economía,True,"min 18–19: 16 pts de probabilidad a favor de rojo, sobre todo por economía (azul: 2 kills; rojo: 3 kills)",True
+NA1_5673221392,detectado,,21,,,,,,,,,,,,,azul,19.9,economía,True,"min 19–22: 20 pts de probabilidad a favor de azul, sobre todo por economía (azul: 6 kills, torre; rojo: 3 kills, torre)",True
+NA1_5673221392,detectado,,34,,,,,,,,,,,,,rojo,-15.9,economía,True,"min 33–35: 16 pts de probabilidad a favor de rojo, sobre todo por economía (azul: 2 kills, inhibidor; rojo: 4 kills)",True
+NA1_5673221392,detectado,,36,,,,,,,,,,,,,azul,19.3,objetivos,True,"min 35–37: 19 pts de probabilidad a favor de azul, sobre todo por objetivos (azul: 6 kills, elder, ace, 2× torre, inhibidor; rojo: 2 kills)",True
+NA1_5673270767,anotado,B,4,azul,pelea,2.0,True,True,False,0.187,azul,False,0.62,0.15,Ventaja de kills para un XinZhao,,,,,,
+NA1_5673270767,anotado,B,9,azul,pelea,2.0,True,True,False,0.187,azul,False,0.815,0.15,Pelea que termina en una torreta muy baja,,,,,,
+NA1_5673270767,anotado,B,16,rojo,pelea,1.0,False,False,True,0.101,azul,False,0.963,0.15,Pelea en la que se obtienen 2 kills,,,,,,
+NA1_5673270767,anotado,B,18,azul,estructura,3.0,False,False,True,0.051,azul,False,0.953,0.15,Destrucción de torre con un triple asesinato de Malzahar,,,,,,
+NA1_5673270767,detectado,,4,,,,,,,,,,,,,azul,18.7,economía,True,"min 3–5: 19 pts de probabilidad a favor de azul, sobre todo por economía (azul: 2 kills)",False
+NA1_5673270767,detectado,,10,,,,,,,,,,,,,azul,18.7,economía,True,"min 9–11: 19 pts de probabilidad a favor de azul, sobre todo por economía (azul: 6 kills; rojo: 1 kill)",False
+NA1_5673291203,anotado,B,15,rojo,objetivo,2.0,True,True,True,0.417,rojo,False,0.566,0.15,"Pelea por dragón que deja en ventaja al equipo rojo ya sea por coordinación propia del equipo o por descoordinación del equipo contrario, la pelea continuó y el Locke aprovechó su dominio del campeon y posibles bonificaciones para seguir cometiendo asesinatos",,,,,,
+NA1_5673291203,anotado,B,21,azul,error,2.0,True,False,False,0.217,rojo,False,0.353,0.15,"Equipo rojo peleó barón y no se retiraron eficientemente, al intentar hacerlo sin una ventaja clara quedaron con poca vida y cuando llegaron a pelearles murieron (el equipo rojo en su mayoria) perdiendo la bonificacion del baron, pudieron dejar el baron a la mitad, pelear y regresar a terminarlo",,,,,,
+NA1_5673291203,anotado,B,31,rojo,estructura,3.0,True,True,True,0.228,rojo,False,0.318,0.15,pusheo correcto del equipo rojo,,,,,,
+NA1_5673291203,anotado,B,35,azul,objetivo,3.0,True,True,True,0.387,azul,False,0.508,0.15,"Ganaron El elder, nada que hacer",,,,,,
+NA1_5673291203,detectado,,17,,,,,,,,,,,,,rojo,-41.7,economía,True,"min 15–18: 42 pts de probabilidad a favor de rojo, sobre todo por economía (azul: 3 kills, torre; rojo: 9 kills, dragón, torre)",True
+NA1_5673291203,detectado,,21,,,,,,,,,,,,,rojo,-21.7,economía,True,"min 20–22: 22 pts de probabilidad a favor de rojo, sobre todo por economía (azul: 1 kill; rojo: 4 kills, barón, torre)",False
+NA1_5673291203,detectado,,29,,,,,,,,,,,,,rojo,-22.8,economía,True,"min 28–30: 23 pts de probabilidad a favor de rojo, sobre todo por economía (azul: 2 kills; rojo: 5 kills, ace, dragón)",True
+NA1_5673291203,detectado,,36,,,,,,,,,,,,,azul,38.7,economía,True,"min 34–37: 39 pts de probabilidad a favor de azul, sobre todo por economía (azul: 4 kills, elder; rojo: 1 kill)",True
+NA1_5673291203,detectado,,38,,,,,,,,,,,,,azul,37.1,economía,False,"min 36–39: 37 pts de probabilidad a favor de azul, sobre todo por economía (azul: 6 kills, ace, 5× torre, inhibidor; rojo: 1 kill)",True
+NA1_5673292215,anotado,A,11,rojo,objetivo,3.0,False,False,True,0.109,rojo,False,0.172,0.15,"Pelea por el dragon, beneficiada totalmente a favor del equipo rojo",,,,,,
+NA1_5673292215,anotado,A,16,azul,objetivo,3.0,True,True,True,0.182,azul,False,0.227,0.15,"Pelea por el dragon, beneficia totalmente a favor del equipo azul",,,,,,
+NA1_5673292215,anotado,A,19,azul,objetivo,3.0,True,True,True,0.207,rojo,False,0.362,0.15,"Pelea por el heraldo, totalmente a favor del equipo azul. Heraldo usado inmediatamente para presionar el carril central",,,,,,
+NA1_5673292215,anotado,A,27,azul,pelea,3.0,True,True,True,0.446,azul,False,0.829,0.15,"Pelea a favor del equipo azul, que ayuda a presionar las estructuras del carril central",,,,,,
+NA1_5673292215,anotado,A,29,azul,pelea,2.0,True,True,True,0.446,azul,False,0.829,0.15,Pelea final a favor del equipo azul.  ,,,,,,
+NA1_5673292215,detectado,,2,,,,,,,,,,,,,rojo,-17.2,economía,False,"min 1–3: 17 pts de probabilidad a favor de rojo, sobre todo por economía",False
+NA1_5673292215,detectado,,17,,,,,,,,,,,,,azul,18.1,economía,True,"min 16–18: 18 pts de probabilidad a favor de azul, sobre todo por economía (azul: 5 kills, dragón; rojo: 3 kills)",True
+NA1_5673292215,detectado,,19,,,,,,,,,,,,,azul,20.1,economía,True,"min 17–20: 20 pts de probabilidad a favor de azul, sobre todo por economía (azul: 8 kills, torre; rojo: 3 kills, torre)",True
+NA1_5673292215,detectado,,21,,,,,,,,,,,,,rojo,-20.7,economía,True,"min 20–22: 21 pts de probabilidad a favor de rojo, sobre todo por economía (azul: 2 kills, torre; rojo: 3 kills)",True
+NA1_5673292215,detectado,,28,,,,,,,,,,,,,azul,44.6,objetivos,True,"min 26–29: 45 pts de probabilidad a favor de azul, sobre todo por objetivos (azul: 8 kills, ace, 3× torre, inhibidor; rojo: 5 kills)",True
+NA1_5673298789,anotado,B,7,azul,pelea,3.0,True,True,False,0.162,azul,False,0.862,0.15,"Excelente rotación de Jarvan, presencia en todo el mapa que logro ganar un Dragón",,,,,,
+NA1_5673298789,anotado,B,9,azul,pick,3.0,True,True,True,0.162,azul,False,0.862,0.15,Jarvan mató al sylas que permitió llevarse las larvas del Vacio,,,,,,
+NA1_5673298789,anotado,B,14,azul,pelea,3.0,False,False,True,0.033,azul,False,0.977,0.15,Presión constante del Jarvan que logra una ventaja de 23-6 ,,,,,,
+NA1_5673298789,detectado,,3,,,,,,,,,,,,,azul,22.0,economía,False,"min 1–4: 22 pts de probabilidad a favor de azul, sobre todo por economía (azul: 4 kills; rojo: 1 kill)",False
+NA1_5673298789,detectado,,8,,,,,,,,,,,,,azul,16.2,economía,True,"min 7–9: 16 pts de probabilidad a favor de azul, sobre todo por economía (azul: 4 kills, dragón; rojo: 1 kill)",False
+NA1_5673311828,anotado,B,13,azul,estructura,2.0,False,False,False,0.119,azul,False,0.588,0.15,"Taliya rotó y mató al top, lo que logró ejercer presión y destruis 2 torretas",,,,,,
+NA1_5673311828,anotado,B,15,rojo,pick,2.0,False,False,False,0.095,rojo,False,0.616,0.15,Rengar mató a Yone y permitió pelear el objetivo de drag,,,,,,
+NA1_5673311828,anotado,B,26,rojo,pelea,2.0,True,True,True,0.186,rojo,False,0.55,0.15,Pese a no ganar el dragón la pelea terminó con un ace para el equipo rojo,,,,,,
+NA1_5673311828,anotado,B,29,azul,objetivo,3.0,True,False,True,0.366,azul,False,0.7,0.15,Excelente Barón que permitió ejercer presión suficiente y dejar expuesto al otro equipo,,,,,,
+NA1_5673311828,detectado,,3,,,,,,,,,,,,,azul,16.1,economía,False,"min 2–4: 16 pts de probabilidad a favor de azul, sobre todo por economía (azul: 3 kills)",False
+NA1_5673311828,detectado,,7,,,,,,,,,,,,,rojo,-20.8,economía,False,"min 6–8: 21 pts de probabilidad a favor de rojo, sobre todo por economía (azul: 1 kill; rojo: 3 kills)",False
+NA1_5673311828,detectado,,28,,,,,,,,,,,,,rojo,-18.6,economía,True,"min 27–29: 19 pts de probabilidad a favor de rojo, sobre todo por economía (azul: 3 kills; rojo: 5 kills, ace, torre)",True
+NA1_5673311828,detectado,,30,,,,,,,,,,,,,azul,36.6,economía,True,"min 29–31: 37 pts de probabilidad a favor de azul, sobre todo por economía (azul: 5 kills, barón; rojo: 1 kill)",True
+NA1_5673509404,anotado,A,14,rojo,pelea,2.0,False,False,True,0.128,rojo,False,0.175,0.15,Pelea a favor del equipo rojo,,,,,,
+NA1_5673509404,anotado,A,18,rojo,estructura,1.0,False,False,True,0.04,azul,False,0.048,0.15,Dos torres tiradas a favor del equipo rojo,,,,,,
+NA1_5673509404,anotado,A,22,rojo,pelea,3.0,True,False,True,0.16,azul,False,0.01,0.15,Pelea a favor del equipo rojo; su resultado es tirar 2 torres y 2 inhibidores,,,,,,
+NA1_5673509404,anotado,A,23,azul,pelea,3.0,True,True,True,0.16,azul,False,0.01,0.15,"Pelea totalmente a favor del equipo azul, el mid se hace una cuadra-kill; y un dragon",,,,,,
+NA1_5673509404,anotado,A,24,rojo,pelea,3.0,True,False,True,0.16,azul,False,0.01,0.15,Pelea totalmente a favor del equipo rojo. Es suficiente para terminar la partida.,,,,,,
+NA1_5673509404,anotado,B,14,rojo,pelea,2.0,False,False,True,0.128,rojo,False,0.175,0.15,Muerte de la botline lo que permite pushea r llevarse la torre de mid,,,,,,
+NA1_5673509404,anotado,B,22,rojo,estructura,3.0,True,False,True,0.16,azul,False,0.01,0.15,Pelea en Bot logró ventaja para pushear ,,,,,,
+NA1_5673509404,anotado,B,23,azul,pelea,2.0,True,True,True,0.16,azul,False,0.01,0.15,Defenza de torre que logró una ventaja de una cuadra kill para la katarina y perimitió pushear y hacer drag,,,,,,
+NA1_5673509404,anotado,B,24,rojo,pelea,3.0,True,False,True,0.16,azul,False,0.01,0.15,Buena continuación de la pelea y ejecución de todo el quipo contrario,,,,,,
+NA1_5673509404,detectado,,4,,,,,,,,,,,,,rojo,-32.5,economía,False,"min 3–5: 32 pts de probabilidad a favor de rojo, sobre todo por economía (azul: 2 kills; rojo: 6 kills)",True
+NA1_5673509404,detectado,,23,,,,,,,,,,,,,azul,16.0,economía,True,"min 23–24: 16 pts de probabilidad a favor de azul, sobre todo por economía (azul: 4 kills)",True
+NA1_5673608242,anotado,B,8,rojo,objetivo,2.0,True,True,False,0.187,rojo,False,0.288,0.15,Objetivo de larvas y rotación del jungla a mid para asesinato doble,,,,,,
+NA1_5673608242,anotado,B,17,rojo,pick,3.0,False,False,True,0.02,rojo,False,0.014,0.15,"Karma mató a taliyah, Rakan y Jhin, dejó expuesta a la shyvana y el team azul ya no pudo pelear el dragón",,,,,,
+NA1_5673608242,anotado,B,23,rojo,objetivo,2.0,False,False,True,0.015,rojo,False,0.011,0.15,"Xayah tripe asesinato, aunque pierden dragón genera ventaja para generar presión en las torretas",,,,,,
+NA1_5673608242,anotado,B,24,azul,pelea,2.0,False,False,True,0.007,azul,False,0.005,0.15,Pelea que mejora el marcador del euqipo azul,,,,,,
+NA1_5673608242,anotado,B,26,rojo,objetivo,3.0,False,False,True,0.009,rojo,False,0.005,0.15,Barón que genera la ventaja completa y marca el final de la partida ,,,,,,
+NA1_5673608242,detectado,,9,,,,,,,,,,,,,rojo,-18.7,economía,True,"min 8–10: 19 pts de probabilidad a favor de rojo, sobre todo por economía (azul: 1 kill; rojo: 5 kills, 3× larvas)",True

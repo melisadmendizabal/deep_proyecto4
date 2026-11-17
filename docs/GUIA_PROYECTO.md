@@ -17,7 +17,7 @@
 
 ---
 
-## Avisos y estado (sáb 7 nov)
+## Avisos y estado (actualizado lun 16 nov)
 
 | Bloque | Estado |
 |---|---|
@@ -31,9 +31,15 @@
 | B9 Anotación + E3/E4 (A) | ✅ Completado (mié 11): E3/E4 (`results/b9_e3e4.md`: un modelo global sirve para todos los tiers y regiones), 35 partidas anotadas (`annotations/A.csv`) y partidas propias descargadas desde la PC de B (ver B10) |
 | B8 Momentos + anotación (B) | ✅ Completado (lun 9): detector, herramienta Streamlit, protocolo, selección de 55 partidas. B lleva 13 anotadas |
 | B11 Backend (A) | ✅ Completado (jue 12): `app/api.py` + `app/inference.py` + `src/export_model.py`. Partidas propias nuevas en 1.2 s (p50, 9/9 < 3 s; Riot es el 95 %). Detector del producto: **GRU (M4)**; la iteración híbrida GRU+R0 empata con R0 (`results/b10_hibrido.md`), así que no se adopta. **Bug arreglado que afecta a B10:** ver B11 |
-| B13 Frontend (A) | 🟡 Frontend "Fight Diff", fallback offline (5 partidas en `app/demo/`) y monitoreo (`docs/monitoreo.md`) ✅. **Falta desplegar** |
+| B13 Frontend (A) | ✅ Completado: frontend "Fight Diff", fallback offline (5 partidas en `app/demo/`), monitoreo (`docs/monitoreo.md`), selector con 8 modelos y **desplegado en Render** (plan gratis, ~250 MB). Key de Riot de la app **aprobada** (vie 13; no vence cada 24 h) |
 | Mejoras post-B10 (A) | ✅ (vie 13): **M6 Transformer causal** y campeones (draft) como embeddings, en M6 y en la GRU (M4+draft). Los campeones sí importan: **M6+draft (promedio de 3 semillas) AUC 0.821, +0.008 vs M4** (IC sin cruzar 0), M4+draft 0.819 (empate con M6); sin campeones M6 = M4. El valor no cambia (todos ~130 USD/mes, R0 sigue igual o mejor). **La app usa M6+draft como modelo principal** (`models/m6_draft`, θ* = 0.15); M4 queda en el selector. Detalle: `results/mejoras.md` (`python src/mejoras_eval.py`). Toca `train.py` (función `forward`), `datasets.py` y `models/gru.py` (opción `champions`, apagada por defecto) |
 | B10 Valor (B) | ✅ Código ✅ (lun 9): `src/value_model.py` + `src/agreement.py`, N3 de B corrida (TCN final ×3, E6 λ 0.1 y 0.5 ×3). ✅ Completado (jue 12): valor y acuerdo con las 55 partidas de A y B, f_rev medido = 1.38, momentos de 3 repeticiones en `annotations/revisiones_momentos.csv` (ver B10) |
+| B12 Resultados de valor (B) | ✅ Completado (lun 16): `python src/b12_resultados.py` → tabla E1 con costos (`results/b12_tabla_e1.md`), SHAP de LightGBM y ablación por grupos de M4 y M6+campeones (`results/b12_explicabilidad.md`), 3 casos de falla (`results/b12_fallas.md`). Ver B12 |
+| B14 Usabilidad (B) | 🟡 Solo cualitativa: amigos que juegan revisaron los clips y coincidieron (diapositiva 10). No hubo prueba cronometrada (t_clip y t_setup siguen estimados). Falta redactar 4.3, 4.5 y 4.7 |
+| B15 Escrito + README + video (A) | ⬜ No hay README de reproducción ni video en el repo. Falta redactar 4.1, 4.4, 4.6 y 4.9 |
+| B16 Presentación (B) | ✅ Slides en `presentacion/Fight_Diff.pptx` (+ PDF): 10 diapositivas + 2 de anexo. Faltan las secciones 4.2 y 4.8 del escrito |
+| Presentación | ✅ **Presentado (lun 16), nos fue bien** |
+| **Escrito** | ⬜ **Entrega mié 18.** Es lo único que queda (ver "Lun 16 – Mié 18") |
 
 **Para A (compañero), de B6/B8:**
 - Curva de aprendizaje de M4: `python src/learning_curve.py --models m4 --set model.hidden=128 model.layers=2 model.dropout=0.1 train.lr=0.0003`.
@@ -482,14 +488,24 @@ Valor_mes = N_rev × (Ahorro_promedio / 60) × C_h − C_infra − N_rev × C_pr
 
 **Terminado cuando:** una partida propia nueva devuelve la curva y los momentos en < 3 s. ✅ **9/9 partidas propias de noviembre** por `/analyze` descargando de Riot: p50 1.23 s, máx 1.83 s. Ojo para B13: con θ* = 0.23, 2 de las 9 salen con 0 momentos (ver `results/b11_resumen.md`).
 
-### B12 · B · Mié 11 – Jue 12 · Resultados de valor, sesgos y explicabilidad (6 h) · Debe
+### B12 · B · Mié 11 – Jue 12 · Resultados de valor, sesgos y explicabilidad (6 h) · Debe · **COMPLETADO (lun 16 nov)**
 
-- [ ] Para cada modelo (R0, M0–M5): detector → P/R/F1 de momentos → valor al mes → **tabla maestra E1** (USD/mes, Δ vs M0, costo de entrenamiento e inferencia).
-- [ ] Gráficas: valor vs modelo, valor vs θ y valor vs tamaño de datos (con E2).
-- [ ] E5: AUC, ECE y F1 de momentos por tier, región, tramo de minuto y duración.
-- [ ] Explicabilidad: SHAP global de LightGBM, ablación por grupos (o Integrated Gradients) para la GRU, y **3 casos de falla analizados**.
+Todo con `python src/b12_resultados.py` (~3 min con GPU; `--solo shap ablacion fallas costo` para correr una parte).
 
-### B13 · A · Vie 13 – Sáb 14 · Frontend + despliegue (6 h) · Debe · **FALTA SOLO DESPLEGAR (vie 13 nov)**
+- [x] Para cada modelo (R0, M0–M6, con y sin campeones): detector → P/R/F1 de momentos → valor al mes → **tabla maestra E1** → `results/b12_tabla_e1.md`. Columnas: AUC, valor [IC], F1, clips, parámetros, segundos de entrenamiento (final ×3 semillas + búsqueda) e inferencia en CPU medida con el motor de la app. **Resultado:** todo el entrenamiento suma ~31 min de GPU de laptop; inferencia de 0.1 ms (M0) a 14 ms ×3 semillas (GRU), análisis completo 12–85 ms. El costo es ~0 para todos, así que no cambia qué modelo conviene: el valor queda en USD 123–148/mes.
+- [~] Gráficas: ✅ valor vs θ (`results/figures/b10_valor_vs_theta.png`), tornado y valor vs modelo (diapositiva 7). ⬜ Valor vs tamaño de datos (E2): solo está la curva de AUC (`b7_curva_aprendizaje.png`); para el escrito basta decir que el AUC se aplana después de 12k y el valor no sigue al AUC.
+- [~] E5: ✅ AUC/ECE por tramo de minuto (`results/b5_eval/`, `b5_auc_por_tramo.png`) y por región (LAN 0.800, NA 0.805, ~0.02 por debajo de EUW/KR; diapositiva A2). En `results/mejoras.md`: M6+draft gana en las 4 regiones y los 6 tiers y pierde un poco en partidas < 25 min. ⬜ F1 de momentos por segmento: con 28 partidas de test no alcanza; decirlo como límite.
+- [x] Explicabilidad (`results/b12_explicabilidad.md`, figuras `b12_shap_lgbm.png` y `b12_ablacion.png`):
+  - **SHAP global de LightGBM** (TreeSHAP de LightGBM, `pred_contrib`, sin instalar `shap`): economía 58 %, objetivos 21 %, oro por rol 11 %, combate 5 %, visión 2 %. Top: `gold_diff` 25 %, `gold_diff_rel` 16 %, `dragons_diff` 11 %, `xp_diff` 11 %. Con el minuto, la economía pierde peso (66 % → 44 %) y los objetivos ganan (11 % → 31 %). Curioso: `gold_diff_utility` tiene dirección negativa (con el mismo oro total, más oro en el support = menos en los carries).
+  - **Ablación por grupos** en la GRU y en M6+campeones (grupo → media de train, AUC en test): sin economía −0.023 / −0.036; sin objetivos −0.018 / −0.016; **sin campeones −0.009** (casi todo lo que ganó el draft); combate, rol, minuto y visión < 0.002 cada uno (redundantes con el oro).
+- [x] **3 casos de falla analizados** (`results/b12_fallas.md`, `figures/b12_fallas.png`), detector de la app (M6+campeones, θ* 0.15) en las 28 partidas anotadas de test:
+  1. *Cortado por el top 5* (KR_8444875248, min 16): la curva sí cae 19.5 pts a favor de rojo, pero la partida tuvo más de 5 saltos grandes y el detector solo muestra los 5 mayores (`top_k`). R0 sí lo marca.
+  2. *Falsa alarma en el cierre* (NA1_5672887032, min 48): la app marca el push final (−37 pts); nadie lo anota porque la partida ya estaba decidida. Arreglo posible: no marcar los últimos 2–3 min.
+  3. *Partida ya decidida* (NA1_5673608242, min 26): barón real, pero la curva ya estaba en 0 %; no hay salto posible. R0 sí lo marca.
+  - **Hallazgo:** de los 34 momentos anotados que la app no detecta, **79 % pasan con la partida ya decidida** (curva < 20 % o > 80 %), 15 % son saltos menores que θ* y 6 % quedan fuera del top 5 o fusionados con un clip vecino. Explica por qué R0 (que cuenta eventos) tiene más recall: los momentos que se pierden casi nunca cambian quién gana.
+- **Arreglo de paso:** `.gitattributes` nuevo (`models/**/model.txt -text`). Con `core.autocrlf=true` en Windows, git convertía `models/m2_lgbm/model.txt` a CRLF y LightGBM no lo podía leer (M2 fallaba en la app local; en Render no, porque el repo lo guarda con LF).
+
+### B13 · A · Vie 13 – Sáb 14 · Frontend + despliegue (6 h) · Debe · **COMPLETADO (desplegado en Render)**
 
 - [x] `app/static/index.html` + `style.css` + `app.js` (Chart.js 4.4.1), estética tipo hextech sin assets de Riot y con el aviso legal de Riot. Producto: **"Fight Diff"**. Correr: `uvicorn app.api:app --port 8000` → http://127.0.0.1:8000
   - Entrada por Riot ID (lista de partidas con ícono de campeón, Data Dragon) o match ID; enlaces directos `/?match=NA1_…&lado=azul` y `/?riot=Nombre%23TAG&plataforma=na1`.
@@ -497,17 +513,17 @@ Valor_mes = N_rev × (Ahorro_promedio / 60) × C_h − C_infra − N_rev × C_pr
   - Lista de momentos con su explicación (reparto por grupo), eventos por equipo y "en la repetición: de mm:00 a mm:00". **Posibles momentos** (θ/2 ≤ salto < θ*, fuera de la zona de baja certeza, máximo 3) en una sección aparte con borde punteado y marcador hueco.
   - Fichas con el valor: revisión completa (f_rev × D) vs solo clips (t_setup + n × t_clip).
   - Colores de datos validados con el validador de paletas (azul `#3a8ee6` / rojo `#e8505b` sobre `#0a1428`: pasan todas las pruebas, ΔE daltonismo 21); el dorado es solo interfaz. Revisado con capturas en escritorio y a 390 px.
-- [~] Desplegar (Render o Hugging Face Spaces, con la key como secreto). **Elegido: Render (plan gratis).** Preparado: `render.yaml`, `requirements-deploy.txt` (PyTorch CPU: ~240–260 MB de RAM medidos, cabe en 512 MB) y los pesos de la app en git (`models/m4_gru/`, excepción en `.gitignore`). Pasos en `docs/despliegue.md`. **Falta:** confirmar si la key es personal o development (B) y crear el servicio en el panel (A).
+- [x] Desplegar (Render o Hugging Face Spaces, con la key como secreto). **Desplegado en Render (plan gratis)** con la key de la app aprobada por Riot (vie 13, no vence). Modelo principal M6+draft (θ* 0.15) y 8 modelos en el selector (commits `cbe01f6`, `410fe76`). Lo de abajo es el historial de la preparación. Preparado: `render.yaml`, `requirements-deploy.txt` (PyTorch CPU: ~240–260 MB de RAM medidos, cabe en 512 MB) y los pesos de la app en git (`models/m4_gru/`, excepción en `.gitignore`). Pasos en `docs/despliegue.md`. **Falta:** confirmar si la key es personal o development (B) y crear el servicio en el panel (A).
 - [x] **Fallback offline:** 5 partidas propias precalculadas en `app/demo/` (`python app/make_demo.py`); `/analyze` las sirve si Riot falla y el frontend las ofrece como "Partidas de ejemplo".
 - [x] Logging de predicciones (`data/app_cache/predicciones.jsonl`: curva, resultado, features del min 15, tiempos; sin datos personales) + `docs/monitoreo.md` + `app/monitor.py` (log-loss, ECE, AUC y PSI por parche/semana, con alertas). Validado con 300 partidas de test: reproduce la evaluación offline (log-loss 0.503, ECE 0.019) y no da falsas alarmas.
 
 ### B14 · B · Vie 13 – Sáb 14 · Usabilidad + redacción (5 h) · Debería
 
-- [ ] Prueba con 4–6 personas que jueguen:
+- [~] Prueba con 4–6 personas que jueguen. **Hecha solo de forma cualitativa:** amigos que juegan revisaron los clips marcados y coincidieron en que eran los que decidieron la partida. No se cronometró (diapositiva 10, "siguientes pasos"). Lo planeado era:
   - Cada una revisa una partida sin la herramienta y otra con ella.
   - Se mide el tiempo y si encontró los momentos clave.
   - Al final, una encuesta de 5 preguntas.
-- [ ] Recalcular el valor con los tiempos medidos (f_rev, t_clip, t_setup).
+- [~] Recalcular el valor con los tiempos medidos: ✅ f_rev medido (1.38, B10). t_clip y t_setup siguen estimados (no hubo prueba cronometrada).
 - [ ] Borradores de las secciones 4.3 (valor), 4.5 (tabla de iteraciones) y 4.7 (explicabilidad y ética).
 
 ### B15 · A · Dom 15 · Escrito + README + video (5 h) · Debe
@@ -518,7 +534,7 @@ Valor_mes = N_rev × (Ahorro_promedio / 60) × C_h − C_infra − N_rev × C_pr
 
 ### B16 · B · Dom 15 · Presentación + defensa (5 h) · Debe
 
-- [ ] Slides para un pitch de 8–10 min: problema y usuario → por qué DL → modelo de valor → iteraciones → conclusión de negocio.
+- [x] Slides para un pitch de 8–10 min: problema y usuario → por qué DL → modelo de valor → iteraciones → conclusión de negocio. **`presentacion/Fight_Diff.pptx` + `.pdf`** (10 diapositivas + anexo de hiperparámetros y sensibilidad).
 - [ ] Secciones 4.2 y 4.8 y el banco de preguntas (sección 12).
 - [ ] **Ensayo conjunto, domingo en la noche (2 h):**
   - Cronometrar el pitch.
@@ -527,7 +543,7 @@ Valor_mes = N_rev × (Ahorro_promedio / 60) × C_h − C_infra − N_rev × C_pr
 
 ### Lun 16 – Mié 18 · Ambos
 
-- [ ] Presentar en el turno asignado.
+- [x] Presentar en el turno asignado. **Presentado el lun 16; nos fue bien.**
 - [ ] Unir el escrito, revisarlo cruzado (cada quien lee lo que escribió el otro) y entregarlo el miércoles 18.
 
 ---

@@ -1,0 +1,2 @@
+# Modelos de LightGBM: sin conversión de fin de línea (con CRLF, LightGBM no puede leer model.txt)
+models/**/model.txt -text
