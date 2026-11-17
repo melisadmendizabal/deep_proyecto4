@@ -13,7 +13,7 @@
 
 ![Casos de falla](figures/b12_fallas.png)
 
-## Caso 1. Momento perdido con la partida abierta (R0 sí lo marca)
+## Caso 1. Momento cortado por el límite de 5 clips (R0 sí lo marca)
 
 **KR_8444875248**, minuto 16 de la jugada. Gana azul, 32.1 min.
 

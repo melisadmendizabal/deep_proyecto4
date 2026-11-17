@@ -36,10 +36,10 @@
 | B10 Valor (B) | ✅ Código ✅ (lun 9): `src/value_model.py` + `src/agreement.py`, N3 de B corrida (TCN final ×3, E6 λ 0.1 y 0.5 ×3). ✅ Completado (jue 12): valor y acuerdo con las 55 partidas de A y B, f_rev medido = 1.38, momentos de 3 repeticiones en `annotations/revisiones_momentos.csv` (ver B10) |
 | B12 Resultados de valor (B) | ✅ Completado (lun 16): `python src/b12_resultados.py` → tabla E1 con costos (`results/b12_tabla_e1.md`), SHAP de LightGBM y ablación por grupos de M4 y M6+campeones (`results/b12_explicabilidad.md`), 3 casos de falla (`results/b12_fallas.md`). Ver B12 |
 | B14 Usabilidad (B) | 🟡 Solo cualitativa: amigos que juegan revisaron los clips y coincidieron (diapositiva 10). No hubo prueba cronometrada (t_clip y t_setup siguen estimados). Falta redactar 4.3, 4.5 y 4.7 |
-| B15 Escrito + README + video (A) | ⬜ No hay README de reproducción ni video en el repo. Falta redactar 4.1, 4.4, 4.6 y 4.9 |
+| B15 Escrito + README + video (A) | 🟡 README ✅ (`README.md`, lo hizo B el mar 17). Falta el video (si la entrega lo pide) y redactar 4.1, 4.4, 4.6 y 4.9 |
 | B16 Presentación (B) | ✅ Slides en `presentacion/Fight_Diff.pptx` (+ PDF): 10 diapositivas + 2 de anexo. Faltan las secciones 4.2 y 4.8 del escrito |
 | Presentación | ✅ **Presentado (lun 16), nos fue bien** |
-| **Escrito** | ⬜ **Entrega mié 18.** Es lo único que queda (ver "Lun 16 – Mié 18") |
+| **Escrito** | 🟡 **Borrador completo (mar 17):** `informe/Informe_Proyecto_Final_FightDiff.docx` (29 págs., secciones 4.1–4.9 de la rúbrica, 12 figuras, 13 tablas). `informe/` está en `.gitignore`. Falta: revisión cruzada, captura de la app, URL de Render y enlace al video. **Entrega mié 18** |
 
 **Para A (compañero), de B6/B8:**
 - Curva de aprendizaje de M4: `python src/learning_curve.py --models m4 --set model.hidden=128 model.layers=2 model.dropout=0.1 train.lr=0.0003`.
@@ -529,7 +529,7 @@ Todo con `python src/b12_resultados.py` (~3 min con GPU; `--solo shap ablacion f
 ### B15 · A · Dom 15 · Escrito + README + video (5 h) · Debe
 
 - [ ] Secciones 4.1, 4.4, 4.6 y 4.9.
-- [ ] README de reproducción: comandos en orden, de `collect.py` a la app.
+- [x] README de reproducción: comandos en orden, de `collect.py` a la app. **`README.md` en la raíz (mar 17, B):** resultados, instalación, app, pruebas y los 10 pasos con los comandos reales de las corridas finales. Falta poner la URL de Render.
 - [ ] Video .mp4 de 2–4 min (OBS): problema → demo con una partida nueva → resultado de valor.
 
 ### B16 · B · Dom 15 · Presentación + defensa (5 h) · Debe

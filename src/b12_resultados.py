@@ -358,7 +358,9 @@ def _pick_cases(tab: pd.DataFrame, detail: dict, theta: float) -> list[dict]:
     if len(c1):
         r = c1.iloc[0]
         used.add(r.match_id)
-        cases.append({"caso": "Momento perdido con la partida abierta (R0 sí lo marca)", "match_id": r.match_id,
+        title = ("Momento cortado por el límite de 5 clips (R0 sí lo marca)" if r.cortado_top_k
+                 else "Momento perdido con la partida abierta (R0 sí lo marca)")
+        cases.append({"caso": title, "match_id": r.match_id,
                       "minuto": int(r.minuto_jugada), "fila": r})
     # 2) falsa alarma: detección sin anotación cerca, con el salto más grande
     c2 = de[~de["anotado"].astype(bool) & ~de["match_id"].isin(used)].copy()
@@ -546,7 +548,7 @@ E1 = [  # (nombre, carpeta de la app, corrida final, prefijo de la búsqueda, fu
     ("M4 GRU", "m4_gru", "gru_final", "gru_hp", "mejoras"),
     ("M5 TCN", "m5_tcn", "tcn_final", "tcn_hp", "mejoras"),
     ("M6 Transformer", None, "m6_final", "m6_hp", "mejoras"),
-    ("M4 + campeones", "m4_draft", "m4d_final", "m4d_hp", "mejoras"),
+    ("M4 + campeones", "m4_draft", "m4d_hp__lr0.001_d0.3_s4?", "m4d_hp", "mejoras"),   # la config elegida (mejoras_eval)
     ("M6 + campeones (app)", "m6_draft", "m6d_final", None, "mejoras"),
 ]
 VALUE_KEY = {"R0 regla": "R0", "M0 logística (oro)": "M0", "M1 logística": "M1", "M2 LightGBM": "M2",
@@ -557,7 +559,7 @@ AUC_KEY = {"M0 logística (oro)": "M0", "M2 LightGBM": "M2", "M4 GRU": "M4", "M5
 
 
 def _summaries(prefix: str, final: bool) -> list[dict]:
-    pat = f"{prefix}__s*" if final else f"{prefix}__*"
+    pat = prefix if "?" in prefix else (f"{prefix}__s*" if final else f"{prefix}__*")
     dirs = sorted(RUNS.glob(pat)) or ([RUNS / prefix] if (RUNS / prefix / "summary.json").exists() else [])
     return [json.loads((d / "summary.json").read_text(encoding="utf-8")) for d in dirs
             if (d / "summary.json").exists()]
@@ -598,6 +600,9 @@ def latency(model_dirs: list[str], n: int = 28) -> dict:
     from src.predict_matches import load_raw
     from src.features import EVENT_COLS, EVENT_TYPES_USED, FRAME_COLS, match_to_features
     from app.inference import champions_of
+    # Un solo hilo, como en Render (OMP_NUM_THREADS=1). En una laptop con núcleos P y E conviene además fijar el
+    # proceso a núcleos P con prioridad alta; si no, Windows lo manda a núcleos E y los tiempos varían ×3–4.
+    torch.set_num_threads(1)
     sel = pd.read_csv(ANN_DIR / "seleccion.csv")
     ids = sel.loc[sel["split"] == "test", "match_id"].tolist()[:n]
     raw = load_raw(ids)
@@ -612,15 +617,19 @@ def latency(model_dirs: list[str], n: int = 28) -> dict:
         for f, ch in list(feats.values())[:3]:   # calentar
             eng.predict(f, ch)
         ms_pred, ms_full = [], []
-        for mid, (f, ch) in feats.items():
-            t0 = time.perf_counter()
-            p = eng.predict(f, ch)
-            if eng.average:
-                eng.combine(p)
-            ms_pred.append(1000 * (time.perf_counter() - t0))
-            t0 = time.perf_counter()
-            eng.analyze(raw[mid])
-            ms_full.append(1000 * (time.perf_counter() - t0))
+        for mid, (f, ch) in feats.items():   # mínimo de 3 repeticiones: robusto a otra carga en la PC
+            tp, tf = [], []
+            for _ in range(3):
+                t0 = time.perf_counter()
+                p = eng.predict(f, ch)
+                if eng.average:
+                    eng.combine(p)
+                tp.append(1000 * (time.perf_counter() - t0))
+                t0 = time.perf_counter()
+                eng.analyze(raw[mid])
+                tf.append(1000 * (time.perf_counter() - t0))
+            ms_pred.append(min(tp))
+            ms_full.append(min(tf))
         out[d] = {"modelo_ms": float(np.median(ms_pred)), "analisis_ms": float(np.median(ms_full)),
                   "semillas": len(eng.members)}
         print(f"  latencia {d:10s} modelo {out[d]['modelo_ms']:.1f} ms · análisis completo {out[d]['analisis_ms']:.1f} ms")
@@ -674,7 +683,9 @@ def write_cost(e1: pd.DataFrame) -> Path:
          "*`python src/b12_resultados.py --solo costo`. Valor: test (28 partidas anotadas), θ* elegido en val "
          "(`results/mejoras_valor.csv`; M1 y M3 de `results/b10_valor.md`). AUC: test, 4,032 partidas. "
          "Entrenamiento: suma de `train_seconds` de `results/runs/*/summary.json`. Inferencia: medida aquí en CPU "
-         "con el motor de la app (`app/inference.py`), mediana de 28 partidas de test; *modelo* = solo la red "
+         "con el motor de la app (`app/inference.py`), 1 hilo como en Render, proceso fijado a núcleos P "
+         "(i7-13620H) con prioridad alta; mediana de 28 partidas de test (mínimo de 3 repeticiones por partida); entre corridas los tiempos varían hasta ~2× por el estado térmico "
+         "de la laptop, sin cambiar el orden de magnitud. *modelo* = solo la red "
          "(todas las semillas que usa la app), *análisis* = features + modelo + momentos + explicación.*", "",
          "| Modelo | AUC test | Valor USD/mes [IC 95 %] | F1 momentos | Clips/partida | Parámetros | "
          "Entrenamiento final | Búsqueda de HP | Inferencia modelo | Análisis completo |",

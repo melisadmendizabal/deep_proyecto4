@@ -47,3 +47,6 @@ features/
 results/runs/**/predictions.npz
 results/runs/**/model.pkl
 results/runs/**/model.txt
+
+# Informe final en Word (se edita aparte, no va al repo)
+informe/
