@@ -1,0 +1,38 @@
+feature,grupo,media_abs_logit,pct,direccion
+gold_diff_rel,economía,0.4925,15.6497,0.9956
+dragons_diff,objetivos,0.3627,11.5256,0.9821
+xp_diff,economía,0.249,7.9127,0.996
+campeones_rojo,campeones,0.2341,7.4381,
+campeones_azul,campeones,0.2223,7.0642,
+gold_diff_bottom,oro por rol,0.2045,6.4969,0.9962
+gold_diff,economía,0.1813,5.7604,0.9958
+kills_diff_2m,combate,0.1657,5.2636,0.951
+cs_diff,economía,0.1136,3.6102,0.9508
+grubs_diff,objetivos,0.1062,3.3732,0.9142
+gold_diff_utility,oro por rol,0.1054,3.3481,-0.9809
+plates_diff,objetivos,0.1003,3.1858,0.9972
+level_diff,economía,0.0966,3.0706,0.9835
+gold_diff_middle,oro por rol,0.0774,2.4604,0.9598
+gold_diff_jungle,oro por rol,0.0744,2.3642,0.9586
+wards_placed_3m_diff,visión,0.0363,1.1529,0.9425
+heralds_diff,objetivos,0.0312,0.9926,0.9864
+inhibs_down_diff,objetivos,0.0309,0.9809,0.9775
+current_gold_diff,economía,0.0282,0.8969,-0.5553
+gold_diff_top,oro por rol,0.0281,0.8937,0.8568
+kills_diff,combate,0.0244,0.7748,-0.8434
+towers_outer_diff,objetivos,0.0231,0.7333,-0.1547
+towers_nexus_diff,objetivos,0.0221,0.701,1.0
+wards_killed_3m_diff,visión,0.0209,0.665,0.1503
+towers_inner_diff,objetivos,0.0191,0.6085,0.9765
+wards_placed_diff,visión,0.0185,0.5883,0.301
+wards_killed_diff,visión,0.0174,0.554,0.7754
+baron_active,objetivos,0.0172,0.5463,0.8274
+barons_diff,objetivos,0.0165,0.5251,-0.9994
+first_blood,combate,0.0126,0.3995,-0.3894
+aces_diff,combate,0.0085,0.2689,0.9855
+towers_base_diff,objetivos,0.0031,0.0988,-0.7541
+dragon_soul,objetivos,0.003,0.0956,1.0
+minute,minuto,0.0,0.0,
+elder_active,objetivos,0.0,0.0,
+gold_diff_d3,tendencia,0.0,0.0,
+gold_diff_d1,tendencia,0.0,0.0,

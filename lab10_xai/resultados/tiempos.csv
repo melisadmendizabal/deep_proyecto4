@@ -1,0 +1,7 @@
+tarea,n,ms_por_instancia
+"IG nivel, minuto 10 (batch de 32)",1000,6.22
+"IG nivel, minuto 15 (batch de 32)",1000,8.25
+"IG nivel, minuto 20 (batch de 32)",930,11.83
+"IG nivel, minuto 25 (batch de 32)",809,16.4
+IG momento (1 a la vez),3524,37.61
+Oclusión de la app por momento,3524,6.58

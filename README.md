@@ -165,6 +165,28 @@ python src/mejoras_eval.py         # ensambles de semillas, M6 y campeones, en A
 python src/b12_resultados.py       # ~3 min: SHAP, ablación por grupos, 3 casos de falla, tabla E1 con costos
 ```
 
+### 9b. Laboratorio 10: Explainable AI (Integrated Gradients sobre M6 + campeones)
+
+Todo está en [`lab10_xai/`](lab10_xai/). Explica el modelo de la app (`models/m6_draft/`, promedio de 3 semillas) **sin reentrenarlo**, sobre el split de test de `features/sequences.npz` (lo genera el paso 3; `features/` no va a git). Solo usa PyTorch, NumPy, pandas y matplotlib: IG está implementado a mano (no hace falta `captum`).
+
+```bash
+python lab10_xai/costo_metodos.py   # parte 2: costo de IG y de la oclusión, y error de completitud (~10 s, necesita data/anotacion)
+python lab10_xai/explicar.py        # parte 3: explicaciones locales, globales y sensibilidad (~5-10 min en CPU)
+python lab10_xai/explicar.py --n-global 100 --n-sens 30   # prueba rápida (~20 s)
+```
+
+`explicar.py` es determinista (semilla 42 para la muestra y las instancias; red en modo eval) y regenera todas las figuras y tablas del informe:
+
+| Salida | Contenido |
+|---|---|
+| `lab10_xai/figuras/fig1_locales.png` | 6 instancias de test: acierto y error con alta confianza, caso cercano a 0.5, partida con AFK, momento verdadero y momento falso |
+| `lab10_xai/figuras/fig2_global.png` | % del aporte por grupo (minutos 10-25, vs TreeSHAP de M2), top-15 features y cuánto pesa la historia |
+| `lab10_xai/figuras/fig3_momentos.png` | IG vs la oclusión que usa hoy la app, sobre todos los momentos de la muestra |
+| `lab10_xai/resultados/resumen_parte3.md` | todas las tablas en Markdown (se regenera; no editar a mano) |
+| `lab10_xai/resultados/*.csv` | locales, global por grupo/feature/retraso/subgrupo, momentos, sensibilidad y tiempos |
+
+Los parámetros de diseño (línea base, pasos, minutos, tamaños de muestra) están como constantes al inicio de `explicar.py`, y su justificación está en `partes_3_5.md`.
+
 ### 10. Exportar los modelos para la app (B11)
 
 ```bash

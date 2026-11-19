@@ -1,0 +1,7 @@
+caso,descripcion,match_id,tier,parche,gana,minuto,desde_min,linea_base,p_azul,p_linea_base,delta_pts,delta_logit,error_completitud,ms,top4_pts,nota_humana,eventos,minuto_anotado
+A,"Acierto, alta confianza",EUW1_8035676835,EMERALD,16.22,azul,15,,pareja,0.924,0.501,42.3,2.4991,3.5e-05,56.1,"gold_diff_rel +12.1, dragons_diff +5.8, xp_diff +5.5, gold_diff +4.3",,,
+B,"Error, alta confianza",NA1_5673256745,SILVER,16.21,azul,15,,pareja,0.158,0.501,-34.3,-1.6757,1.49e-05,50.3,"dragons_diff -11.8, campeones_rojo -9.2, gold_diff_rel -5.1, campeones_azul +4.2",,,
+C,Cerca del umbral,KR_8445777853,PLATINUM,16.22,azul,15,,pareja,0.505,0.501,0.4,0.0174,3.38e-06,40.4,"campeones_azul -10.1, dragons_diff +6.4, cs_diff +4.1, grubs_diff -3.8",,,
+D,Subgrupo: con AFK,EUW1_8035556309,MASTER,16.22,rojo,15,,pareja,0.402,0.501,-9.9,-0.4027,4.2e-06,35.4,"gold_diff_middle +8.3, dragons_diff -6.4, cs_diff -5.4, gold_diff_jungle -5.3",,,
+E,Momento verdadero,KR_8444875248,SILVER,16.22,azul,20,18.0,congelada,0.517,0.286,23.1,0.9845,1.16e-05,36.2,"gold_diff_rel +8.2, kills_diff_2m +7.6, gold_diff_utility -5.5, xp_diff +3.9","El jungla del equipo azul mata al jungla del equipo rojo, asegurando un objetivo de barón sin dificultad. Con ese barón ejercen una gran presión en carriles mid y top.","azul: 5 kills, torre, torre; rojo: 3 kills",21.0
+F,Momento falso,KR_8444601933,EMERALD,16.21,azul,5,3.0,congelada,0.419,0.755,-33.6,-1.453,2.77e-05,26.9,"gold_diff_rel -20.0, kills_diff_2m -4.5, level_diff -4.4, xp_diff -2.1",,rojo: 3 kills,

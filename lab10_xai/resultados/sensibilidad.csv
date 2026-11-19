@@ -1,0 +1,8 @@
+variante,corr_rangos_grupos_mediana,mismo_grupo_top_%,corr_rangos_features_mediana,error_completitud_max,pct_economía,pct_oro por rol,pct_objetivos,pct_combate,pct_visión,pct_minuto,pct_campeones
+"referencia: 3 semillas, partida pareja, 32 pasos",1.0,100.0,1.0,0.0003,40.7057,16.6339,18.4636,6.1292,3.0981,0.0,14.9695
+solo semilla 42,0.9643,93.5,0.9479,0.0003,38.2986,17.5204,17.6657,7.6426,3.7457,0.0,15.127
+solo semilla 43,0.9643,95.0,0.9466,0.0003,40.2174,15.1364,18.216,6.0556,2.8671,0.0,17.5075
+solo semilla 44,0.9643,92.5,0.8997,0.0003,40.5344,16.307,18.085,6.2334,3.0845,0.0,15.7557
+"línea base 'todo en cero' (media de train, minuto incluido)",1.0,99.0,0.9666,0.0003,40.3334,16.4453,18.8297,6.0911,3.0568,0.3628,14.881
+16 pasos,1.0,100.0,1.0,0.001,40.7062,16.6339,18.4634,6.1292,3.0981,0.0,14.9692
+64 pasos,1.0,100.0,1.0,1e-04,40.7056,16.6339,18.4636,6.1292,3.0981,0.0,14.9695

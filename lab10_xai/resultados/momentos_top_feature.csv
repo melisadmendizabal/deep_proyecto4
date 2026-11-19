@@ -1,0 +1,10 @@
+feature principal,minuto < 5,minuto ≥ 5
+gold_diff_rel,100.0,39.5
+kills_diff_2m,0.0,36.6
+xp_diff,0.0,7.8
+dragons_diff,0.0,7.1
+towers_nexus_diff,0.0,5.4
+inhibs_down_diff,0.0,2.6
+baron_active,0.0,0.3
+elder_active,0.0,0.3
+n momentos,311.0,3213.0
