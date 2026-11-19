@@ -1,0 +1,7 @@
+metodo,ms_mediana,pasadas_mediana,minutos_mediana,delta_logit_mediana,error_completitud_max
+IG 16 pasos,18.3478,16.0,23.0,0.564469,0.000121
+IG 32 pasos,27.5006,32.0,23.0,0.564469,3e-05
+IG 64 pasos,46.2036,64.0,23.0,0.564469,8e-06
+Oclusión feature×minuto (ventana de 3 min),24.7201,105.0,23.0,,
+Oclusión feature×minuto (partida completa),184.5288,805.0,23.0,,
+Pasada normal (referencia),2.0852,1.0,23.0,,
