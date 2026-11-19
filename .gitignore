@@ -50,3 +50,6 @@ results/runs/**/model.txt
 
 # Informe final en Word (se edita aparte, no va al repo)
 informe/
+
+# Lab 10: salidas de la prueba rápida de explicar.py (las del informe sí van)
+lab10_xai/prueba/

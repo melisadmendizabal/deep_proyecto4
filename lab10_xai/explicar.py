@@ -5,14 +5,16 @@ Modelo: M6 Transformer causal + campeones, promedio de las 3 semillas recalibrad
 la misma curva que muestra la app. Datos: split de test de features/sequences.npz (ya estandarizado
 con el scaler de train; reproduce las predicciones guardadas del ensamble con error < 1e-4).
 
-    python lab10_xai/explicar.py                  # 5-10 min en CPU
-    python lab10_xai/explicar.py --n-global 100   # prueba rápida
+    python lab10_xai/explicar.py                  # 4-11 min en CPU según la PC
+    python lab10_xai/explicar.py --n-global 100 --n-sens 30   # prueba rápida (~2 min) -> lab10_xai/prueba/
 
-Escribe lab10_xai/resultados/*.csv, lab10_xai/resultados/resumen_parte3.md y lab10_xai/figuras/*.png.
+Escribe lab10_xai/resultados/*.csv, lab10_xai/resultados/resumen_parte3.md y lab10_xai/figuras/*.png
+(con --n-global/--n-sens distintos a los del informe escribe en lab10_xai/prueba/, que no va a git).
 Todo es determinista: la muestra y las instancias salen de np.random.default_rng(42) y la red está en
 modo eval (sin dropout), así que dos corridas dan los mismos números.
 
-Qué se explica (salida = logit de la curva de la app en el minuto t; ver partes_1_2.md):
+Qué se explica (salida = logit de la curva de la app en el minuto t; parámetros y su justificación en
+lab10_xai/README.md):
   1. NIVEL: "¿por qué P(gana azul) está donde está en el minuto t?". Línea base = "partida pareja":
      todas las diferencias en 0 (cada feature cruda en 0 y luego estandarizada), el MINUTO REAL
      (para no atribuirle nada al paso del tiempo) y los 10 campeones = id 0 (desconocido, embedding
@@ -247,11 +249,17 @@ def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--n-global", type=int, default=N_GLOBAL)
     ap.add_argument("--n-sens", type=int, default=N_SENS)
+    ap.add_argument("--salida", type=Path, default=None,
+                    help="carpeta de salida (crea resultados/ y figuras/ dentro). Por defecto lab10_xai/, "
+                         "o lab10_xai/prueba/ si se cambia --n-global o --n-sens, para no pisar lo del informe")
     args = ap.parse_args()
+    global OUT, FIG
+    base = args.salida or (HERE if (args.n_global, args.n_sens) == (N_GLOBAL, N_SENS) else HERE / "prueba")
+    OUT, FIG = base / "resultados", base / "figuras"
     torch.manual_seed(SEED)
     rng = np.random.default_rng(SEED)
-    OUT.mkdir(exist_ok=True)
-    FIG.mkdir(exist_ok=True)
+    OUT.mkdir(parents=True, exist_ok=True)
+    FIG.mkdir(parents=True, exist_ok=True)
     t_all = time.perf_counter()
 
     eng = Engine(MODEL_DIR)

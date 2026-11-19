@@ -18,6 +18,7 @@ Dada una partida ranked de League of Legends, **Fight Diff** estima minuto a min
 | Hallazgo | Más AUC no significa más valor: los campeones suben el AUC pero no cambian los saltos de la curva, y una regla simple (R0) compite en número de clips | [`results/b12_tabla_e1.md`](results/b12_tabla_e1.md) |
 | Costo | Todo el entrenamiento: ~31 min de GPU de laptop. Hosting: USD 0. Una partida nueva tarda 1.2 s (95 % es la API de Riot) | [`results/b11_latencia.md`](results/b11_latencia.md) |
 | Explicabilidad | SHAP de LightGBM, ablación por grupos y 3 casos de falla | [`results/b12_explicabilidad.md`](results/b12_explicabilidad.md), [`results/b12_fallas.md`](results/b12_fallas.md) |
+| Lab 10 (XAI) | Integrated Gradients sobre M6 + campeones: el modelo usa casi solo el minuto actual (80–84 % del aporte), el draft pesa 15 % pero acierta el signo solo el 53 % de las veces, y los momentos antes del minuto 5 son un artefacto de `gold_diff_rel` | [`lab10_xai/README.md`](lab10_xai/README.md), [`lab10_xai/resultados/resumen_parte3.md`](lab10_xai/resultados/resumen_parte3.md) |
 
 ## Qué hay en el repo y qué no
 
@@ -167,25 +168,14 @@ python src/b12_resultados.py       # ~3 min: SHAP, ablación por grupos, 3 casos
 
 ### 9b. Laboratorio 10: Explainable AI (Integrated Gradients sobre M6 + campeones)
 
-Todo está en [`lab10_xai/`](lab10_xai/). Explica el modelo de la app (`models/m6_draft/`, promedio de 3 semillas) **sin reentrenarlo**, sobre el split de test de `features/sequences.npz` (lo genera el paso 3; `features/` no va a git). Solo usa PyTorch, NumPy, pandas y matplotlib: IG está implementado a mano (no hace falta `captum`).
+> **Nota:** el Laboratorio 10 del curso es aparte del proyecto, pero se hizo sobre este mismo repo y este mismo modelo. Todo está en [`lab10_xai/`](lab10_xai/); **las instrucciones completas, los datos que necesita, lo que genera y los parámetros de diseño están en [`lab10_xai/README.md`](lab10_xai/README.md).**
+
+Explica el modelo de la app (`models/m6_draft/`) con Integrated Gradients, **sin reentrenarlo**, sobre el split de test de `features/sequences.npz` (paso 3). No necesita librerías extra (IG está implementado a mano, sin `captum`).
 
 ```bash
-python lab10_xai/costo_metodos.py   # parte 2: costo de IG y de la oclusión, y error de completitud (~10 s, necesita data/anotacion)
-python lab10_xai/explicar.py        # parte 3: explicaciones locales, globales y sensibilidad (~5-10 min en CPU)
-python lab10_xai/explicar.py --n-global 100 --n-sens 30   # prueba rápida (~20 s)
+python lab10_xai/costo_metodos.py   # parte 2: costo de IG vs oclusión (~10 s, necesita data/anotacion)
+python lab10_xai/explicar.py        # parte 3: todas las figuras y tablas del informe del lab, semilla 42 (4-11 min en CPU)
 ```
-
-`explicar.py` es determinista (semilla 42 para la muestra y las instancias; red en modo eval) y regenera todas las figuras y tablas del informe:
-
-| Salida | Contenido |
-|---|---|
-| `lab10_xai/figuras/fig1_locales.png` | 6 instancias de test: acierto y error con alta confianza, caso cercano a 0.5, partida con AFK, momento verdadero y momento falso |
-| `lab10_xai/figuras/fig2_global.png` | % del aporte por grupo (minutos 10-25, vs TreeSHAP de M2), top-15 features y cuánto pesa la historia |
-| `lab10_xai/figuras/fig3_momentos.png` | IG vs la oclusión que usa hoy la app, sobre todos los momentos de la muestra |
-| `lab10_xai/resultados/resumen_parte3.md` | todas las tablas en Markdown (se regenera; no editar a mano) |
-| `lab10_xai/resultados/*.csv` | locales, global por grupo/feature/retraso/subgrupo, momentos, sensibilidad y tiempos |
-
-Los parámetros de diseño (línea base, pasos, minutos, tamaños de muestra) están como constantes al inicio de `explicar.py`, y su justificación está en `partes_3_5.md`.
 
 ### 10. Exportar los modelos para la app (B11)
 
@@ -210,6 +200,7 @@ models/                  modelos exportados que usa la app
 results/                 métricas, reportes (.md), figuras y resumen de cada corrida
 docs/                    guía, supuestos de valor, protocolo de anotación, despliegue, monitoreo
 tests/                   pruebas (pytest)
+lab10_xai/               Laboratorio 10 (Explainable AI): scripts, figuras y tablas, con su propio README
 ```
 
 ## Privacidad y uso
